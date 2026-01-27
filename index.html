@@ -2,485 +2,1080 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Planning Nathan</title>
+  <title>Planning de Nath</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     :root {
-      --bg: #0f172a;
-      --card: #111827;
+      --bg: #020617;
+      --bg-soft: #020617ee;
+      --card: #020617;
+      --border: rgba(148, 163, 184, 0.4);
       --accent: #38bdf8;
-      --accent-soft: #0ea5e9;
+      --accent-soft: rgba(56, 189, 248, 0.15);
       --text: #e5e7eb;
       --muted: #9ca3af;
-      --sport: #22c55e;
-      --music: #f97316;
-      --english: #a855f7;
+      --danger: #f87171;
+      --success: #4ade80;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.9);
     }
 
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     body {
-      background: radial-gradient(circle at top, #1e293b 0, #020617 55%);
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #0f172a 0, #020617 55%);
       color: var(--text);
       min-height: 100vh;
-      padding: 24px;
       display: flex;
       justify-content: center;
+      align-items: flex-start;
+      padding: 24px;
     }
 
     .app {
       width: 100%;
-      max-width: 1100px;
+      max-width: 1200px;
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 20px;
     }
 
-    h1 {
-      font-size: 1.8rem;
-      margin-bottom: 0.25rem;
+    @media (max-width: 900px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
     }
 
-    .subtitle {
-      color: var(--muted);
-      margin-bottom: 1.5rem;
+    .panel {
+      background: var(--bg-soft);
+      border-radius: 24px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      box-shadow: var(--shadow-soft);
+      padding: 18px 18px 20px;
+      backdrop-filter: blur(18px);
     }
 
-    .summary {
+    .panel-header {
       display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 20px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-title span.icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #38bdf8, #0ea5e9 55%, #0369a1);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 13px;
+      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.7);
+    }
+
+    .panel-subtitle {
+      font-size: 12px;
+      color: var(--muted);
     }
 
     .badge {
-      padding: 8px 14px;
+      font-size: 11px;
+      padding: 3px 8px;
       border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      color: var(--muted);
+      background: rgba(15, 23, 42, 0.7);
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
       background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      font-size: 0.85rem;
+      color: var(--text);
+      font-size: 12px;
+      padding: 6px 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: 0.15s ease;
+    }
+
+    .btn:hover {
+      border-color: var(--accent);
+      background: rgba(15, 23, 42, 1);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.35);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #0ea5e9, #22c55e);
+      border-color: transparent;
+      color: white;
+      box-shadow: 0 12px 30px rgba(34, 197, 94, 0.35);
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.05);
+      box-shadow: 0 16px 40px rgba(34, 197, 94, 0.45);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border-color: rgba(148, 163, 184, 0.4);
+    }
+
+    .btn-danger {
+      color: var(--danger);
+      border-color: rgba(248, 113, 113, 0.5);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .btn-danger:hover {
+      background: rgba(127, 29, 29, 0.7);
+      box-shadow: 0 0 0 1px rgba(248, 113, 113, 0.5);
+    }
+
+    .calendar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .calendar-title {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      font-size: 11px;
+    }
+
+    .calendar-day-name {
+      text-align: center;
+      color: var(--muted);
+      padding-bottom: 4px;
+    }
+
+    .calendar-cell {
+      text-align: center;
+      padding: 4px 0;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      color: var(--muted);
+    }
+
+    .calendar-cell.today {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .calendar-cell.other-month {
+      opacity: 0.35;
+    }
+
+    .calendar-legend {
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .calendar-legend span {
       display: inline-flex;
       align-items: center;
       gap: 6px;
     }
 
     .dot {
-      width: 10px;
-      height: 10px;
+      width: 8px;
+      height: 8px;
       border-radius: 999px;
+      display: inline-block;
     }
 
-    .dot.sport { background: var(--sport); }
-    .dot.music { background: var(--music); }
-    .dot.english { background: var(--english); }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 14px;
+    .dot-accent {
+      background: var(--accent);
     }
 
-    @media (max-width: 900px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
+    .dot-success {
+      background: var(--success);
     }
 
-    .day-card {
-      background: linear-gradient(145deg, rgba(15,23,42,0.95), rgba(15,23,42,0.7));
-      border-radius: 16px;
-      padding: 14px 14px 10px;
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.8);
-      backdrop-filter: blur(16px);
-    }
-
-    .day-header {
+    .notes {
+      margin-top: 14px;
       display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 8px;
+      flex-direction: column;
+      gap: 6px;
     }
 
-    .day-name {
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      font-size: 0.8rem;
+    .notes label {
+      font-size: 12px;
       color: var(--muted);
     }
 
-    .day-tag {
-      font-size: 0.7rem;
-      padding: 3px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      color: var(--muted);
+    .notes textarea {
+      width: 100%;
+      min-height: 70px;
+      resize: vertical;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text);
+      font-size: 12px;
+      padding: 8px 10px;
+      outline: none;
     }
 
-    .slot {
-      margin-top: 8px;
-      padding-top: 8px;
-      border-top: 1px dashed rgba(55, 65, 81, 0.8);
+    .notes textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.4);
     }
 
-    .slot-label {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--muted);
-      margin-bottom: 4px;
+    .global-notes {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(148, 163, 184, 0.4);
     }
 
-    .activity {
+    .global-notes textarea {
+      min-height: 60px;
+    }
+
+    .week-header {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 6px 8px;
-      border-radius: 10px;
-      margin-bottom: 4px;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(31, 41, 55, 0.9);
+      justify-content: space-between;
+      margin-bottom: 10px;
+      gap: 10px;
     }
 
-    .activity-label {
-      font-size: 0.8rem;
+    .week-header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
 
-    .activity-tag {
-      font-size: 0.7rem;
-      padding: 2px 6px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.4);
+    .week-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .week-subtitle {
+      font-size: 12px;
       color: var(--muted);
     }
 
-    .activity-tag.sport { border-color: var(--sport); color: var(--sport); }
-    .activity-tag.music { border-color: var(--music); color: var(--music); }
-    .activity-tag.english { border-color: var(--english); color: var(--english); }
-
-    .activity-time {
-      font-size: 0.7rem;
-      color: var(--muted);
-    }
-
-    input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-      accent-color: var(--accent);
-      cursor: pointer;
-    }
-
-    .footer {
-      margin-top: 22px;
+    .week-header-actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
-      align-items: center;
-      justify-content: space-between;
+      gap: 6px;
+      justify-content: flex-end;
     }
 
     .totals {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      font-size: 0.85rem;
+      gap: 8px;
+      margin-bottom: 10px;
+      font-size: 11px;
     }
 
     .total-pill {
-      padding: 6px 10px;
+      padding: 4px 8px;
       border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
       background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.4);
       display: inline-flex;
       align-items: center;
       gap: 6px;
     }
 
-    .total-pill span.value {
-      font-weight: 600;
-      color: var(--accent-soft);
+    .total-label {
+      color: var(--muted);
     }
 
-    .reset-btn {
-      padding: 6px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.6);
-      background: transparent;
+    .total-value {
+      font-weight: 500;
+      color: var(--accent);
+    }
+
+    .days-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+    }
+
+    .day-card {
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at top left, #020617, #020617f0);
+      padding: 10px 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .day-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, rgba(56, 189, 248, 0.08), transparent 55%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .day-header {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .day-title {
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .day-tag {
+      font-size: 11px;
       color: var(--muted);
-      font-size: 0.8rem;
+    }
+
+    .day-actions {
+      display: flex;
+      gap: 4px;
+    }
+
+    .slot {
+      position: relative;
+      z-index: 1;
+      border-radius: var(--radius-md);
+      border: 1px dashed rgba(148, 163, 184, 0.4);
+      padding: 6px 7px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .slot-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .slot-label {
+      font-weight: 500;
+      color: #cbd5f5;
+    }
+
+    .slot-total {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .activities {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .activity {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 6px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      font-size: 11px;
+    }
+
+    .activity input[type="checkbox"] {
+      width: 13px;
+      height: 13px;
+      accent-color: var(--accent);
       cursor: pointer;
     }
 
-    .reset-btn:hover {
+    .activity-main {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      flex: 1;
+    }
+
+    .activity-name {
+      font-size: 11px;
+    }
+
+    .activity-meta {
+      font-size: 10px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .activity-type {
+      padding: 1px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .activity-duration {
+      color: var(--accent);
+    }
+
+    .activity-delete {
+      border: none;
+      background: transparent;
+      color: var(--danger);
+      cursor: pointer;
+      font-size: 14px;
+      padding: 0 4px;
+    }
+
+    .add-event-btn {
+      margin-top: 4px;
+      width: 100%;
+      border-radius: 999px;
+      border: 1px dashed rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--muted);
+      font-size: 11px;
+      padding: 5px 0;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .add-event-btn:hover {
+      border-style: solid;
       border-color: var(--accent);
       color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.35);
+    }
+
+    .day-notes {
+      position: relative;
+      z-index: 1;
+      margin-top: 4px;
+    }
+
+    .day-notes textarea {
+      width: 100%;
+      min-height: 40px;
+      resize: vertical;
+      border-radius: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text);
+      font-size: 11px;
+      padding: 5px 7px;
+      outline: none;
+    }
+
+    .day-notes textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.4);
     }
   </style>
 </head>
 <body>
   <div class="app">
-    <h1>Planning semaine — Nathan</h1>
-    <div class="subtitle">Sport cohérent, 4 h de musique et 5 h d’anglais du lundi au vendredi.</div>
-
-    <div class="summary">
-      <div class="badge"><span class="dot sport"></span>Sport réparti (bas / haut / cardio / escalade)</div>
-      <div class="badge"><span class="dot music"></span>Musique / chant : objectif 4 h</div>
-      <div class="badge"><span class="dot english"></span>Anglais : objectif 5 h (TOEIC)</div>
-    </div>
-
-    <div class="grid" id="week-grid">
-      <!-- Les cartes jours seront injectées en JS -->
-    </div>
-
-    <div class="footer">
-      <div class="totals">
-        <div class="total-pill">
-          🎵 Musique / chant : <span class="value" id="music-hours">0</span> h / 4 h
-        </div>
-        <div class="total-pill">
-          🇬🇧 Anglais : <span class="value" id="english-hours">0</span> h / 5 h
+    <!-- Sidebar: calendrier + notes globales -->
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">
+            <span class="icon">📅</span>
+            <span>Vue calendrier</span>
+          </div>
+          <div class="panel-subtitle">
+            Repère ta semaine et garde des notes globales.
+          </div>
         </div>
       </div>
-      <button class="reset-btn" id="reset-btn">Réinitialiser la semaine</button>
+
+      <div class="calendar-header">
+        <div class="calendar-title" id="calendar-month"></div>
+        <div style="display:flex;gap:4px;">
+          <button class="btn btn-ghost" id="prev-month">◀</button>
+          <button class="btn btn-ghost" id="next-month">▶</button>
+        </div>
+      </div>
+
+      <div class="calendar-grid" id="calendar-grid"></div>
+
+      <div class="calendar-legend">
+        <span><span class="dot dot-accent"></span> Aujourd’hui</span>
+        <span><span class="dot dot-success"></span> Semaine active (indicatif)</span>
+      </div>
+
+      <div class="global-notes notes">
+        <label for="global-notes">Notes globales de la semaine</label>
+        <textarea id="global-notes" placeholder="Objectifs, focus, choses à ne pas oublier..."></textarea>
+      </div>
+    </div>
+
+    <!-- Planning principal -->
+    <div class="panel">
+      <div class="week-header">
+        <div class="week-header-left">
+          <div class="week-title">Planning hebdomadaire</div>
+          <div class="week-subtitle">
+            Ajoute des jours, des événements, des textes, et organise ta semaine comme tu veux.
+          </div>
+        </div>
+        <div class="week-header-actions">
+          <button class="btn" id="add-day-btn">+ Ajouter un jour</button>
+          <button class="btn btn-ghost" id="reset-week-btn">Réinitialiser</button>
+        </div>
+      </div>
+
+      <div class="totals" id="totals"></div>
+
+      <div class="days-grid" id="days-grid"></div>
     </div>
   </div>
 
   <script>
-    const weekData = [
-      {
-        day: "Lundi",
-        tag: "Bas du corps + créatif",
-        slots: [
-          {
-            label: "Midi",
-            activities: [
-              { name: "Abdos + jambes", type: "sport", duration: 1 }
-            ]
-          },
-          {
-            label: "Soir",
-            activities: [
-              { name: "Musique / chant (session douce)", type: "music", duration: 1 },
-              { name: "Anglais — écoute + vocabulaire", type: "english", duration: 0.5 }
-            ]
-          }
-        ]
-      },
-      {
-        day: "Mardi",
-        tag: "Escalade",
-        slots: [
-          {
-            label: "Midi",
-            activities: [
-              { name: "Course (optionnel)", type: "sport", duration: 1 }
-            ]
-          },
-          {
-            label: "Soir",
-            activities: [
-              { name: "Escalade", type: "sport", duration: 2 },
-              { name: "Anglais — compréhension orale", type: "english", duration: 0.75 }
-            ]
-          }
-        ]
-      },
-      {
-        day: "Mercredi",
-        tag: "Musique intense",
-        slots: [
-          {
-            label: "Midi",
-            activities: [
-              { name: "Natation (récup active, futur)", type: "sport", duration: 0.75 }
-            ]
-          },
-          {
-            label: "Soir",
-            activities: [
-              { name: "Musique / chant (grosse session)", type: "music", duration: 2 },
-              { name: "Anglais — lecture + grammaire", type: "english", duration: 0.5 }
-            ]
-          }
-        ]
-      },
-      {
-        day: "Jeudi",
-        tag: "Haut du corps + mix",
-        slots: [
-          {
-            label: "Midi",
-            activities: [
-              { name: "Muscu poids du corps (haut du corps)", type: "sport", duration: 1 }
-            ]
-          },
-          {
-            label: "Soir",
-            activities: [
-              { name: "Musique / chant", type: "music", duration: 1 },
-              { name: "Anglais — TOEIC ciblé", type: "english", duration: 1 }
-            ]
-          }
-        ]
-      },
-      {
-        day: "Vendredi",
-        tag: "Cardio + Anglais fort",
-        slots: [
-          {
-            label: "Midi",
-            activities: [
-              { name: "Course ou vélo", type: "sport", duration: 1 }
-            ]
-          },
-          {
-            label: "Soir",
-            activities: [
-              { name: "Anglais — grammaire + exos", type: "english", duration: 1 },
-              { name: "Anglais — écoute + test blanc", type: "english", duration: 1 },
-              { name: "Anglais — écoute passive (podcast)", type: "english", duration: 0.25 }
-            ]
-          }
-        ]
+    // --- Données & stockage ---
+
+    const STORAGE_KEY = "planning_nath_v2";
+
+    const defaultWeekData = {
+      globalNotes: "",
+      days: [
+        {
+          day: "Lundi",
+          tag: "Démarrage & focus",
+          notes: "",
+          slots: [
+            {
+              label: "Matin",
+              activities: [
+                { name: "Qualité / Amélioration continue", type: "travail", duration: 3, done: false },
+                { name: "Suivi terrain / échanges équipe", type: "terrain", duration: 1, done: false }
+              ]
+            },
+            {
+              label: "Après-midi",
+              activities: [
+                { name: "Projets / Formalisation", type: "projet", duration: 3, done: false },
+                { name: "Temps perso / apprentissage", type: "perso", duration: 1, done: false }
+              ]
+            }
+          ]
+        },
+        {
+          day: "Mardi",
+          tag: "Projets & structuration",
+          notes: "",
+          slots: [
+            {
+              label: "Matin",
+              activities: [
+                { name: "Analyse / 8D / A3", type: "qualité", duration: 3, done: false },
+                { name: "Points rapides / mails", type: "support", duration: 1, done: false }
+              ]
+            },
+            {
+              label: "Après-midi",
+              activities: [
+                { name: "Standardisation / docs", type: "projet", duration: 2, done: false },
+                { name: "Temps perso / TOEIC", type: "perso", duration: 2, done: false }
+              ]
+            }
+          ]
+        },
+        {
+          day: "Mercredi",
+          tag: "Terrain & amélioration",
+          notes: "",
+          slots: [
+            {
+              label: "Matin",
+              activities: [
+                { name: "Terrain / gemba / observation", type: "terrain", duration: 3, done: false },
+                { name: "Debrief / quick wins", type: "qualité", duration: 1, done: false }
+              ]
+            },
+            {
+              label: "Après-midi",
+              activities: [
+                { name: "Projets en cours", type: "projet", duration: 3, done: false },
+                { name: "Temps perso / veille", type: "perso", duration: 1, done: false }
+              ]
+            }
+          ]
+        },
+        {
+          day: "Jeudi",
+          tag: "Profondeur & formalisation",
+          notes: "",
+          slots: [
+            {
+              label: "Matin",
+              activities: [
+                { name: "Analyse profonde / DOE / AMDEC", type: "qualité", duration: 3, done: false },
+                { name: "Alignement avec les équipes", type: "terrain", duration: 1, done: false }
+              ]
+            },
+            {
+              label: "Après-midi",
+              activities: [
+                { name: "Rédaction / standards / supports", type: "projet", duration: 3, done: false },
+                { name: "Temps perso / structuration", type: "perso", duration: 1, done: false }
+              ]
+            }
+          ]
+        },
+        {
+          day: "Vendredi",
+          tag: "Synthèse & préparation",
+          notes: "",
+          slots: [
+            {
+              label: "Matin",
+              activities: [
+                { name: "Synthèse semaine / KPI / suivi", type: "qualité", duration: 3, done: false },
+                { name: "Points avec les parties prenantes", type: "terrain", duration: 1, done: false }
+              ]
+            },
+            {
+              label: "Après-midi",
+              activities: [
+                { name: "Préparation semaine suivante", type: "projet", duration: 2, done: false },
+                { name: "Temps perso / bilan", type: "perso", duration: 2, done: false }
+              ]
+            }
+          ]
+        }
+      ]
+    };
+
+    let weekData = loadData();
+
+    function loadData() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return structuredClone(defaultWeekData);
+        const parsed = JSON.parse(raw);
+        if (!parsed.days || !Array.isArray(parsed.days)) {
+          return structuredClone(defaultWeekData);
+        }
+        return parsed;
+      } catch (e) {
+        return structuredClone(defaultWeekData);
       }
-    ];
+    }
 
-    const grid = document.getElementById("week-grid");
-    const musicHoursEl = document.getElementById("music-hours");
-    const englishHoursEl = document.getElementById("english-hours");
-    const resetBtn = document.getElementById("reset-btn");
+    function saveData() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(weekData));
+    }
 
-    function createDayCard(dayData, dayIndex) {
-      const card = document.createElement("div");
-      card.className = "day-card";
+    // --- Utilitaires ---
 
-      const header = document.createElement("div");
-      header.className = "day-header";
+    function sumDurations(activities) {
+      return activities.reduce((acc, a) => acc + (a.duration || 0), 0);
+    }
 
-      const name = document.createElement("div");
-      name.className = "day-name";
-      name.textContent = dayData.day;
+    function formatHours(h) {
+      return `${h.toFixed(1).replace(".0", "")} h`;
+    }
 
-      const tag = document.createElement("div");
-      tag.className = "day-tag";
-      tag.textContent = dayData.tag;
+    function getTotals() {
+      const totals = {
+        global: 0,
+        travail: 0,
+        terrain: 0,
+        projet: 0,
+        qualité: 0,
+        perso: 0,
+        custom: 0
+      };
 
-      header.appendChild(name);
-      header.appendChild(tag);
-      card.appendChild(header);
-
-      dayData.slots.forEach((slot, slotIndex) => {
-        const slotDiv = document.createElement("div");
-        slotDiv.className = "slot";
-
-        const slotLabel = document.createElement("div");
-        slotLabel.className = "slot-label";
-        slotLabel.textContent = slot.label;
-        slotDiv.appendChild(slotLabel);
-
-        slot.activities.forEach((act, actIndex) => {
-          const activityDiv = document.createElement("div");
-          activityDiv.className = "activity";
-
-          const checkbox = document.createElement("input");
-          checkbox.type = "checkbox";
-          checkbox.dataset.type = act.type;
-          checkbox.dataset.duration = act.duration;
-          checkbox.dataset.key = `${dayIndex}-${slotIndex}-${actIndex}`;
-
-          const labelDiv = document.createElement("div");
-          const title = document.createElement("div");
-          title.className = "activity-label";
-          title.textContent = act.name;
-
-          const meta = document.createElement("div");
-          meta.style.display = "flex";
-          meta.style.gap = "6px";
-          meta.style.alignItems = "center";
-
-          const tagSpan = document.createElement("span");
-          tagSpan.className = `activity-tag ${act.type}`;
-          tagSpan.textContent =
-            act.type === "sport" ? "Sport" :
-            act.type === "music" ? "Musique" :
-            "Anglais";
-
-          const timeSpan = document.createElement("span");
-          timeSpan.className = "activity-time";
-          timeSpan.textContent = `${act.duration} h`;
-
-          meta.appendChild(tagSpan);
-          meta.appendChild(timeSpan);
-
-          labelDiv.appendChild(title);
-          labelDiv.appendChild(meta);
-
-          activityDiv.appendChild(checkbox);
-          activityDiv.appendChild(labelDiv);
-          slotDiv.appendChild(activityDiv);
+      weekData.days.forEach(day => {
+        day.slots.forEach(slot => {
+          slot.activities.forEach(a => {
+            const d = a.duration || 0;
+            totals.global += d;
+            const t = (a.type || "custom").toLowerCase();
+            if (totals[t] !== undefined) {
+              totals[t] += d;
+            } else {
+              totals.custom += d;
+            }
+          });
         });
-
-        card.appendChild(slotDiv);
       });
 
-      return card;
+      return totals;
+    }
+
+    // --- Rendu du planning ---
+
+    const daysGrid = document.getElementById("days-grid");
+    const totalsDiv = document.getElementById("totals");
+    const globalNotesEl = document.getElementById("global-notes");
+
+    globalNotesEl.value = weekData.globalNotes || "";
+    globalNotesEl.addEventListener("input", () => {
+      weekData.globalNotes = globalNotesEl.value;
+      saveData();
+    });
+
+    function renderTotals() {
+      const t = getTotals();
+      totalsDiv.innerHTML = "";
+
+      const entries = [
+        ["Total", t.global],
+        ["Travail", t.travail],
+        ["Terrain", t.terrain],
+        ["Projets", t.projet],
+        ["Qualité", t.qualité],
+        ["Perso", t.perso],
+        ["Custom", t.custom]
+      ];
+
+      entries.forEach(([label, value]) => {
+        if (value <= 0 && label !== "Total") return;
+        const pill = document.createElement("div");
+        pill.className = "total-pill";
+        pill.innerHTML = `
+          <span class="total-label">${label}</span>
+          <span class="total-value">${formatHours(value)}</span>
+        `;
+        totalsDiv.appendChild(pill);
+      });
     }
 
     function renderWeek() {
-      grid.innerHTML = "";
-      weekData.forEach((day, i) => {
-        const card = createDayCard(day, i);
-        grid.appendChild(card);
-      });
+      saveData();
+      renderTotals();
+      daysGrid.innerHTML = "";
 
-      // Restaurer l'état depuis localStorage
-      const saved = JSON.parse(localStorage.getItem("planning-state") || "{}");
-      document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-        const key = cb.dataset.key;
-        if (saved[key]) cb.checked = true;
-      });
+      weekData.days.forEach((dayData, dayIndex) => {
+        const card = document.createElement("div");
+        card.className = "day-card";
 
-      updateTotals();
-      attachListeners();
-    }
+        // Header
+        const header = document.createElement("div");
+        header.className = "day-header";
 
-    function updateTotals() {
-      let music = 0;
-      let english = 0;
+        const title = document.createElement("div");
+        title.className = "day-title";
+        title.innerHTML = `
+          <span>${dayData.day}</span>
+          <span class="day-tag">${dayData.tag || ""}</span>
+        `;
 
-      document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-        if (!cb.checked) return;
-        const type = cb.dataset.type;
-        const duration = parseFloat(cb.dataset.duration || "0");
-        if (type === "music") music += duration;
-        if (type === "english") english += duration;
-      });
+        const actions = document.createElement("div");
+        actions.className = "day-actions";
 
-      musicHoursEl.textContent = music.toFixed(2).replace(".00", "");
-      englishHoursEl.textContent = english.toFixed(2).replace(".00", "");
-    }
-
-    function attachListeners() {
-      document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-        cb.addEventListener("change", () => {
-          const saved = JSON.parse(localStorage.getItem("planning-state") || "{}");
-          saved[cb.dataset.key] = cb.checked;
-          localStorage.setItem("planning-state", JSON.stringify(saved));
-          updateTotals();
+        const renameBtn = document.createElement("button");
+        renameBtn.className = "btn btn-ghost";
+        renameBtn.style.fontSize = "10px";
+        renameBtn.textContent = "Renommer";
+        renameBtn.addEventListener("click", () => {
+          const newName = prompt("Nouveau nom du jour :", dayData.day);
+          if (!newName) return;
+          dayData.day = newName.trim();
+          renderWeek();
         });
-      });
 
-      resetBtn.addEventListener("click", () => {
-        document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-        localStorage.removeItem("planning-state");
-        updateTotals();
+        const deleteDayBtn = document.createElement("button");
+        deleteDayBtn.className = "btn btn-danger";
+        deleteDayBtn.style.fontSize = "10px";
+        deleteDayBtn.textContent = "Supprimer";
+        deleteDayBtn.addEventListener("click", () => {
+          if (!confirm(`Supprimer le jour "${dayData.day}" ?`)) return;
+          weekData.days.splice(dayIndex, 1);
+          renderWeek();
+        });
+
+        actions.appendChild(renameBtn);
+        actions.appendChild(deleteDayBtn);
+
+        header.appendChild(title);
+        header.appendChild(actions);
+        card.appendChild(header);
+
+        // Slots
+        dayData.slots.forEach((slot, slotIndex) => {
+          const slotDiv = document.createElement("div");
+          slotDiv.className = "slot";
+
+          const slotHeader = document.createElement("div");
+          slotHeader.className = "slot-header";
+
+          const slotLabel = document.createElement("div");
+          slotLabel.className = "slot-label";
+          slotLabel.textContent = slot.label;
+
+          const slotTotal = document.createElement("div");
+          slotTotal.className = "slot-total";
+          slotTotal.textContent = formatHours(sumDurations(slot.activities));
+
+          slotHeader.appendChild(slotLabel);
+          slotHeader.appendChild(slotTotal);
+          slotDiv.appendChild(slotHeader);
+
+          const activitiesDiv = document.createElement("div");
+          activitiesDiv.className = "activities";
+
+          slot.activities.forEach((activity, actIndex) => {
+            const activityDiv = document.createElement("div");
+            activityDiv.className = "activity";
+
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.checked = !!activity.done;
+            checkbox.addEventListener("change", () => {
+              activity.done = checkbox.checked;
+              saveData();
+            });
+
+            const main = document.createElement("div");
+            main.className = "activity-main";
+
+            const name = document.createElement("div");
+            name.className = "activity-name";
+            name.textContent = activity.name;
+
+            const meta = document.createElement("div");
+            meta.className = "activity-meta";
+
+            const typeSpan = document.createElement("span");
+            typeSpan.className = "activity-type";
+            typeSpan.textContent = (activity.type || "custom").toUpperCase();
+
+            const durationSpan = document.createElement("span");
+            durationSpan.className = "activity-duration";
+            durationSpan.textContent = formatHours(activity.duration || 0);
+
+            meta.appendChild(typeSpan);
+            meta.appendChild(durationSpan);
+
+            main.appendChild(name);
+            main.appendChild(meta);
+
+            const deleteBtn = document.createElement("button");
+            deleteBtn.className = "activity-delete";
+            deleteBtn.textContent = "✖";
+            deleteBtn.title = "Supprimer cet événement";
+            deleteBtn.addEventListener("click", () => {
+              slot.activities.splice(actIndex, 1);
+              renderWeek();
+            });
+
+            activityDiv.appendChild(checkbox);
+            activityDiv.appendChild(main);
+            activityDiv.appendChild(deleteBtn);
+
+            activitiesDiv.appendChild(activityDiv);
+          });
+
+          slotDiv.appendChild(activitiesDiv);
+
+          const addEventBtn = document.createElement("button");
+          addEventBtn.className = "add-event-btn";
+          addEventBtn.innerHTML = `<span>+ Ajouter un événement</span>`;
+          addEventBtn.addEventListener("click", () => {
+            const name = prompt("Nom de l’événement :");
+            if (!name) return;
+
+            const durationStr = prompt("Durée en heures (ex : 1, 1.5, 2) :");
+            if (!durationStr) return;
+            const duration = parseFloat(durationStr.replace(",", "."));
+            if (isNaN(duration) || duration <= 0) return;
+
+            const type = prompt("Type (travail, terrain, projet, qualité, perso, custom) :", "custom") || "custom";
+
+            slot.activities.push({
+              name: name.trim(),
+              type: type.trim().toLowerCase(),
+              duration,
+              done: false
+            });
+
+            renderWeek();
+          });
+
+          slotDiv.appendChild(addEventBtn);
+          card.appendChild(slotDiv);
+        });
+
+        // Notes du jour
+        const notesDiv = document.createElement("div");
+        notesDiv.className = "day-notes";
+        const notesTextarea = document.createElement("textarea");
+        notesTextarea.placeholder = "Notes pour ce jour (priorités, ressentis, choses à surveiller...)";
+        notesTextarea.value = dayData.notes || "";
+        notesTextarea.addEventListener("input", () => {
+          dayData.notes = notesTextarea.value;
+          saveData();
+        });
+        notesDiv.appendChild(notesTextarea);
+        card.appendChild(notesDiv);
+
+        daysGrid.appendChild(card);
       });
     }
+
+    // --- Actions globales ---
+
+    document.getElementById("add-day-btn").addEventListener("click", () => {
+      const name = prompt("Nom du nouveau jour (ex : Samedi, Dimanche, Jour spécial...) :");
+      if (!name) return;
+      const tag = prompt("Tag / description du jour (facultatif) :", "") || "";
+      weekData.days.push({
+        day: name.trim(),
+        tag: tag.trim(),
+        notes: "",
+        slots: [
+          {
+            label: "Journée",
+            activities: []
+          }
+        ]
+      });
+      renderWeek();
+    });
+
+    document.getElementById("reset-week-btn").addEventListener("click", () => {
+      if (!confirm("Réinitialiser complètement le planning et effacer toutes les modifications ?")) return;
+      weekData = structuredClone(defaultWeekData);
+      globalNotesEl.value = weekData.globalNotes || "";
+      renderWeek();
+    });
+
+    // --- Calendrier ---
+
+    const calendarMonthEl = document.getElementById("calendar-month");
+    const calendarGridEl = document.getElementById("calendar-grid");
+    const prevMonthBtn = document.getElementById("prev-month");
+    const nextMonthBtn = document.getElementById("next-month");
+
+    let currentCalendarDate = new Date();
+
+    function renderCalendar() {
+      const year = currentCalendarDate.getFullYear();
+      const month = currentCalendarDate.getMonth();
+
+      const monthNames = [
+        "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+        "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+      ];
+
+      calendarMonthEl.textContent = `${monthNames[month]} ${year}`;
+
+      calendarGridEl.innerHTML = "";
+
+      const dayNames = ["L", "M", "M", "J", "V", "S", "D"];
+      dayNames.forEach(d => {
+        const el = document.createElement("div");
+        el.className = "calendar-day-name";
+        el.textContent = d;
+        calendarGridEl.appendChild(el);
+      });
+
+      const firstDay = new Date(year, month, 1);
+      const startDay = (firstDay.getDay() + 6) % 7; // Lundi = 0
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+      const today = new Date();
+      const isSameMonth = today.getFullYear() === year && today.getMonth() === month;
+
+      const totalCells = 42; // 6 semaines
+
+      for (let i = 0; i < totalCells; i++) {
+        const cell = document.createElement("div");
+        cell.className = "calendar-cell";
+
+        let dayNumber;
+        let isOtherMonth = false;
+
+        if (i < startDay) {
+          dayNumber = daysInPrevMonth - (startDay - 1 - i);
+          isOtherMonth = true;
+        } else if (i >= startDay + daysInMonth) {
+          dayNumber = i - (startDay + daysInMonth) + 1;
+          isOtherMonth = true;
+        } else {
+          dayNumber = i - startDay + 1;
+        }
+
+        cell.textContent = dayNumber;
+
+        if (isOtherMonth) {
+          cell.classList.add("other-month");
+        } else if (isSameMonth && dayNumber === today.getDate()) {
+          cell.classList.add("today");
+        }
+
+        calendarGridEl.appendChild(cell);
+      }
+    }
+
+    prevMonthBtn.addEventListener("click", () => {
+      currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+      renderCalendar();
+    });
+
+    nextMonthBtn.addEventListener("click", () => {
+      currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+      renderCalendar();
+    });
+
+    // --- Initialisation ---
 
     renderWeek();
+    renderCalendar();
   </script>
 </body>
 </html>
