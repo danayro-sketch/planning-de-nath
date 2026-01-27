@@ -25,19 +25,23 @@
       box-sizing: border-box;
     }
 
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-        "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #0f172a 0, #020617 55%);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 24px;
-    }
+   body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    "Segoe UI", sans-serif;
+
+  /* Nouveau fond plus joli */
+  background: radial-gradient(circle at 20% 20%, #1e3a8a 0%, #0f172a 40%, #020617 90%);
+  background-attachment: fixed;
+
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 24px;
+}
 
     .app {
       width: 100%;
@@ -1079,3 +1083,4 @@
   </script>
 </body>
 </html>
+
