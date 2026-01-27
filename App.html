@@ -15,17 +15,21 @@
       "TA_CLÉ_ANON_ICI"
     );
 
+    let user = null;
+    let planningId = null;
+    let planningData = null;
+
     async function init() {
-      // Vérifier si l'utilisateur est connecté
+      // Vérifier la session
       const { data } = await supabase.auth.getSession();
       if (!data.session) {
         window.location.href = "login.html";
         return;
       }
 
-      const user = data.session.user;
+      user = data.session.user;
 
-      // Charger le planning depuis Supabase
+      // Charger le planning
       const { data: planning, error } = await supabase
         .from("plannings")
         .select("*")
@@ -38,25 +42,62 @@
       }
 
       if (!planning) {
-        // Si aucun planning n'existe → en créer un
+        // Créer un planning vide
         const defaultData = {
-          days: [],
+          globalNotes: "",
           checklist: [],
-          globalNotes: ""
+          days: [
+            { day: "Lundi", tag: "Démarrage en douceur", notes: "", slots: baseSlots() },
+            { day: "Mardi", tag: "Activités régulières", notes: "", slots: baseSlots() },
+            { day: "Mercredi", tag: "Milieu de semaine", notes: "", slots: baseSlots() },
+            { day: "Jeudi", tag: "Rythme stable", notes: "", slots: baseSlots() },
+            { day: "Vendredi", tag: "Fin de semaine", notes: "", slots: baseSlots() },
+            { day: "Samedi", tag: "Temps perso / loisirs", notes: "", slots: baseSlots() },
+            { day: "Dimanche", tag: "Repos / préparation", notes: "", slots: baseSlots() }
+          ]
         };
 
-        await supabase.from("plannings").insert({
-          user_id: user.id,
-          data: defaultData
-        });
+        const { data: newPlanning } = await supabase
+          .from("plannings")
+          .insert({
+            user_id: user.id,
+            data: defaultData
+          })
+          .select()
+          .single();
 
-        document.body.innerHTML = "<h2>Planning créé. Recharge la page.</h2>";
-        return;
+        planningId = newPlanning.id;
+        planningData = newPlanning.data;
+      } else {
+        planningId = planning.id;
+        planningData = planning.data;
       }
 
-      // Ici on affichera ton planning pastel
-      document.body.innerHTML = "<h2>Planning chargé !</h2>";
-      console.log("Planning :", planning.data);
+      // Charger ton planning pastel
+      loadPlanningUI();
+    }
+
+    function baseSlots() {
+      return [
+        { label: "Matin", activities: [] },
+        { label: "Midi", activities: [] },
+        { label: "Soir", activities: [] }
+      ];
+    }
+
+    async function savePlanning() {
+      await supabase
+        .from("plannings")
+        .update({ data: planningData })
+        .eq("id", planningId);
+    }
+
+    function loadPlanningUI() {
+      // Ici, on remplace tout le body par ton planning pastel
+      document.body.innerHTML = `
+        <h2>Ton planning est chargé !</h2>
+        <p>La version pastel complète arrive à la brique suivante.</p>
+      `;
     }
 
     init();
