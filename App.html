@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Planning</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <h1>Chargement du planning...</h1>
+
+  <script>
+    const supabase = window.supabase.createClient(
+      "TON_URL_SUPABASE_ICI",
+      "TA_CLÉ_ANON_ICI"
+    );
+
+    async function init() {
+      // Vérifier si l'utilisateur est connecté
+      const { data } = await supabase.auth.getSession();
+      if (!data.session) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      const user = data.session.user;
+
+      // Charger le planning depuis Supabase
+      const { data: planning, error } = await supabase
+        .from("plannings")
+        .select("*")
+        .eq("user_id", user.id)
+        .single();
+
+      if (error && error.code !== "PGRST116") {
+        document.body.innerHTML = "<h2>Erreur : " + error.message + "</h2>";
+        return;
+      }
+
+      if (!planning) {
+        // Si aucun planning n'existe → en créer un
+        const defaultData = {
+          days: [],
+          checklist: [],
+          globalNotes: ""
+        };
+
+        await supabase.from("plannings").insert({
+          user_id: user.id,
+          data: defaultData
+        });
+
+        document.body.innerHTML = "<h2>Planning créé. Recharge la page.</h2>";
+        return;
+      }
+
+      // Ici on affichera ton planning pastel
+      document.body.innerHTML = "<h2>Planning chargé !</h2>";
+      console.log("Planning :", planning.data);
+    }
+
+    init();
+  </script>
+</body>
+</html>
