@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <meta charset="UTF-8" />
   <title>Planning de Nath</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -22,25 +23,137 @@
     }
 
     * {
-      box-sizing: border-box;
-    }
+* {
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
 
-   body {
+body {
   margin: 0;
   padding: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-    "Segoe UI", sans-serif;
 
-  /* Nouveau fond plus joli */
-  background: radial-gradient(circle at 20% 20%, #1e3a8a 0%, #0f172a 40%, #020617 90%);
+  /* Nouveau fond premium */
+  background:
+    radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.25), transparent 60%),
+    radial-gradient(circle at 80% 80%, rgba(34, 197, 94, 0.25), transparent 60%),
+    #0f172a;
   background-attachment: fixed;
 
-  color: var(--text);
+  color: #e5e7eb;
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   padding: 24px;
+}
+
+/* --- JOURS AVEC COULEURS PASTEL --- */
+.day-card {
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+  padding: 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Halo pastel différent pour chaque jour */
+.day-card:nth-child(1)::before { background: rgba(56, 189, 248, 0.12); } /* Bleu */
+.day-card:nth-child(2)::before { background: rgba(34, 197, 94, 0.12); } /* Vert */
+.day-card:nth-child(3)::before { background: rgba(249, 115, 22, 0.12); } /* Orange */
+.day-card:nth-child(4)::before { background: rgba(168, 85, 247, 0.12); } /* Violet */
+.day-card:nth-child(5)::before { background: rgba(236, 72, 153, 0.12); } /* Rose */
+.day-card:nth-child(6)::before { background: rgba(14, 165, 233, 0.12); } /* Cyan */
+.day-card:nth-child(7)::before { background: rgba(251, 191, 36, 0.12); } /* Jaune */
+
+.day-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 1;
+  pointer-events: none;
+}
+
+/* Titres des jours */
+.day-title span:first-child {
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+}
+
+.day-tag {
+  font-size: 11px;
+  color: rgba(255,255,255,0.6);
+}
+
+/* Slots */
+.slot {
+  border-radius: 12px;
+  border: 1px dashed rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.04);
+  padding: 8px;
+  margin-top: 6px;
+}
+
+.slot-label {
+  font-weight: 600;
+  color: #cbd5f5;
+}
+
+.slot-total {
+  color: #38bdf8;
+  font-size: 12px;
+}
+
+/* Activités */
+.activity {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.activity-type {
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.activity-duration {
+  color: #38bdf8;
+  font-weight: 500;
+}
+
+/* Bouton ajouter */
+.add-event-btn {
+  margin-top: 6px;
+  width: 100%;
+  padding: 6px;
+  border-radius: 999px;
+  border: 1px dashed rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.03);
+  color: rgba(255,255,255,0.7);
+  cursor: pointer;
+}
+
+.add-event-btn:hover {
+  border-color: #38bdf8;
+  color: #38bdf8;
+}
+
+/* Notes */
+.day-notes textarea {
+  width: 100%;
+  min-height: 50px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.05);
+  color: white;
+  padding: 6px;
 }
 
     .app {
@@ -1083,4 +1196,5 @@
   </script>
 </body>
 </html>
+
 
