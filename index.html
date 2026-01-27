@@ -1,160 +1,45 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <meta charset="UTF-8" />
-  <title>Planning de Nath</title>
+  <title>Planning d’activités de Nath</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
     :root {
-      --bg: #020617;
-      --bg-soft: #020617ee;
-      --card: #020617;
-      --border: rgba(148, 163, 184, 0.4);
-      --accent: #38bdf8;
-      --accent-soft: rgba(56, 189, 248, 0.15);
       --text: #e5e7eb;
       --muted: #9ca3af;
+      --border-soft: rgba(255, 255, 255, 0.12);
+      --border-strong: rgba(255, 255, 255, 0.2);
+      --bg-panel: rgba(15, 23, 42, 0.9);
+      --accent: #38bdf8;
       --danger: #f87171;
-      --success: #4ade80;
       --radius-lg: 18px;
       --radius-md: 12px;
       --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.9);
     }
 
     * {
-* {
-  box-sizing: border-box;
-  font-family: 'Inter', sans-serif;
-}
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
 
-body {
-  margin: 0;
-  padding: 0;
-
-  /* Nouveau fond premium */
-  background:
-    radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.25), transparent 60%),
-    radial-gradient(circle at 80% 80%, rgba(34, 197, 94, 0.25), transparent 60%),
-    #0f172a;
-  background-attachment: fixed;
-
-  color: #e5e7eb;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 24px;
-}
-
-/* --- JOURS AVEC COULEURS PASTEL --- */
-.day-card {
-  border-radius: 18px;
-  border: 1px solid rgba(255,255,255,0.08);
-  background: rgba(255,255,255,0.03);
-  padding: 14px;
-  position: relative;
-  overflow: hidden;
-}
-
-/* Halo pastel différent pour chaque jour */
-.day-card:nth-child(1)::before { background: rgba(56, 189, 248, 0.12); } /* Bleu */
-.day-card:nth-child(2)::before { background: rgba(34, 197, 94, 0.12); } /* Vert */
-.day-card:nth-child(3)::before { background: rgba(249, 115, 22, 0.12); } /* Orange */
-.day-card:nth-child(4)::before { background: rgba(168, 85, 247, 0.12); } /* Violet */
-.day-card:nth-child(5)::before { background: rgba(236, 72, 153, 0.12); } /* Rose */
-.day-card:nth-child(6)::before { background: rgba(14, 165, 233, 0.12); } /* Cyan */
-.day-card:nth-child(7)::before { background: rgba(251, 191, 36, 0.12); } /* Jaune */
-
-.day-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  opacity: 1;
-  pointer-events: none;
-}
-
-/* Titres des jours */
-.day-title span:first-child {
-  font-size: 16px;
-  font-weight: 600;
-  color: white;
-}
-
-.day-tag {
-  font-size: 11px;
-  color: rgba(255,255,255,0.6);
-}
-
-/* Slots */
-.slot {
-  border-radius: 12px;
-  border: 1px dashed rgba(255,255,255,0.15);
-  background: rgba(255,255,255,0.04);
-  padding: 8px;
-  margin-top: 6px;
-}
-
-.slot-label {
-  font-weight: 600;
-  color: #cbd5f5;
-}
-
-.slot-total {
-  color: #38bdf8;
-  font-size: 12px;
-}
-
-/* Activités */
-.activity {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 8px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
-}
-
-.activity-type {
-  font-size: 9px;
-  padding: 2px 6px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.2);
-}
-
-.activity-duration {
-  color: #38bdf8;
-  font-weight: 500;
-}
-
-/* Bouton ajouter */
-.add-event-btn {
-  margin-top: 6px;
-  width: 100%;
-  padding: 6px;
-  border-radius: 999px;
-  border: 1px dashed rgba(255,255,255,0.3);
-  background: rgba(255,255,255,0.03);
-  color: rgba(255,255,255,0.7);
-  cursor: pointer;
-}
-
-.add-event-btn:hover {
-  border-color: #38bdf8;
-  color: #38bdf8;
-}
-
-/* Notes */
-.day-notes textarea {
-  width: 100%;
-  min-height: 50px;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.15);
-  background: rgba(255,255,255,0.05);
-  color: white;
-  padding: 6px;
-}
+    body {
+      margin: 0;
+      padding: 0;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(137, 207, 240, 0.35), transparent 60%),
+        radial-gradient(circle at 80% 80%, rgba(196, 181, 253, 0.35), transparent 60%),
+        #0f172a;
+      background-attachment: fixed;
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 24px;
+    }
 
     .app {
       width: 100%;
@@ -171,9 +56,9 @@ body {
     }
 
     .panel {
-      background: var(--bg-soft);
+      background: var(--bg-panel);
       border-radius: 24px;
-      border: 1px solid rgba(148, 163, 184, 0.35);
+      border: 1px solid var(--border-soft);
       box-shadow: var(--shadow-soft);
       padding: 18px 18px 20px;
       backdrop-filter: blur(18px);
@@ -213,18 +98,9 @@ body {
       color: var(--muted);
     }
 
-    .badge {
-      font-size: 11px;
-      padding: 3px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      color: var(--muted);
-      background: rgba(15, 23, 42, 0.7);
-    }
-
     .btn {
       border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.5);
+      border: 1px solid var(--border-soft);
       background: rgba(15, 23, 42, 0.9);
       color: var(--text);
       font-size: 12px;
@@ -240,23 +116,6 @@ body {
       border-color: var(--accent);
       background: rgba(15, 23, 42, 1);
       box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.35);
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #0ea5e9, #22c55e);
-      border-color: transparent;
-      color: white;
-      box-shadow: 0 12px 30px rgba(34, 197, 94, 0.35);
-    }
-
-    .btn-primary:hover {
-      filter: brightness(1.05);
-      box-shadow: 0 16px 40px rgba(34, 197, 94, 0.45);
-    }
-
-    .btn-ghost {
-      background: transparent;
-      border-color: rgba(148, 163, 184, 0.4);
     }
 
     .btn-danger {
@@ -301,17 +160,24 @@ body {
       border-radius: 8px;
       border: 1px solid transparent;
       color: var(--muted);
-    }
-
-    .calendar-cell.today {
-      border-color: var(--accent);
-      background: var(--accent-soft);
-      color: var(--accent);
-      font-weight: 600;
+      background: rgba(15, 23, 42, 0.7);
     }
 
     .calendar-cell.other-month {
       opacity: 0.35;
+    }
+
+    .calendar-cell.current-week {
+      background: rgba(196, 181, 253, 0.25);
+      border-color: rgba(196, 181, 253, 0.6);
+      color: #e5e7eb;
+    }
+
+    .calendar-cell.today {
+      background: rgba(137, 207, 240, 0.4);
+      border-color: rgba(137, 207, 240, 0.9);
+      color: #0f172a;
+      font-weight: 600;
     }
 
     .calendar-legend {
@@ -336,12 +202,12 @@ body {
       display: inline-block;
     }
 
-    .dot-accent {
-      background: var(--accent);
+    .dot-today {
+      background: rgba(137, 207, 240, 0.9);
     }
 
-    .dot-success {
-      background: var(--success);
+    .dot-week {
+      background: rgba(196, 181, 253, 0.9);
     }
 
     .notes {
@@ -361,7 +227,7 @@ body {
       min-height: 70px;
       resize: vertical;
       border-radius: var(--radius-md);
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-soft);
       background: rgba(15, 23, 42, 0.9);
       color: var(--text);
       font-size: 12px;
@@ -374,14 +240,10 @@ body {
       box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.4);
     }
 
-    .global-notes {
+    .weekly-checklist {
       margin-top: 10px;
       padding-top: 10px;
-      border-top: 1px dashed rgba(148, 163, 184, 0.4);
-    }
-
-    .global-notes textarea {
-      min-height: 60px;
+      border-top: 1px dashed var(--border-soft);
     }
 
     .week-header {
@@ -408,13 +270,6 @@ body {
       color: var(--muted);
     }
 
-    .week-header-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      justify-content: flex-end;
-    }
-
     .totals {
       display: flex;
       flex-wrap: wrap;
@@ -426,7 +281,7 @@ body {
     .total-pill {
       padding: 4px 8px;
       border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.5);
+      border: 1px solid var(--border-soft);
       background: rgba(15, 23, 42, 0.9);
       display: inline-flex;
       align-items: center;
@@ -450,12 +305,9 @@ body {
 
     .day-card {
       border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      background: radial-gradient(circle at top left, #020617, #020617f0);
-      padding: 10px 10px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+      border: 1px solid var(--border-soft);
+      background: rgba(15, 23, 42, 0.9);
+      padding: 12px;
       position: relative;
       overflow: hidden;
     }
@@ -464,9 +316,10 @@ body {
       content: "";
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at top right, rgba(56, 189, 248, 0.08), transparent 55%);
+      background: radial-gradient(circle at top right, rgba(255,255,255,0.12), transparent 55%);
       opacity: 0.9;
       pointer-events: none;
+      mix-blend-mode: screen;
     }
 
     .day-header {
@@ -476,36 +329,37 @@ body {
       align-items: center;
       justify-content: space-between;
       gap: 6px;
+      margin-bottom: 6px;
     }
 
     .day-title {
-      font-size: 14px;
-      font-weight: 600;
       display: flex;
       flex-direction: column;
       gap: 2px;
     }
 
-    .day-tag {
-      font-size: 11px;
-      color: var(--muted);
+    .day-title span:first-child {
+      font-size: 15px;
+      font-weight: 600;
+      color: white;
     }
 
-    .day-actions {
-      display: flex;
-      gap: 4px;
+    .day-tag {
+      font-size: 11px;
+      color: rgba(255,255,255,0.6);
     }
 
     .slot {
       position: relative;
       z-index: 1;
       border-radius: var(--radius-md);
-      border: 1px dashed rgba(148, 163, 184, 0.4);
+      border: 1px dashed rgba(255,255,255,0.18);
       padding: 6px 7px;
       display: flex;
       flex-direction: column;
       gap: 6px;
       background: rgba(15, 23, 42, 0.9);
+      margin-top: 4px;
     }
 
     .slot-header {
@@ -517,8 +371,8 @@ body {
     }
 
     .slot-label {
-      font-weight: 500;
-      color: #cbd5f5;
+      font-weight: 600;
+      color: #e5e7eb;
     }
 
     .slot-total {
@@ -538,8 +392,8 @@ body {
       gap: 6px;
       padding: 4px 6px;
       border-radius: 999px;
-      background: rgba(15, 23, 42, 0.95);
-      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
       font-size: 11px;
     }
 
@@ -572,7 +426,7 @@ body {
     .activity-type {
       padding: 1px 6px;
       border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.5);
+      border: 1px solid rgba(255,255,255,0.25);
       font-size: 9px;
       text-transform: uppercase;
       letter-spacing: 0.04em;
@@ -595,9 +449,9 @@ body {
       margin-top: 4px;
       width: 100%;
       border-radius: 999px;
-      border: 1px dashed rgba(148, 163, 184, 0.6);
-      background: rgba(15, 23, 42, 0.9);
-      color: var(--muted);
+      border: 1px dashed rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.03);
+      color: rgba(255,255,255,0.7);
       font-size: 11px;
       padding: 5px 0;
       cursor: pointer;
@@ -625,9 +479,9 @@ body {
       min-height: 40px;
       resize: vertical;
       border-radius: 10px;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      background: rgba(15, 23, 42, 0.9);
-      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.05);
+      color: white;
       font-size: 11px;
       padding: 5px 7px;
       outline: none;
@@ -641,7 +495,7 @@ body {
 </head>
 <body>
   <div class="app">
-    <!-- Sidebar: calendrier + notes globales -->
+    <!-- Sidebar -->
     <div class="panel">
       <div class="panel-header">
         <div>
@@ -650,7 +504,7 @@ body {
             <span>Vue calendrier</span>
           </div>
           <div class="panel-subtitle">
-            Repère ta semaine et garde des notes globales.
+            Repère ta semaine et garde tes repères visuels.
           </div>
         </div>
       </div>
@@ -658,36 +512,38 @@ body {
       <div class="calendar-header">
         <div class="calendar-title" id="calendar-month"></div>
         <div style="display:flex;gap:4px;">
-          <button class="btn btn-ghost" id="prev-month">◀</button>
-          <button class="btn btn-ghost" id="next-month">▶</button>
+          <button class="btn" id="prev-month">◀</button>
+          <button class="btn" id="next-month">▶</button>
         </div>
       </div>
 
       <div class="calendar-grid" id="calendar-grid"></div>
 
       <div class="calendar-legend">
-        <span><span class="dot dot-accent"></span> Aujourd’hui</span>
-        <span><span class="dot dot-success"></span> Semaine active (indicatif)</span>
+        <span><span class="dot dot-today"></span> Aujourd’hui</span>
+        <span><span class="dot dot-week"></span> Semaine actuelle</span>
       </div>
 
       <div class="global-notes notes">
         <label for="global-notes">Notes globales de la semaine</label>
         <textarea id="global-notes" placeholder="Objectifs, focus, choses à ne pas oublier..."></textarea>
       </div>
+
+      <div class="weekly-checklist notes">
+        <label>Liste d’activités à ne pas oublier</label>
+        <div id="checklist-container"></div>
+        <button class="btn" id="add-checklist-item">+ Ajouter une activité</button>
+      </div>
     </div>
 
-    <!-- Planning principal -->
+    <!-- Planning -->
     <div class="panel">
       <div class="week-header">
         <div class="week-header-left">
-          <div class="week-title">Planning hebdomadaire</div>
+          <div class="week-title">Planning d’activités</div>
           <div class="week-subtitle">
-            Ajoute des jours, des événements, des textes, et organise ta semaine comme tu veux.
+            7 jours, Matin / Midi / Soir, en pastel doux.
           </div>
-        </div>
-        <div class="week-header-actions">
-          <button class="btn" id="add-day-btn">+ Ajouter un jour</button>
-          <button class="btn btn-ghost" id="reset-week-btn">Réinitialiser</button>
         </div>
       </div>
 
@@ -698,181 +554,74 @@ body {
   </div>
 
   <script>
-    // --- Données & stockage ---
-
-    const STORAGE_KEY = "planning_nath_v2";
+    const STORAGE_KEY = "planning_activites_nath_v1";
 
     const defaultWeekData = {
       globalNotes: "",
+      checklist: [],
       days: [
-        {
-          day: "Lundi",
-          tag: "Démarrage & focus",
-          notes: "",
-          slots: [
-            {
-              label: "Matin",
-              activities: [
-                { name: "Qualité / Amélioration continue", type: "travail", duration: 3, done: false },
-                { name: "Suivi terrain / échanges équipe", type: "terrain", duration: 1, done: false }
-              ]
-            },
-            {
-              label: "Après-midi",
-              activities: [
-                { name: "Projets / Formalisation", type: "projet", duration: 3, done: false },
-                { name: "Temps perso / apprentissage", type: "perso", duration: 1, done: false }
-              ]
-            }
-          ]
-        },
-        {
-          day: "Mardi",
-          tag: "Projets & structuration",
-          notes: "",
-          slots: [
-            {
-              label: "Matin",
-              activities: [
-                { name: "Analyse / 8D / A3", type: "qualité", duration: 3, done: false },
-                { name: "Points rapides / mails", type: "support", duration: 1, done: false }
-              ]
-            },
-            {
-              label: "Après-midi",
-              activities: [
-                { name: "Standardisation / docs", type: "projet", duration: 2, done: false },
-                { name: "Temps perso / TOEIC", type: "perso", duration: 2, done: false }
-              ]
-            }
-          ]
-        },
-        {
-          day: "Mercredi",
-          tag: "Terrain & amélioration",
-          notes: "",
-          slots: [
-            {
-              label: "Matin",
-              activities: [
-                { name: "Terrain / gemba / observation", type: "terrain", duration: 3, done: false },
-                { name: "Debrief / quick wins", type: "qualité", duration: 1, done: false }
-              ]
-            },
-            {
-              label: "Après-midi",
-              activities: [
-                { name: "Projets en cours", type: "projet", duration: 3, done: false },
-                { name: "Temps perso / veille", type: "perso", duration: 1, done: false }
-              ]
-            }
-          ]
-        },
-        {
-          day: "Jeudi",
-          tag: "Profondeur & formalisation",
-          notes: "",
-          slots: [
-            {
-              label: "Matin",
-              activities: [
-                { name: "Analyse profonde / DOE / AMDEC", type: "qualité", duration: 3, done: false },
-                { name: "Alignement avec les équipes", type: "terrain", duration: 1, done: false }
-              ]
-            },
-            {
-              label: "Après-midi",
-              activities: [
-                { name: "Rédaction / standards / supports", type: "projet", duration: 3, done: false },
-                { name: "Temps perso / structuration", type: "perso", duration: 1, done: false }
-              ]
-            }
-          ]
-        },
-        {
-          day: "Vendredi",
-          tag: "Synthèse & préparation",
-          notes: "",
-          slots: [
-            {
-              label: "Matin",
-              activities: [
-                { name: "Synthèse semaine / KPI / suivi", type: "qualité", duration: 3, done: false },
-                { name: "Points avec les parties prenantes", type: "terrain", duration: 1, done: false }
-              ]
-            },
-            {
-              label: "Après-midi",
-              activities: [
-                { name: "Préparation semaine suivante", type: "projet", duration: 2, done: false },
-                { name: "Temps perso / bilan", type: "perso", duration: 2, done: false }
-              ]
-            }
-          ]
-        }
+        { day: "Lundi", tag: "Démarrage en douceur", notes: "", slots: baseSlots() },
+        { day: "Mardi", tag: "Activités régulières", notes: "", slots: baseSlots() },
+        { day: "Mercredi", tag: "Milieu de semaine", notes: "", slots: baseSlots() },
+        { day: "Jeudi", tag: "Rythme stable", notes: "", slots: baseSlots() },
+        { day: "Vendredi", tag: "Fin de semaine", notes: "", slots: baseSlots() },
+        { day: "Samedi", tag: "Temps perso / loisirs", notes: "", slots: baseSlots() },
+        { day: "Dimanche", tag: "Repos / préparation", notes: "", slots: baseSlots() }
       ]
     };
 
-    let weekData = loadData();
+    function baseSlots() {
+      return [
+        { label: "Matin", activities: [] },
+        { label: "Midi", activities: [] },
+        { label: "Soir", activities: [] }
+      ];
+    }
 
     function loadData() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (!raw) return structuredClone(defaultWeekData);
         const parsed = JSON.parse(raw);
-        if (!parsed.days || !Array.isArray(parsed.days)) {
-          return structuredClone(defaultWeekData);
-        }
+        if (!parsed.days || parsed.days.length !== 7) return structuredClone(defaultWeekData);
+        parsed.days.forEach(d => {
+          if (!d.slots || d.slots.length !== 3) d.slots = baseSlots();
+        });
+        if (!parsed.checklist) parsed.checklist = [];
+        if (!parsed.globalNotes) parsed.globalNotes = "";
         return parsed;
-      } catch (e) {
+      } catch {
         return structuredClone(defaultWeekData);
       }
     }
 
+    let weekData = loadData();
+
     function saveData() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(weekData));
     }
-
-    // --- Utilitaires ---
 
     function sumDurations(activities) {
       return activities.reduce((acc, a) => acc + (a.duration || 0), 0);
     }
 
     function formatHours(h) {
+      if (!h) return "0 h";
       return `${h.toFixed(1).replace(".0", "")} h`;
     }
 
     function getTotals() {
-      const totals = {
-        global: 0,
-        travail: 0,
-        terrain: 0,
-        projet: 0,
-        qualité: 0,
-        perso: 0,
-        custom: 0
-      };
-
+      const totals = { global: 0 };
       weekData.days.forEach(day => {
         day.slots.forEach(slot => {
           slot.activities.forEach(a => {
             const d = a.duration || 0;
             totals.global += d;
-            const t = (a.type || "custom").toLowerCase();
-            if (totals[t] !== undefined) {
-              totals[t] += d;
-            } else {
-              totals.custom += d;
-            }
           });
         });
       });
-
       return totals;
     }
-
-    // --- Rendu du planning ---
 
     const daysGrid = document.getElementById("days-grid");
     const totalsDiv = document.getElementById("totals");
@@ -887,28 +636,24 @@ body {
     function renderTotals() {
       const t = getTotals();
       totalsDiv.innerHTML = "";
-
-      const entries = [
-        ["Total", t.global],
-        ["Travail", t.travail],
-        ["Terrain", t.terrain],
-        ["Projets", t.projet],
-        ["Qualité", t.qualité],
-        ["Perso", t.perso],
-        ["Custom", t.custom]
-      ];
-
-      entries.forEach(([label, value]) => {
-        if (value <= 0 && label !== "Total") return;
-        const pill = document.createElement("div");
-        pill.className = "total-pill";
-        pill.innerHTML = `
-          <span class="total-label">${label}</span>
-          <span class="total-value">${formatHours(value)}</span>
-        `;
-        totalsDiv.appendChild(pill);
-      });
+      const pill = document.createElement("div");
+      pill.className = "total-pill";
+      pill.innerHTML = `
+        <span class="total-label">Total estimé</span>
+        <span class="total-value">${formatHours(t.global)}</span>
+      `;
+      totalsDiv.appendChild(pill);
     }
+
+    const pastelColors = [
+      "rgba(137, 207, 240, 0.35)",
+      "rgba(196, 181, 253, 0.35)",
+      "rgba(167, 227, 171, 0.35)",
+      "rgba(255, 236, 179, 0.35)",
+      "rgba(255, 182, 193, 0.35)",
+      "rgba(255, 210, 160, 0.35)",
+      "rgba(180, 220, 255, 0.35)"
+    ];
 
     function renderWeek() {
       saveData();
@@ -918,8 +663,9 @@ body {
       weekData.days.forEach((dayData, dayIndex) => {
         const card = document.createElement("div");
         card.className = "day-card";
+        const color = pastelColors[dayIndex % pastelColors.length];
+        card.style.background = `linear-gradient(145deg, ${color}, rgba(15,23,42,0.9))`;
 
-        // Header
         const header = document.createElement("div");
         header.className = "day-header";
 
@@ -930,38 +676,9 @@ body {
           <span class="day-tag">${dayData.tag || ""}</span>
         `;
 
-        const actions = document.createElement("div");
-        actions.className = "day-actions";
-
-        const renameBtn = document.createElement("button");
-        renameBtn.className = "btn btn-ghost";
-        renameBtn.style.fontSize = "10px";
-        renameBtn.textContent = "Renommer";
-        renameBtn.addEventListener("click", () => {
-          const newName = prompt("Nouveau nom du jour :", dayData.day);
-          if (!newName) return;
-          dayData.day = newName.trim();
-          renderWeek();
-        });
-
-        const deleteDayBtn = document.createElement("button");
-        deleteDayBtn.className = "btn btn-danger";
-        deleteDayBtn.style.fontSize = "10px";
-        deleteDayBtn.textContent = "Supprimer";
-        deleteDayBtn.addEventListener("click", () => {
-          if (!confirm(`Supprimer le jour "${dayData.day}" ?`)) return;
-          weekData.days.splice(dayIndex, 1);
-          renderWeek();
-        });
-
-        actions.appendChild(renameBtn);
-        actions.appendChild(deleteDayBtn);
-
         header.appendChild(title);
-        header.appendChild(actions);
         card.appendChild(header);
 
-        // Slots
         dayData.slots.forEach((slot, slotIndex) => {
           const slotDiv = document.createElement("div");
           slotDiv.className = "slot";
@@ -1008,7 +725,7 @@ body {
 
             const typeSpan = document.createElement("span");
             typeSpan.className = "activity-type";
-            typeSpan.textContent = (activity.type || "custom").toUpperCase();
+            typeSpan.textContent = (activity.type || "activité").toUpperCase();
 
             const durationSpan = document.createElement("span");
             durationSpan.className = "activity-duration";
@@ -1023,7 +740,7 @@ body {
             const deleteBtn = document.createElement("button");
             deleteBtn.className = "activity-delete";
             deleteBtn.textContent = "✖";
-            deleteBtn.title = "Supprimer cet événement";
+            deleteBtn.title = "Supprimer cette activité";
             deleteBtn.addEventListener("click", () => {
               slot.activities.splice(actIndex, 1);
               renderWeek();
@@ -1040,9 +757,9 @@ body {
 
           const addEventBtn = document.createElement("button");
           addEventBtn.className = "add-event-btn";
-          addEventBtn.innerHTML = `<span>+ Ajouter un événement</span>`;
+          addEventBtn.innerHTML = `<span>+ Ajouter une activité</span>`;
           addEventBtn.addEventListener("click", () => {
-            const name = prompt("Nom de l’événement :");
+            const name = prompt("Nom de l’activité :");
             if (!name) return;
 
             const durationStr = prompt("Durée en heures (ex : 1, 1.5, 2) :");
@@ -1050,7 +767,7 @@ body {
             const duration = parseFloat(durationStr.replace(",", "."));
             if (isNaN(duration) || duration <= 0) return;
 
-            const type = prompt("Type (travail, terrain, projet, qualité, perso, custom) :", "custom") || "custom";
+            const type = prompt("Type (sport, perso, sortie, étude, autre...) :", "activité") || "activité";
 
             slot.activities.push({
               name: name.trim(),
@@ -1066,11 +783,10 @@ body {
           card.appendChild(slotDiv);
         });
 
-        // Notes du jour
         const notesDiv = document.createElement("div");
         notesDiv.className = "day-notes";
         const notesTextarea = document.createElement("textarea");
-        notesTextarea.placeholder = "Notes pour ce jour (priorités, ressentis, choses à surveiller...)";
+        notesTextarea.placeholder = "Notes pour ce jour (idées, ressentis, choses à surveiller...)";
         notesTextarea.value = dayData.notes || "";
         notesTextarea.addEventListener("input", () => {
           dayData.notes = notesTextarea.value;
@@ -1083,41 +799,97 @@ body {
       });
     }
 
-    // --- Actions globales ---
+    // Checklist
+    const checklistContainer = document.getElementById("checklist-container");
+    const addChecklistBtn = document.getElementById("add-checklist-item");
 
-    document.getElementById("add-day-btn").addEventListener("click", () => {
-      const name = prompt("Nom du nouveau jour (ex : Samedi, Dimanche, Jour spécial...) :");
-      if (!name) return;
-      const tag = prompt("Tag / description du jour (facultatif) :", "") || "";
-      weekData.days.push({
-        day: name.trim(),
-        tag: tag.trim(),
-        notes: "",
-        slots: [
-          {
-            label: "Journée",
-            activities: []
-          }
-        ]
+    function renderChecklist() {
+      checklistContainer.innerHTML = "";
+
+      weekData.checklist.forEach((item, index) => {
+        const row = document.createElement("div");
+        row.style.display = "flex";
+        row.style.alignItems = "center";
+        row.style.gap = "8px";
+        row.style.marginBottom = "6px";
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = item.done;
+        checkbox.addEventListener("change", () => {
+          item.done = checkbox.checked;
+          saveData();
+        });
+
+        const text = document.createElement("input");
+        text.type = "text";
+        text.value = item.text;
+        text.style.flex = "1";
+        text.style.padding = "6px";
+        text.style.borderRadius = "8px";
+        text.style.border = "1px solid rgba(255,255,255,0.2)";
+        text.style.background = "rgba(255,255,255,0.05)";
+        text.style.color = "white";
+        text.addEventListener("input", () => {
+          item.text = text.value;
+          saveData();
+        });
+
+        const del = document.createElement("button");
+        del.textContent = "✖";
+        del.style.color = "#f87171";
+        del.style.background = "transparent";
+        del.style.border = "none";
+        del.style.cursor = "pointer";
+        del.addEventListener("click", () => {
+          weekData.checklist.splice(index, 1);
+          renderChecklist();
+          saveData();
+        });
+
+        row.appendChild(checkbox);
+        row.appendChild(text);
+        row.appendChild(del);
+
+        checklistContainer.appendChild(row);
       });
-      renderWeek();
+    }
+
+    addChecklistBtn.addEventListener("click", () => {
+      weekData.checklist.push({ text: "", done: false });
+      renderChecklist();
+      saveData();
     });
 
-    document.getElementById("reset-week-btn").addEventListener("click", () => {
-      if (!confirm("Réinitialiser complètement le planning et effacer toutes les modifications ?")) return;
-      weekData = structuredClone(defaultWeekData);
-      globalNotesEl.value = weekData.globalNotes || "";
-      renderWeek();
-    });
-
-    // --- Calendrier ---
-
+    // Calendrier
     const calendarMonthEl = document.getElementById("calendar-month");
     const calendarGridEl = document.getElementById("calendar-grid");
     const prevMonthBtn = document.getElementById("prev-month");
     const nextMonthBtn = document.getElementById("next-month");
 
     let currentCalendarDate = new Date();
+
+    function getMonday(d) {
+      const date = new Date(d);
+      const day = date.getDay();
+      const diff = (day === 0 ? -6 : 1) - day;
+      date.setDate(date.getDate() + diff);
+      date.setHours(0, 0, 0, 0);
+      return date;
+    }
+
+    function sameDay(a, b) {
+      return a.getFullYear() === b.getFullYear() &&
+             a.getMonth() === b.getMonth() &&
+             a.getDate() === b.getDate();
+    }
+
+    function inSameWeek(date, refMonday) {
+      const d = new Date(date);
+      d.setHours(0,0,0,0);
+      const diff = (d - refMonday) / (1000 * 60 * 60 * 24);
+      return diff >= 0 && diff < 7;
+    }
 
     function renderCalendar() {
       const year = currentCalendarDate.getFullYear();
@@ -1129,7 +901,6 @@ body {
       ];
 
       calendarMonthEl.textContent = `${monthNames[month]} ${year}`;
-
       calendarGridEl.innerHTML = "";
 
       const dayNames = ["L", "M", "M", "J", "V", "S", "D"];
@@ -1141,37 +912,48 @@ body {
       });
 
       const firstDay = new Date(year, month, 1);
-      const startDay = (firstDay.getDay() + 6) % 7; // Lundi = 0
+      const startDay = (firstDay.getDay() + 6) % 7;
       const daysInMonth = new Date(year, month + 1, 0).getDate();
       const daysInPrevMonth = new Date(year, month, 0).getDate();
 
       const today = new Date();
-      const isSameMonth = today.getFullYear() === year && today.getMonth() === month;
+      today.setHours(0,0,0,0);
+      const mondayOfTodayWeek = getMonday(today);
 
-      const totalCells = 42; // 6 semaines
+      const totalCells = 42;
 
       for (let i = 0; i < totalCells; i++) {
         const cell = document.createElement("div");
         cell.className = "calendar-cell";
 
         let dayNumber;
+        let cellDate;
         let isOtherMonth = false;
 
         if (i < startDay) {
           dayNumber = daysInPrevMonth - (startDay - 1 - i);
+          cellDate = new Date(year, month - 1, dayNumber);
           isOtherMonth = true;
         } else if (i >= startDay + daysInMonth) {
           dayNumber = i - (startDay + daysInMonth) + 1;
+          cellDate = new Date(year, month + 1, dayNumber);
           isOtherMonth = true;
         } else {
           dayNumber = i - startDay + 1;
+          cellDate = new Date(year, month, dayNumber);
         }
 
         cell.textContent = dayNumber;
 
         if (isOtherMonth) {
           cell.classList.add("other-month");
-        } else if (isSameMonth && dayNumber === today.getDate()) {
+        }
+
+        if (inSameWeek(cellDate, mondayOfTodayWeek)) {
+          cell.classList.add("current-week");
+        }
+
+        if (sameDay(cellDate, today)) {
           cell.classList.add("today");
         }
 
@@ -1189,12 +971,10 @@ body {
       renderCalendar();
     });
 
-    // --- Initialisation ---
-
+    // Init
     renderWeek();
+    renderChecklist();
     renderCalendar();
   </script>
 </body>
 </html>
-
-
