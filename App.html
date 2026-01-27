@@ -95,9 +95,60 @@
     function loadPlanningUI() {
       // Ici, on remplace tout le body par ton planning pastel
       document.body.innerHTML = `
-        <h2>Ton planning est chargé !</h2>
-        <p>La version pastel complète arrive à la brique suivante.</p>
-      `;
+  <div class="container">
+    <header>
+      <h1>Planning d’activités</h1>
+      <button id="logoutBtn" class="logout">Déconnexion</button>
+    </header>
+
+    <section class="global-notes">
+      <h2>Notes globales</h2>
+      <textarea id="globalNotes"></textarea>
+    </section>
+
+    <section class="week">
+      ${planningData.days.map((day, index) => `
+        <div class="day-card" data-day-index="${index}">
+          <h3>${day.day}</h3>
+          <input class="tag-input" value="${day.tag}" placeholder="Tag du jour" />
+
+          <div class="slots">
+            ${day.slots.map((slot, sIndex) => `
+              <div class="slot" data-slot-index="${sIndex}">
+                <h4>${slot.label}</h4>
+                <ul class="activities">
+                  ${slot.activities.map((act, aIndex) => `
+                    <li>
+                      <input class="activity-input" data-activity-index="${aIndex}" value="${act}" />
+                      <button class="delete-activity">×</button>
+                    </li>
+                  `).join("")}
+                </ul>
+                <button class="add-activity">+ Ajouter une activité</button>
+              </div>
+            `).join("")}
+          </div>
+
+          <textarea class="day-notes" placeholder="Notes du jour">${day.notes}</textarea>
+        </div>
+      `).join("")}
+    </section>
+
+    <section class="checklist">
+      <h2>Checklist</h2>
+      <ul id="checklist">
+        ${planningData.checklist.map((item, i) => `
+          <li>
+            <input type="checkbox" ${item.checked ? "checked" : ""} data-index="${i}" />
+            <input class="check-text" value="${item.text}" />
+            <button class="delete-check">×</button>
+          </li>
+        `).join("")}
+      </ul>
+      <button id="addCheck">+ Ajouter une tâche</button>
+    </section>
+  </div>
+`;
     }
 
     init();
