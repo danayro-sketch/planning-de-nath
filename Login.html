@@ -152,9 +152,10 @@
         return;
       }
 
-      window.location.href = "app.html";
+      window.location.href = "App.html";
     });
 
+  
     signupForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       showError("");
@@ -179,7 +180,7 @@
     (async () => {
       const { data } = await supabase.auth.getSession();
       if (data.session) {
-        window.location.href = "app.html";
+        window.location.href = "App.html";
       }
     })();
   </script>
