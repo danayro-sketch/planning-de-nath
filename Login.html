@@ -97,7 +97,7 @@
 
     <div id="error" class="error"></div>
 
-    <form id="login-form">
+    <form id="Login-form">
       <label for="email">Email</label>
       <input type="email" id="email" required />
 
@@ -128,14 +128,14 @@
     );
 
     const errorBox = document.getElementById("error");
-    const loginForm = document.getElementById("login-form");
+    const LoginForm = document.getElementById("Login-form");
     const signupForm = document.getElementById("signup-form");
 
     function showError(msg) {
       errorBox.textContent = msg || "";
     }
 
-    loginForm.addEventListener("submit", async (e) => {
+    LoginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       showError("");
 
