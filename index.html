@@ -2,351 +2,979 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Planning 7 jours pastel</title>
+  <title>Planning d’activités de Nath</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
+    :root {
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --border-soft: rgba(255, 255, 255, 0.12);
+      --border-strong: rgba(255, 255, 255, 0.2);
+      --bg-panel: rgba(15, 23, 42, 0.9);
+      --accent: #38bdf8;
+      --danger: #f87171;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.9);
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
     body {
-      font-family: Inter, sans-serif;
-      background: #F7F7FB;
       margin: 0;
       padding: 0;
-      color: #333;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(137, 207, 240, 0.35), transparent 60%),
+        radial-gradient(circle at 80% 80%, rgba(196, 181, 253, 0.35), transparent 60%),
+        #0f172a;
+      background-attachment: fixed;
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 24px;
     }
 
-    .container {
-      max-width: 1400px;
-      margin: auto;
-      padding: 20px;
-    }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .week-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 12px;
-    }
-
-    .day-card {
-      background: #FFFFFF;
-      border-radius: 12px;
-      padding: 12px;
-      border: 1px solid #E0E7FF;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    }
-
-    .day-card h2 {
-      text-align: center;
-      font-size: 16px;
-      margin: 0 0 10px;
-    }
-
-    .slot {
-      border-radius: 10px;
-      padding: 8px;
-      margin-bottom: 10px;
-    }
-
-    .slot[data-slot="morning"] { background: #E3F2FD; }
-    .slot[data-slot="noon"]    { background: #FFF3E0; }
-    .slot[data-slot="evening"] { background: #F3E5F5; }
-
-    .activity {
-      background: #FFFFFF;
-      border-radius: 8px;
-      padding: 6px;
-      margin-bottom: 6px;
-      border: 1px solid #E0E7FF;
-    }
-
-    input, select {
+    .app {
       width: 100%;
-      padding: 6px;
-      border-radius: 6px;
-      border: 1px solid #D1D5DB;
-      margin-bottom: 4px;
+      max-width: 1200px;
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: var(--bg-panel);
+      border-radius: 24px;
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-soft);
+      padding: 18px 18px 20px;
+      backdrop-filter: blur(18px);
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-title span.icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #38bdf8, #0ea5e9 55%, #0369a1);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
       font-size: 13px;
+      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.7);
+    }
+
+    .panel-subtitle {
+      font-size: 12px;
+      color: var(--muted);
     }
 
     .btn {
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text);
+      font-size: 12px;
       padding: 6px 10px;
-      border-radius: 6px;
-      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       cursor: pointer;
-      background: #A5B4FC;
-      color: white;
-      font-size: 13px;
-      width: 100%;
+      transition: 0.15s ease;
+    }
+
+    .btn:hover {
+      border-color: var(--accent);
+      background: rgba(15, 23, 42, 1);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.35);
     }
 
     .btn-danger {
-      background: #FCA5A5;
+      color: var(--danger);
+      border-color: rgba(248, 113, 113, 0.5);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .btn-danger:hover {
+      background: rgba(127, 29, 29, 0.7);
+      box-shadow: 0 0 0 1px rgba(248, 113, 113, 0.5);
+    }
+
+    .calendar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .calendar-title {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      font-size: 11px;
+    }
+
+    .calendar-day-name {
+      text-align: center;
+      color: var(--muted);
+      padding-bottom: 4px;
+    }
+
+    .calendar-cell {
+      text-align: center;
+      padding: 4px 0;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      color: var(--muted);
+      background: rgba(15, 23, 42, 0.7);
+    }
+
+    .calendar-cell.other-month {
+      opacity: 0.35;
+    }
+
+    .calendar-cell.current-week {
+      background: rgba(196, 181, 253, 0.25);
+      border-color: rgba(196, 181, 253, 0.6);
+      color: #e5e7eb;
+    }
+
+    .calendar-cell.today {
+      background: rgba(137, 207, 240, 0.4);
+      border-color: rgba(137, 207, 240, 0.9);
+      color: #0f172a;
+      font-weight: 600;
+    }
+
+    .calendar-legend {
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .calendar-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      display: inline-block;
+    }
+
+    .dot-today {
+      background: rgba(137, 207, 240, 0.9);
+    }
+
+    .dot-week {
+      background: rgba(196, 181, 253, 0.9);
+    }
+
+    .notes {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .notes label {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .notes textarea {
+      width: 100%;
+      min-height: 70px;
+      resize: vertical;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-soft);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text);
+      font-size: 12px;
+      padding: 8px 10px;
+      outline: none;
+    }
+
+    .notes textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.4);
+    }
+
+    .weekly-checklist {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border-soft);
+    }
+
+    .week-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      gap: 10px;
+    }
+
+    .week-header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .week-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .week-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .totals {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+      font-size: 11px;
+    }
+
+    .total-pill {
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      background: rgba(15, 23, 42, 0.9);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .total-label {
+      color: var(--muted);
+    }
+
+    .total-value {
+      font-weight: 500;
+      color: var(--accent);
+    }
+
+    .days-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+    }
+
+    .day-card {
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-soft);
+      background: rgba(15, 23, 42, 0.9);
+      padding: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .day-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, rgba(255,255,255,0.12), transparent 55%);
+      opacity: 0.9;
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+
+    .day-header {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .day-title {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .day-title span:first-child {
+      font-size: 15px;
+      font-weight: 600;
+      color: white;
+    }
+
+    .day-tag {
+      font-size: 11px;
+      color: rgba(255,255,255,0.6);
+    }
+
+    .slot {
+      position: relative;
+      z-index: 1;
+      border-radius: var(--radius-md);
+      border: 1px dashed rgba(255,255,255,0.18);
+      padding: 6px 7px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: rgba(15, 23, 42, 0.9);
+      margin-top: 4px;
+    }
+
+    .slot-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .slot-label {
+      font-weight: 600;
+      color: #e5e7eb;
+    }
+
+    .slot-total {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .activities {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .activity {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      font-size: 11px;
+    }
+
+    .activity input[type="checkbox"] {
+      width: 13px;
+      height: 13px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .activity-main {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      flex: 1;
+    }
+
+    .activity-name {
+      font-size: 11px;
+    }
+
+    .activity-meta {
+      font-size: 10px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .activity-type {
+      padding: 1px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.25);
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .activity-duration {
+      color: var(--accent);
+    }
+
+    .activity-delete {
+      border: none;
+      background: transparent;
+      color: var(--danger);
+      cursor: pointer;
+      font-size: 14px;
+      padding: 0 4px;
+    }
+
+    .add-event-btn {
+      margin-top: 4px;
+      width: 100%;
+      border-radius: 999px;
+      border: 1px dashed rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.03);
+      color: rgba(255,255,255,0.7);
+      font-size: 11px;
+      padding: 5px 0;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .add-event-btn:hover {
+      border-style: solid;
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.35);
+    }
+
+    .day-notes {
+      position: relative;
+      z-index: 1;
+      margin-top: 4px;
+    }
+
+    .day-notes textarea {
+      width: 100%;
+      min-height: 40px;
+      resize: vertical;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.05);
+      color: white;
+      font-size: 11px;
+      padding: 5px 7px;
+      outline: none;
+    }
+
+    .day-notes textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.4);
     }
   </style>
 </head>
-
 <body>
-  <div class="container">
-    <h1>Planning pastel – 7 jours visibles</h1>
+  <div class="app">
+    <!-- Sidebar -->
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">
+            <span class="icon">📅</span>
+            <span>Vue calendrier</span>
+          </div>
+          <div class="panel-subtitle">
+            Repère ta semaine et garde tes repères visuels.
+          </div>
+        </div>
+      </div>
 
-    <input type="date" id="weekStart" />
+      <div class="calendar-header">
+        <div class="calendar-title" id="calendar-month"></div>
+        <div style="display:flex;gap:4px;">
+          <button class="btn" id="prev-month">◀</button>
+          <button class="btn" id="next-month">▶</button>
+        </div>
+      </div>
 
-    <div class="week-grid" id="weekGrid"></div>
+      <div class="calendar-grid" id="calendar-grid"></div>
+
+      <div class="calendar-legend">
+        <span><span class="dot dot-today"></span> Aujourd’hui</span>
+        <span><span class="dot dot-week"></span> Semaine actuelle</span>
+      </div>
+
+      <div class="global-notes notes">
+        <label for="global-notes">Notes globales de la semaine</label>
+        <textarea id="global-notes" placeholder="Objectifs, focus, choses à ne pas oublier..."></textarea>
+      </div>
+
+      <div class="weekly-checklist notes">
+        <label>Liste d’activités à ne pas oublier</label>
+        <div id="checklist-container"></div>
+        <button class="btn" id="add-checklist-item">+ Ajouter une activité</button>
+      </div>
+    </div>
+
+    <!-- Planning -->
+    <div class="panel">
+      <div class="week-header">
+        <div class="week-header-left">
+          <div class="week-title">Planning d’activités</div>
+          <div class="week-subtitle">
+            7 jours, Matin / Midi / Soir, en pastel doux.
+          </div>
+        </div>
+      </div>
+
+      <div class="totals" id="totals"></div>
+
+      <div class="days-grid" id="days-grid"></div>
+    </div>
   </div>
 
-<script>
-  const supabase = window.supabase.createClient(
-    "https://wgspawpymauabfdzhcwh.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indnc3Bhd3B5bWF1YWJmZHpoY3doIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk1MDcyOTcsImV4cCI6MjA4NTA4MzI5N30.BV7w18Nmr9aMMAdsXdLovy6zowODwFvphXgWWSsVCHs"
-  );
+  <script>
+    const STORAGE_KEY = "planning_activites_nath_v1";
 
-  let currentUser = null;
-  let planningId = null;
-  let weekDates = [];
+    const defaultWeekData = {
+      globalNotes: "",
+      checklist: [],
+      days: [
+        { day: "Lundi", tag: "Démarrage en douceur", notes: "", slots: baseSlots() },
+        { day: "Mardi", tag: "Activités régulières", notes: "", slots: baseSlots() },
+        { day: "Mercredi", tag: "Milieu de semaine", notes: "", slots: baseSlots() },
+        { day: "Jeudi", tag: "Rythme stable", notes: "", slots: baseSlots() },
+        { day: "Vendredi", tag: "Fin de semaine", notes: "", slots: baseSlots() },
+        { day: "Samedi", tag: "Temps perso / loisirs", notes: "", slots: baseSlots() },
+        { day: "Dimanche", tag: "Repos / préparation", notes: "", slots: baseSlots() }
+      ]
+    };
 
-  async function init() {
-    const { data } = await supabase.auth.getSession();
-    if (!data.session) {
-      alert("Connecte-toi d'abord.");
-      return;
+    function baseSlots() {
+      return [
+        { label: "Matin", activities: [] },
+        { label: "Midi", activities: [] },
+        { label: "Soir", activities: [] }
+      ];
     }
 
-    currentUser = data.session.user;
-
-    await loadOrCreatePlanning();
-    setWeek(new Date());
-  }
-
-  async function loadOrCreatePlanning() {
-    const { data } = await supabase
-      .from("plannings")
-      .select("*")
-      .eq("user_id", currentUser.id)
-      .eq("type", "personal")
-      .single();
-
-    if (!data) {
-      const { data: newP } = await supabase
-        .from("plannings")
-        .insert({
-          user_id: currentUser.id,
-          type: "personal",
-          name: "Mon planning perso"
-        })
-        .select()
-        .single();
-
-      planningId = newP.id;
-    } else {
-      planningId = data.id;
-    }
-  }
-
-  function setWeek(date) {
-    const monday = new Date(date);
-    monday.setDate(monday.getDate() - monday.getDay() + 1);
-
-    weekDates = [];
-    for (let i = 0; i < 7; i++) {
-      const d = new Date(monday);
-      d.setDate(monday.getDate() + i);
-      weekDates.push(d.toISOString().slice(0,10));
+    function loadData() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return structuredClone(defaultWeekData);
+        const parsed = JSON.parse(raw);
+        if (!parsed.days || parsed.days.length !== 7) return structuredClone(defaultWeekData);
+        parsed.days.forEach(d => {
+          if (!d.slots || d.slots.length !== 3) d.slots = baseSlots();
+        });
+        if (!parsed.checklist) parsed.checklist = [];
+        if (!parsed.globalNotes) parsed.globalNotes = "";
+        return parsed;
+      } catch {
+        return structuredClone(defaultWeekData);
+      }
     }
 
-    document.getElementById("weekStart").value = weekDates[0];
-    renderWeek();
-  }
+    let weekData = loadData();
 
-  async function renderWeek() {
-    const grid = document.getElementById("weekGrid");
-    grid.innerHTML = "";
-
-    for (const date of weekDates) {
-      const dayCard = document.createElement("div");
-      dayCard.className = "day-card";
-
-      dayCard.innerHTML = `
-        <h2>${formatDate(date)}</h2>
-
-        <div class="slot" data-slot="morning">
-          <h3>Matin</h3>
-          <div id="m-${date}"></div>
-          <button class="btn add-btn" data-date="${date}" data-slot="morning">+ Ajouter</button>
-        </div>
-
-        <div class="slot" data-slot="noon">
-          <h3>Midi</h3>
-          <div id="n-${date}"></div>
-          <button class="btn add-btn" data-date="${date}" data-slot="noon">+ Ajouter</button>
-        </div>
-
-        <div class="slot" data-slot="evening">
-          <h3>Soir</h3>
-          <div id="e-${date}"></div>
-          <button class="btn add-btn" data-date="${date}" data-slot="evening">+ Ajouter</button>
-        </div>
-      `;
-
-      grid.appendChild(dayCard);
-
-      await loadDay(date);
+    function saveData() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(weekData));
     }
 
-    attachAddButtons();
-    attachActivityEvents();
-  }
+    function sumDurations(activities) {
+      return activities.reduce((acc, a) => acc + (a.duration || 0), 0);
+    }
 
-  function formatDate(d) {
-    return new Date(d).toLocaleDateString("fr-FR", {
-      weekday: "long",
-      day: "2-digit",
-      month: "short"
+    function formatHours(h) {
+      if (!h) return "0 h";
+      return `${h.toFixed(1).replace(".0", "")} h`;
+    }
+
+    function getTotals() {
+      const totals = { global: 0 };
+      weekData.days.forEach(day => {
+        day.slots.forEach(slot => {
+          slot.activities.forEach(a => {
+            const d = a.duration || 0;
+            totals.global += d;
+          });
+        });
+      });
+      return totals;
+    }
+
+    const daysGrid = document.getElementById("days-grid");
+    const totalsDiv = document.getElementById("totals");
+    const globalNotesEl = document.getElementById("global-notes");
+
+    globalNotesEl.value = weekData.globalNotes || "";
+    globalNotesEl.addEventListener("input", () => {
+      weekData.globalNotes = globalNotesEl.value;
+      saveData();
     });
-  }
 
-  async function loadDay(date) {
-    const { data: day } = await supabase
-      .from("planning_days")
-      .select("*")
-      .eq("planning_id", planningId)
-      .eq("date", date)
-      .single();
-
-    let dayId = null;
-
-    if (!day) {
-      const { data: newDay } = await supabase
-        .from("planning_days")
-        .insert({ planning_id: planningId, date })
-        .select()
-        .single();
-      dayId = newDay.id;
-    } else {
-      dayId = day.id;
+    function renderTotals() {
+      const t = getTotals();
+      totalsDiv.innerHTML = "";
+      const pill = document.createElement("div");
+      pill.className = "total-pill";
+      pill.innerHTML = `
+        <span class="total-label">Total estimé</span>
+        <span class="total-value">${formatHours(t.global)}</span>
+      `;
+      totalsDiv.appendChild(pill);
     }
 
-    const { data: acts } = await supabase
-      .from("activities")
-      .select("*")
-      .eq("planning_day_id", dayId);
+    const pastelColors = [
+      "rgba(137, 207, 240, 0.35)",
+      "rgba(196, 181, 253, 0.35)",
+      "rgba(167, 227, 171, 0.35)",
+      "rgba(255, 236, 179, 0.35)",
+      "rgba(255, 182, 193, 0.35)",
+      "rgba(255, 210, 160, 0.35)",
+      "rgba(180, 220, 255, 0.35)"
+    ];
 
-    renderActivities(date, acts || []);
-  }
+    function renderWeek() {
+      saveData();
+      renderTotals();
+      daysGrid.innerHTML = "";
 
-  function renderActivities(date, acts) {
-    ["morning","noon","evening"].forEach(slot => {
-      const container = document.getElementById(slot[0] + "-" + date);
-      container.innerHTML = "";
+      weekData.days.forEach((dayData, dayIndex) => {
+        const card = document.createElement("div");
+        card.className = "day-card";
+        const color = pastelColors[dayIndex % pastelColors.length];
+        card.style.background = `linear-gradient(145deg, ${color}, rgba(15,23,42,0.9))`;
 
-      acts.filter(a => a.slot === slot).forEach(a => {
-        const div = document.createElement("div");
-        div.className = "activity";
-        div.style.background = computeColor(a);
+        const header = document.createElement("div");
+        header.className = "day-header";
 
-        div.innerHTML = `
-          <input data-id="${a.id}" class="name" value="${a.name || ""}" placeholder="Nom">
-          <input data-id="${a.id}" class="cat" value="${a.category || ""}" placeholder="Catégorie">
-          <input data-id="${a.id}" class="dur" type="number" value="${a.duration || 0}" placeholder="Durée (min)">
-          <input data-id="${a.id}" class="due" type="date" value="${a.due_date || ""}">
-          <button class="btn btn-danger" data-del="${a.id}">Supprimer</button>
+        const title = document.createElement("div");
+        title.className = "day-title";
+        title.innerHTML = `
+          <span>${dayData.day}</span>
+          <span class="day-tag">${dayData.tag || ""}</span>
         `;
 
-        container.appendChild(div);
+        header.appendChild(title);
+        card.appendChild(header);
+
+        dayData.slots.forEach((slot, slotIndex) => {
+          const slotDiv = document.createElement("div");
+          slotDiv.className = "slot";
+
+          const slotHeader = document.createElement("div");
+          slotHeader.className = "slot-header";
+
+          const slotLabel = document.createElement("div");
+          slotLabel.className = "slot-label";
+          slotLabel.textContent = slot.label;
+
+          const slotTotal = document.createElement("div");
+          slotTotal.className = "slot-total";
+          slotTotal.textContent = formatHours(sumDurations(slot.activities));
+
+          slotHeader.appendChild(slotLabel);
+          slotHeader.appendChild(slotTotal);
+          slotDiv.appendChild(slotHeader);
+
+          const activitiesDiv = document.createElement("div");
+          activitiesDiv.className = "activities";
+
+          slot.activities.forEach((activity, actIndex) => {
+            const activityDiv = document.createElement("div");
+            activityDiv.className = "activity";
+
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.checked = !!activity.done;
+            checkbox.addEventListener("change", () => {
+              activity.done = checkbox.checked;
+              saveData();
+            });
+
+            const main = document.createElement("div");
+            main.className = "activity-main";
+
+            const name = document.createElement("div");
+            name.className = "activity-name";
+            name.textContent = activity.name;
+
+            const meta = document.createElement("div");
+            meta.className = "activity-meta";
+
+            const typeSpan = document.createElement("span");
+            typeSpan.className = "activity-type";
+            typeSpan.textContent = (activity.type || "activité").toUpperCase();
+
+            const durationSpan = document.createElement("span");
+            durationSpan.className = "activity-duration";
+            durationSpan.textContent = formatHours(activity.duration || 0);
+
+            meta.appendChild(typeSpan);
+            meta.appendChild(durationSpan);
+
+            main.appendChild(name);
+            main.appendChild(meta);
+
+            const deleteBtn = document.createElement("button");
+            deleteBtn.className = "activity-delete";
+            deleteBtn.textContent = "✖";
+            deleteBtn.title = "Supprimer cette activité";
+            deleteBtn.addEventListener("click", () => {
+              slot.activities.splice(actIndex, 1);
+              renderWeek();
+            });
+
+            activityDiv.appendChild(checkbox);
+            activityDiv.appendChild(main);
+            activityDiv.appendChild(deleteBtn);
+
+            activitiesDiv.appendChild(activityDiv);
+          });
+
+          slotDiv.appendChild(activitiesDiv);
+
+          const addEventBtn = document.createElement("button");
+          addEventBtn.className = "add-event-btn";
+          addEventBtn.innerHTML = `<span>+ Ajouter une activité</span>`;
+          addEventBtn.addEventListener("click", () => {
+            const name = prompt("Nom de l’activité :");
+            if (!name) return;
+
+            const durationStr = prompt("Durée en heures (ex : 1, 1.5, 2) :");
+            if (!durationStr) return;
+            const duration = parseFloat(durationStr.replace(",", "."));
+            if (isNaN(duration) || duration <= 0) return;
+
+            const type = prompt("Type (sport, perso, sortie, étude, autre...) :", "activité") || "activité";
+
+            slot.activities.push({
+              name: name.trim(),
+              type: type.trim().toLowerCase(),
+              duration,
+              done: false
+            });
+
+            renderWeek();
+          });
+
+          slotDiv.appendChild(addEventBtn);
+          card.appendChild(slotDiv);
+        });
+
+        const notesDiv = document.createElement("div");
+        notesDiv.className = "day-notes";
+        const notesTextarea = document.createElement("textarea");
+        notesTextarea.placeholder = "Notes pour ce jour (idées, ressentis, choses à surveiller...)";
+        notesTextarea.value = dayData.notes || "";
+        notesTextarea.addEventListener("input", () => {
+          dayData.notes = notesTextarea.value;
+          saveData();
+        });
+        notesDiv.appendChild(notesTextarea);
+        card.appendChild(notesDiv);
+
+        daysGrid.appendChild(card);
       });
-    });
-  }
+    }
 
-  function computeColor(a) {
-    if (!a.due_date) return "#E0F7E9";
+    // Checklist
+    const checklistContainer = document.getElementById("checklist-container");
+    const addChecklistBtn = document.getElementById("add-checklist-item");
 
-    const start = new Date(a.created_at || a.due_date);
-    const end = new Date(a.due_date);
-    const now = new Date();
+    function renderChecklist() {
+      checklistContainer.innerHTML = "";
 
-    const total = end - start;
-    const elapsed = Math.min(Math.max(now - start, 0), total);
-    const ratio = total === 0 ? 1 : elapsed / total;
+      weekData.checklist.forEach((item, index) => {
+        const row = document.createElement("div");
+        row.style.display = "flex";
+        row.style.alignItems = "center";
+        row.style.gap = "8px";
+        row.style.marginBottom = "6px";
 
-    const from = { r: 224, g: 247, b: 233 };
-    const to   = { r: 253, g: 226, b: 226 };
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = item.done;
+        checkbox.addEventListener("change", () => {
+          item.done = checkbox.checked;
+          saveData();
+        });
 
-    const r = Math.round(from.r + (to.r - from.r) * ratio);
-    const g = Math.round(from.g + (to.g - from.g) * ratio);
-    const b = Math.round(from.b + (to.b - from.b) * ratio);
+        const text = document.createElement("input");
+        text.type = "text";
+        text.value = item.text;
+        text.style.flex = "1";
+        text.style.padding = "6px";
+        text.style.borderRadius = "8px";
+        text.style.border = "1px solid rgba(255,255,255,0.2)";
+        text.style.background = "rgba(255,255,255,0.05)";
+        text.style.color = "white";
+        text.addEventListener("input", () => {
+          item.text = text.value;
+          saveData();
+        });
 
-    return `rgb(${r},${g},${b})`;
-  }
+        const del = document.createElement("button");
+        del.textContent = "✖";
+        del.style.color = "#f87171";
+        del.style.background = "transparent";
+        del.style.border = "none";
+        del.style.cursor = "pointer";
+        del.addEventListener("click", () => {
+          weekData.checklist.splice(index, 1);
+          renderChecklist();
+          saveData();
+        });
 
-  function attachAddButtons() {
-    document.querySelectorAll(".add-btn").forEach(btn => {
-      btn.onclick = async () => {
-        const date = btn.dataset.date;
-        const slot = btn.dataset.slot;
+        row.appendChild(checkbox);
+        row.appendChild(text);
+        row.appendChild(del);
 
-        await addActivity(date, slot);
-        await renderWeek();
-      };
-    });
-  }
+        checklistContainer.appendChild(row);
+      });
+    }
 
-  async function addActivity(date, slot) {
-    const { data: day } = await supabase
-      .from("planning_days")
-      .select("*")
-      .eq("planning_id", planningId)
-      .eq("date", date)
-      .single();
-
-    const dayId = day.id;
-
-    await supabase.from("activities").insert({
-      planning_day_id: dayId,
-      slot,
-      name: "",
-      category: "",
-      duration: 0,
-      created_at: new Date().toISOString(),
-      done: false
-    });
-  }
-
-  function attachActivityEvents() {
-    document.querySelectorAll(".name").forEach(i => {
-      i.oninput = () => update(i.dataset.id, { name: i.value });
-    });
-
-    document.querySelectorAll(".cat").forEach(i => {
-      i.oninput = () => update(i.dataset.id, { category: i.value });
+    addChecklistBtn.addEventListener("click", () => {
+      weekData.checklist.push({ text: "", done: false });
+      renderChecklist();
+      saveData();
     });
 
-    document.querySelectorAll(".dur").forEach(i => {
-      i.onchange = () => update(i.dataset.id, { duration: Number(i.value) });
+    // Calendrier
+    const calendarMonthEl = document.getElementById("calendar-month");
+    const calendarGridEl = document.getElementById("calendar-grid");
+    const prevMonthBtn = document.getElementById("prev-month");
+    const nextMonthBtn = document.getElementById("next-month");
+
+    let currentCalendarDate = new Date();
+
+    function getMonday(d) {
+      const date = new Date(d);
+      const day = date.getDay();
+      const diff = (day === 0 ? -6 : 1) - day;
+      date.setDate(date.getDate() + diff);
+      date.setHours(0, 0, 0, 0);
+      return date;
+    }
+
+    function sameDay(a, b) {
+      return a.getFullYear() === b.getFullYear() &&
+             a.getMonth() === b.getMonth() &&
+             a.getDate() === b.getDate();
+    }
+
+    function inSameWeek(date, refMonday) {
+      const d = new Date(date);
+      d.setHours(0,0,0,0);
+      const diff = (d - refMonday) / (1000 * 60 * 60 * 24);
+      return diff >= 0 && diff < 7;
+    }
+
+    function renderCalendar() {
+      const year = currentCalendarDate.getFullYear();
+      const month = currentCalendarDate.getMonth();
+
+      const monthNames = [
+        "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+        "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+      ];
+
+      calendarMonthEl.textContent = `${monthNames[month]} ${year}`;
+      calendarGridEl.innerHTML = "";
+
+      const dayNames = ["L", "M", "M", "J", "V", "S", "D"];
+      dayNames.forEach(d => {
+        const el = document.createElement("div");
+        el.className = "calendar-day-name";
+        el.textContent = d;
+        calendarGridEl.appendChild(el);
+      });
+
+      const firstDay = new Date(year, month, 1);
+      const startDay = (firstDay.getDay() + 6) % 7;
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      const mondayOfTodayWeek = getMonday(today);
+
+      const totalCells = 42;
+
+      for (let i = 0; i < totalCells; i++) {
+        const cell = document.createElement("div");
+        cell.className = "calendar-cell";
+
+        let dayNumber;
+        let cellDate;
+        let isOtherMonth = false;
+
+        if (i < startDay) {
+          dayNumber = daysInPrevMonth - (startDay - 1 - i);
+          cellDate = new Date(year, month - 1, dayNumber);
+          isOtherMonth = true;
+        } else if (i >= startDay + daysInMonth) {
+          dayNumber = i - (startDay + daysInMonth) + 1;
+          cellDate = new Date(year, month + 1, dayNumber);
+          isOtherMonth = true;
+        } else {
+          dayNumber = i - startDay + 1;
+          cellDate = new Date(year, month, dayNumber);
+        }
+
+        cell.textContent = dayNumber;
+
+        if (isOtherMonth) {
+          cell.classList.add("other-month");
+        }
+
+        if (inSameWeek(cellDate, mondayOfTodayWeek)) {
+          cell.classList.add("current-week");
+        }
+
+        if (sameDay(cellDate, today)) {
+          cell.classList.add("today");
+        }
+
+        calendarGridEl.appendChild(cell);
+      }
+    }
+
+    prevMonthBtn.addEventListener("click", () => {
+      currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+      renderCalendar();
     });
 
-    document.querySelectorAll(".due").forEach(i => {
-      i.onchange = () => update(i.dataset.id, { due_date: i.value });
+    nextMonthBtn.addEventListener("click", () => {
+      currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+      renderCalendar();
     });
 
-    document.querySelectorAll("[data-del]").forEach(btn => {
-      btn.onclick = async () => {
-        await supabase.from("activities").delete().eq("id", btn.dataset.del);
-        await renderWeek();
-      };
-    });
-  }
-
-  async function update(id, data) {
-    await supabase.from("activities").update(data).eq("id", id);
-  }
-
-  init();
-</script>
-
+    // Init
+    renderWeek();
+    renderChecklist();
+    renderCalendar();
+  </script>
 </body>
 </html>
