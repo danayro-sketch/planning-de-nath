@@ -2,979 +2,651 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Planning d’activités de Nath</title>
+  <title>Planning hebdo pastel</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <style>
-    :root {
-      --text: #e5e7eb;
-      --muted: #9ca3af;
-      --border-soft: rgba(255, 255, 255, 0.12);
-      --border-strong: rgba(255, 255, 255, 0.2);
-      --bg-panel: rgba(15, 23, 42, 0.9);
-      --accent: #38bdf8;
-      --danger: #f87171;
-      --radius-lg: 18px;
-      --radius-md: 12px;
-      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.9);
-    }
-
-    * {
-      box-sizing: border-box;
-      font-family: 'Inter', sans-serif;
-    }
-
     body {
+      font-family: system-ui, sans-serif;
+      background: #f7f7fb;
       margin: 0;
       padding: 0;
-      background:
-        radial-gradient(circle at 20% 20%, rgba(137, 207, 240, 0.35), transparent 60%),
-        radial-gradient(circle at 80% 80%, rgba(196, 181, 253, 0.35), transparent 60%),
-        #0f172a;
-      background-attachment: fixed;
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 24px;
+      color: #111827;
     }
-
     .app {
-      width: 100%;
-      max-width: 1200px;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
       display: grid;
-      grid-template-columns: 280px minmax(0, 1fr);
-      gap: 20px;
+      grid-template-columns: 320px 1fr;
+      gap: 16px;
     }
-
-    @media (max-width: 900px) {
+    h1 {
+      grid-column: 1 / -1;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 4px 10px rgba(15,23,42,0.06);
+      border: 1px solid #e0e7ff;
+      margin-bottom: 12px;
+    }
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: 16px;
+    }
+    label {
+      font-size: 13px;
+      color: #4b5563;
+      display: block;
+      margin-bottom: 4px;
+    }
+    input[type="date"],
+    textarea,
+    input[type="text"],
+    select {
+      width: 100%;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      font-size: 13px;
+      margin-bottom: 6px;
+      box-sizing: border-box;
+    }
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+    .btn {
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .btn-primary {
+      background: #a5b4fc;
+      color: white;
+    }
+    .btn-danger {
+      background: #fca5a5;
+      color: white;
+    }
+    .btn-ghost {
+      background: transparent;
+      color: #6b7280;
+    }
+    .todo-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+    .todo-item input[type="text"] {
+      flex: 1;
+      margin-bottom: 0;
+    }
+    .week-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+    }
+    .day-card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 8px;
+      border: 1px solid #e0e7ff;
+      box-shadow: 0 2px 6px rgba(15,23,42,0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .day-header {
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .day-sub {
+      text-align: center;
+      font-size: 11px;
+      color: #6b7280;
+      margin-bottom: 4px;
+    }
+    .slot {
+      border-radius: 10px;
+      padding: 6px;
+      margin-bottom: 4px;
+    }
+    .slot[data-slot="morning"] { background: #e3f2fd; }
+    .slot[data-slot="noon"]    { background: #fff3e0; }
+    .slot[data-slot="evening"] { background: #f3e5f5; }
+    .slot h3 {
+      margin: 0 0 4px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .activity {
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 6px;
+      margin-bottom: 4px;
+      border: 1px solid #e0e7ff;
+      font-size: 12px;
+    }
+    .activity-row {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 4px;
+    }
+    .activity-row input,
+    .activity-row select {
+      margin-bottom: 0;
+      font-size: 11px;
+      padding: 4px 6px;
+    }
+    .activity-row input[type="number"] {
+      width: 60px;
+    }
+    .activity-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+    }
+    .activity-footer input[type="date"] {
+      font-size: 11px;
+      padding: 3px 4px;
+    }
+    .pill-week {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #dbeafe;
+      color: #1d4ed8;
+      font-size: 11px;
+      margin-left: 4px;
+    }
+    .pill-day {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #fee2e2;
+      color: #b91c1c;
+      font-size: 11px;
+      margin-left: 4px;
+    }
+    @media (max-width: 1000px) {
       .app {
         grid-template-columns: 1fr;
       }
-    }
-
-    .panel {
-      background: var(--bg-panel);
-      border-radius: 24px;
-      border: 1px solid var(--border-soft);
-      box-shadow: var(--shadow-soft);
-      padding: 18px 18px 20px;
-      backdrop-filter: blur(18px);
-    }
-
-    .panel-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
-    }
-
-    .panel-title {
-      font-size: 16px;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .panel-title span.icon {
-      width: 22px;
-      height: 22px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 20%, #38bdf8, #0ea5e9 55%, #0369a1);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 13px;
-      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.7);
-    }
-
-    .panel-subtitle {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .btn {
-      border-radius: 999px;
-      border: 1px solid var(--border-soft);
-      background: rgba(15, 23, 42, 0.9);
-      color: var(--text);
-      font-size: 12px;
-      padding: 6px 10px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      transition: 0.15s ease;
-    }
-
-    .btn:hover {
-      border-color: var(--accent);
-      background: rgba(15, 23, 42, 1);
-      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.35);
-    }
-
-    .btn-danger {
-      color: var(--danger);
-      border-color: rgba(248, 113, 113, 0.5);
-      background: rgba(15, 23, 42, 0.9);
-    }
-
-    .btn-danger:hover {
-      background: rgba(127, 29, 29, 0.7);
-      box-shadow: 0 0 0 1px rgba(248, 113, 113, 0.5);
-    }
-
-    .calendar-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-
-    .calendar-title {
-      font-size: 14px;
-      font-weight: 500;
-    }
-
-    .calendar-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 4px;
-      font-size: 11px;
-    }
-
-    .calendar-day-name {
-      text-align: center;
-      color: var(--muted);
-      padding-bottom: 4px;
-    }
-
-    .calendar-cell {
-      text-align: center;
-      padding: 4px 0;
-      border-radius: 8px;
-      border: 1px solid transparent;
-      color: var(--muted);
-      background: rgba(15, 23, 42, 0.7);
-    }
-
-    .calendar-cell.other-month {
-      opacity: 0.35;
-    }
-
-    .calendar-cell.current-week {
-      background: rgba(196, 181, 253, 0.25);
-      border-color: rgba(196, 181, 253, 0.6);
-      color: #e5e7eb;
-    }
-
-    .calendar-cell.today {
-      background: rgba(137, 207, 240, 0.4);
-      border-color: rgba(137, 207, 240, 0.9);
-      color: #0f172a;
-      font-weight: 600;
-    }
-
-    .calendar-legend {
-      margin-top: 10px;
-      font-size: 11px;
-      color: var(--muted);
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .calendar-legend span {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      display: inline-block;
-    }
-
-    .dot-today {
-      background: rgba(137, 207, 240, 0.9);
-    }
-
-    .dot-week {
-      background: rgba(196, 181, 253, 0.9);
-    }
-
-    .notes {
-      margin-top: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .notes label {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .notes textarea {
-      width: 100%;
-      min-height: 70px;
-      resize: vertical;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border-soft);
-      background: rgba(15, 23, 42, 0.9);
-      color: var(--text);
-      font-size: 12px;
-      padding: 8px 10px;
-      outline: none;
-    }
-
-    .notes textarea:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.4);
-    }
-
-    .weekly-checklist {
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px dashed var(--border-soft);
-    }
-
-    .week-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-      gap: 10px;
-    }
-
-    .week-header-left {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .week-title {
-      font-size: 16px;
-      font-weight: 600;
-    }
-
-    .week-subtitle {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .totals {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 10px;
-      font-size: 11px;
-    }
-
-    .total-pill {
-      padding: 4px 8px;
-      border-radius: 999px;
-      border: 1px solid var(--border-soft);
-      background: rgba(15, 23, 42, 0.9);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .total-label {
-      color: var(--muted);
-    }
-
-    .total-value {
-      font-weight: 500;
-      color: var(--accent);
-    }
-
-    .days-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 10px;
-    }
-
-    .day-card {
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border-soft);
-      background: rgba(15, 23, 42, 0.9);
-      padding: 12px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .day-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at top right, rgba(255,255,255,0.12), transparent 55%);
-      opacity: 0.9;
-      pointer-events: none;
-      mix-blend-mode: screen;
-    }
-
-    .day-header {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 6px;
-      margin-bottom: 6px;
-    }
-
-    .day-title {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .day-title span:first-child {
-      font-size: 15px;
-      font-weight: 600;
-      color: white;
-    }
-
-    .day-tag {
-      font-size: 11px;
-      color: rgba(255,255,255,0.6);
-    }
-
-    .slot {
-      position: relative;
-      z-index: 1;
-      border-radius: var(--radius-md);
-      border: 1px dashed rgba(255,255,255,0.18);
-      padding: 6px 7px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      background: rgba(15, 23, 42, 0.9);
-      margin-top: 4px;
-    }
-
-    .slot-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    .slot-label {
-      font-weight: 600;
-      color: #e5e7eb;
-    }
-
-    .slot-total {
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    .activities {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .activity {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 6px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.12);
-      font-size: 11px;
-    }
-
-    .activity input[type="checkbox"] {
-      width: 13px;
-      height: 13px;
-      accent-color: var(--accent);
-      cursor: pointer;
-    }
-
-    .activity-main {
-      display: flex;
-      flex-direction: column;
-      gap: 1px;
-      flex: 1;
-    }
-
-    .activity-name {
-      font-size: 11px;
-    }
-
-    .activity-meta {
-      font-size: 10px;
-      color: var(--muted);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .activity-type {
-      padding: 1px 6px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.25);
-      font-size: 9px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .activity-duration {
-      color: var(--accent);
-    }
-
-    .activity-delete {
-      border: none;
-      background: transparent;
-      color: var(--danger);
-      cursor: pointer;
-      font-size: 14px;
-      padding: 0 4px;
-    }
-
-    .add-event-btn {
-      margin-top: 4px;
-      width: 100%;
-      border-radius: 999px;
-      border: 1px dashed rgba(255,255,255,0.3);
-      background: rgba(255,255,255,0.03);
-      color: rgba(255,255,255,0.7);
-      font-size: 11px;
-      padding: 5px 0;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
-
-    .add-event-btn:hover {
-      border-style: solid;
-      border-color: var(--accent);
-      color: var(--accent);
-      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.35);
-    }
-
-    .day-notes {
-      position: relative;
-      z-index: 1;
-      margin-top: 4px;
-    }
-
-    .day-notes textarea {
-      width: 100%;
-      min-height: 40px;
-      resize: vertical;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.15);
-      background: rgba(255,255,255,0.05);
-      color: white;
-      font-size: 11px;
-      padding: 5px 7px;
-      outline: none;
-    }
-
-    .day-notes textarea:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.4);
+      .week-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
   </style>
 </head>
 <body>
+  <h1>Planning hebdo pastel</h1>
   <div class="app">
-    <!-- Sidebar -->
-    <div class="panel">
-      <div class="panel-header">
-        <div>
-          <div class="panel-title">
-            <span class="icon">📅</span>
-            <span>Vue calendrier</span>
-          </div>
-          <div class="panel-subtitle">
-            Repère ta semaine et garde tes repères visuels.
-          </div>
-        </div>
+    <!-- Colonne gauche : calendrier + notes + todo -->
+    <div>
+      <div class="card">
+        <h2>Vue calendrier <span class="pill-week">Semaine</span></h2>
+        <label>Semaine (choisis un lundi) :</label>
+        <input type="date" id="weekStartInput" />
+        <small style="font-size:11px;color:#6b7280;">
+          La semaine affichée va du lundi choisi au dimanche suivant.
+        </small>
       </div>
 
-      <div class="calendar-header">
-        <div class="calendar-title" id="calendar-month"></div>
-        <div style="display:flex;gap:4px;">
-          <button class="btn" id="prev-month">◀</button>
-          <button class="btn" id="next-month">▶</button>
-        </div>
+      <div class="card">
+        <h2>Notes globales de la semaine</h2>
+        <textarea id="weekNotes" placeholder="Objectifs, focus, choses à ne pas oublier..."></textarea>
+        <button id="saveNotesBtn" class="btn btn-primary">Enregistrer les notes</button>
       </div>
 
-      <div class="calendar-grid" id="calendar-grid"></div>
-
-      <div class="calendar-legend">
-        <span><span class="dot dot-today"></span> Aujourd’hui</span>
-        <span><span class="dot dot-week"></span> Semaine actuelle</span>
-      </div>
-
-      <div class="global-notes notes">
-        <label for="global-notes">Notes globales de la semaine</label>
-        <textarea id="global-notes" placeholder="Objectifs, focus, choses à ne pas oublier..."></textarea>
-      </div>
-
-      <div class="weekly-checklist notes">
-        <label>Liste d’activités à ne pas oublier</label>
-        <div id="checklist-container"></div>
-        <button class="btn" id="add-checklist-item">+ Ajouter une activité</button>
+      <div class="card">
+        <h2>Liste d'activités à ne pas oublier</h2>
+        <div id="todoList"></div>
+        <button id="addTodoBtn" class="btn btn-primary">+ Ajouter une activité</button>
       </div>
     </div>
 
-    <!-- Planning -->
-    <div class="panel">
-      <div class="week-header">
-        <div class="week-header-left">
-          <div class="week-title">Planning d’activités</div>
-          <div class="week-subtitle">
-            7 jours, Matin / Midi / Soir, en pastel doux.
-          </div>
-        </div>
+    <!-- Colonne droite : planning 7 jours -->
+    <div>
+      <div class="card">
+        <h2>Planning d'activités</h2>
+        <small style="font-size:11px;color:#6b7280;">
+          7 jours, Matin / Midi / Soir, couleurs pastel. La couleur passe du vert au rouge selon l'approche de la date de fin et la criticité.
+        </small>
       </div>
-
-      <div class="totals" id="totals"></div>
-
-      <div class="days-grid" id="days-grid"></div>
+      <div class="week-grid" id="weekGrid"></div>
     </div>
   </div>
 
-  <script>
-    const STORAGE_KEY = "planning_activites_nath_v1";
+<script>
+  // --- Connexion Supabase ---
+  const supabase = window.supabase.createClient(
+    "https://wgspawpymauabfdzhcwh.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indnc3Bhd3B5bWF1YWJmZHpoY3doIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk1MDcyOTcsImV4cCI6MjA4NTA4MzI5N30.BV7w18Nmr9aMMAdsXdLovy6zowODwFvphXgWWSsVCHs"
+  );
 
-    const defaultWeekData = {
-      globalNotes: "",
-      checklist: [],
-      days: [
-        { day: "Lundi", tag: "Démarrage en douceur", notes: "", slots: baseSlots() },
-        { day: "Mardi", tag: "Activités régulières", notes: "", slots: baseSlots() },
-        { day: "Mercredi", tag: "Milieu de semaine", notes: "", slots: baseSlots() },
-        { day: "Jeudi", tag: "Rythme stable", notes: "", slots: baseSlots() },
-        { day: "Vendredi", tag: "Fin de semaine", notes: "", slots: baseSlots() },
-        { day: "Samedi", tag: "Temps perso / loisirs", notes: "", slots: baseSlots() },
-        { day: "Dimanche", tag: "Repos / préparation", notes: "", slots: baseSlots() }
-      ]
-    };
+  // --- État ---
+  let weekStart = null;      // lundi de la semaine
+  let weekDates = [];        // 7 dates (lundi → dimanche)
+  let activitiesByDate = {}; // { '2026-01-26': [ ... ], ... }
+  let todos = [];
+  let notes = "";
 
-    function baseSlots() {
-      return [
-        { label: "Matin", activities: [] },
-        { label: "Midi", activities: [] },
-        { label: "Soir", activities: [] }
-      ];
+  // --- Utilitaires de date ---
+  function toISODate(d) {
+    return d.toISOString().slice(0,10);
+  }
+
+  function getMonday(date) {
+    const d = new Date(date);
+    const day = d.getDay(); // 0 = dimanche, 1 = lundi...
+    const diff = (day === 0 ? -6 : 1 - day);
+    d.setDate(d.getDate() + diff);
+    d.setHours(0,0,0,0);
+    return d;
+  }
+
+  function computeWeekDates(startDate) {
+    const arr = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(startDate);
+      d.setDate(startDate.getDate() + i);
+      arr.push(toISODate(d));
     }
+    return arr;
+  }
 
-    function loadData() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return structuredClone(defaultWeekData);
-        const parsed = JSON.parse(raw);
-        if (!parsed.days || parsed.days.length !== 7) return structuredClone(defaultWeekData);
-        parsed.days.forEach(d => {
-          if (!d.slots || d.slots.length !== 3) d.slots = baseSlots();
-        });
-        if (!parsed.checklist) parsed.checklist = [];
-        if (!parsed.globalNotes) parsed.globalNotes = "";
-        return parsed;
-      } catch {
-        return structuredClone(defaultWeekData);
-      }
-    }
+  function formatDayLabel(dateStr) {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString("fr-FR", {
+      weekday: "long",
+      day: "2-digit",
+      month: "short"
+    });
+  }
 
-    let weekData = loadData();
+  // --- Couleur activité (vert → rouge + criticité) ---
+  function computeActivityColor(a) {
+    if (!a.due_date || !a.created_at) return "rgb(224,247,233)"; // vert pastel
 
-    function saveData() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(weekData));
-    }
+    const start = new Date(a.created_at);
+    const end = new Date(a.due_date);
+    const now = new Date();
 
-    function sumDurations(activities) {
-      return activities.reduce((acc, a) => acc + (a.duration || 0), 0);
-    }
+    if (end <= start) return "rgb(253,226,226)"; // rouge pastel si dates incohérentes
 
-    function formatHours(h) {
-      if (!h) return "0 h";
-      return `${h.toFixed(1).replace(".0", "")} h`;
-    }
+    const total = end - start;
+    const elapsed = Math.min(Math.max(now - start, 0), total);
+    let ratio = total === 0 ? 1 : elapsed / total; // 0 → vert, 1 → rouge
 
-    function getTotals() {
-      const totals = { global: 0 };
-      weekData.days.forEach(day => {
-        day.slots.forEach(slot => {
-          slot.activities.forEach(a => {
-            const d = a.duration || 0;
-            totals.global += d;
-          });
-        });
-      });
-      return totals;
-    }
+    // Ajustement selon criticité
+    if (a.criticality === "low")   ratio *= 0.7;
+    if (a.criticality === "medium") ratio *= 1.0;
+    if (a.criticality === "high")   ratio *= 1.3;
 
-    const daysGrid = document.getElementById("days-grid");
-    const totalsDiv = document.getElementById("totals");
-    const globalNotesEl = document.getElementById("global-notes");
+    ratio = Math.max(0, Math.min(1, ratio));
 
-    globalNotesEl.value = weekData.globalNotes || "";
-    globalNotesEl.addEventListener("input", () => {
-      weekData.globalNotes = globalNotesEl.value;
-      saveData();
+    const from = { r: 200, g: 255, b: 220 }; // vert pastel
+    const to   = { r: 255, g: 210, b: 210 }; // rouge pastel
+
+    const r = Math.round(from.r + (to.r - from.r) * ratio);
+    const g = Math.round(from.g + (to.g - from.g) * ratio);
+    const b = Math.round(from.b + (to.b - from.b) * ratio);
+
+    return `rgb(${r},${g},${b})`;
+  }
+
+  // --- Chargement global de la semaine ---
+  async function loadWeek() {
+    if (!weekStart) return;
+
+    weekDates = computeWeekDates(weekStart);
+
+    // 1) Notes de semaine
+    const { data: notesData } = await supabase
+      .from("week_notes")
+      .select("*")
+      .eq("week_start", toISODate(weekStart))
+      .maybeSingle();
+
+    notes = notesData ? notesData.notes || "" : "";
+    document.getElementById("weekNotes").value = notes;
+
+    // 2) Todos de semaine
+    const { data: todosData } = await supabase
+      .from("week_todos")
+      .select("*")
+      .eq("week_start", toISODate(weekStart))
+      .order("id");
+
+    todos = todosData || [];
+    renderTodos();
+
+    // 3) Activités de la semaine (toutes dates de la semaine)
+    activitiesByDate = {};
+    for (const d of weekDates) activitiesByDate[d] = [];
+
+    const { data: acts } = await supabase
+      .from("activities")
+      .select("*")
+      .in("date", weekDates)
+      .order("created_at");
+
+    (acts || []).forEach(a => {
+      if (!activitiesByDate[a.date]) activitiesByDate[a.date] = [];
+      activitiesByDate[a.date].push(a);
     });
 
-    function renderTotals() {
-      const t = getTotals();
-      totalsDiv.innerHTML = "";
-      const pill = document.createElement("div");
-      pill.className = "total-pill";
-      pill.innerHTML = `
-        <span class="total-label">Total estimé</span>
-        <span class="total-value">${formatHours(t.global)}</span>
+    renderWeekGrid();
+  }
+
+  // --- Rendu TODO ---
+  function renderTodos() {
+    const container = document.getElementById("todoList");
+    container.innerHTML = "";
+    todos.forEach(t => {
+      const div = document.createElement("div");
+      div.className = "todo-item";
+      div.innerHTML = `
+        <input type="checkbox" data-id="${t.id}" class="todo-done" ${t.done ? "checked" : ""} />
+        <input type="text" data-id="${t.id}" class="todo-text" value="${t.text || ""}" />
+        <button class="btn btn-ghost btn-del-todo" data-id="${t.id}">✕</button>
       `;
-      totalsDiv.appendChild(pill);
-    }
+      container.appendChild(div);
+    });
 
-    const pastelColors = [
-      "rgba(137, 207, 240, 0.35)",
-      "rgba(196, 181, 253, 0.35)",
-      "rgba(167, 227, 171, 0.35)",
-      "rgba(255, 236, 179, 0.35)",
-      "rgba(255, 182, 193, 0.35)",
-      "rgba(255, 210, 160, 0.35)",
-      "rgba(180, 220, 255, 0.35)"
-    ];
+    document.querySelectorAll(".todo-done").forEach(cb => {
+      cb.onchange = async e => {
+        const id = e.target.dataset.id;
+        const done = e.target.checked;
+        await supabase.from("week_todos").update({ done }).eq("id", id);
+        const t = todos.find(x => x.id === id);
+        if (t) t.done = done;
+      };
+    });
 
-    function renderWeek() {
-      saveData();
-      renderTotals();
-      daysGrid.innerHTML = "";
+    document.querySelectorAll(".todo-text").forEach(input => {
+      input.oninput = async e => {
+        const id = e.target.dataset.id;
+        const text = e.target.value;
+        await supabase.from("week_todos").update({ text }).eq("id", id);
+        const t = todos.find(x => x.id === id);
+        if (t) t.text = text;
+      };
+    });
 
-      weekData.days.forEach((dayData, dayIndex) => {
-        const card = document.createElement("div");
-        card.className = "day-card";
-        const color = pastelColors[dayIndex % pastelColors.length];
-        card.style.background = `linear-gradient(145deg, ${color}, rgba(15,23,42,0.9))`;
+    document.querySelectorAll(".btn-del-todo").forEach(btn => {
+      btn.onclick = async e => {
+        const id = e.target.dataset.id;
+        await supabase.from("week_todos").delete().eq("id", id);
+        todos = todos.filter(x => x.id !== id);
+        renderTodos();
+      };
+    });
+  }
 
-        const header = document.createElement("div");
-        header.className = "day-header";
+  // --- Rendu planning semaine ---
+  function renderWeekGrid() {
+    const grid = document.getElementById("weekGrid");
+    grid.innerHTML = "";
 
-        const title = document.createElement("div");
-        title.className = "day-title";
-        title.innerHTML = `
-          <span>${dayData.day}</span>
-          <span class="day-tag">${dayData.tag || ""}</span>
+    const dayLabels = ["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"];
+
+    weekDates.forEach((dateStr, index) => {
+      const dayCard = document.createElement("div");
+      dayCard.className = "day-card";
+
+      dayCard.innerHTML = `
+        <div class="day-header">${dayLabels[index]}</div>
+        <div class="day-sub">${formatDayLabel(dateStr)}</div>
+
+        <div class="slot" data-slot="morning">
+          <h3>Matin</h3>
+          <div class="slot-activities" id="slot-${dateStr}-morning"></div>
+          <button class="btn btn-primary btn-add-activity" data-date="${dateStr}" data-slot="morning">+ Ajouter</button>
+        </div>
+
+        <div class="slot" data-slot="noon">
+          <h3>Midi</h3>
+          <div class="slot-activities" id="slot-${dateStr}-noon"></div>
+          <button class="btn btn-primary btn-add-activity" data-date="${dateStr}" data-slot="noon">+ Ajouter</button>
+        </div>
+
+        <div class="slot" data-slot="evening">
+          <h3>Soir</h3>
+          <div class="slot-activities" id="slot-${dateStr}-evening"></div>
+          <button class="btn btn-primary btn-add-activity" data-date="${dateStr}" data-slot="evening">+ Ajouter</button>
+        </div>
+      `;
+
+      grid.appendChild(dayCard);
+
+      renderActivitiesForDay(dateStr);
+    });
+
+    attachAddActivityButtons();
+  }
+
+  function renderActivitiesForDay(dateStr) {
+    const acts = activitiesByDate[dateStr] || [];
+    ["morning","noon","evening"].forEach(slot => {
+      const container = document.getElementById(`slot-${dateStr}-${slot}`);
+      container.innerHTML = "";
+      acts.filter(a => a.slot === slot).forEach(a => {
+        const div = document.createElement("div");
+        div.className = "activity";
+        div.style.background = computeActivityColor(a);
+
+        div.innerHTML = `
+          <div class="activity-row">
+            <input type="text" data-id="${a.id}" class="act-name" value="${a.name || ""}" placeholder="Nom">
+          </div>
+          <div class="activity-row">
+            <input type="text" data-id="${a.id}" class="act-cat" value="${a.category || ""}" placeholder="Catégorie">
+            <input type="number" data-id="${a.id}" class="act-dur" value="${a.duration || 0}" placeholder="Durée (min)">
+          </div>
+          <div class="activity-row">
+            <label style="font-size:11px;">Criticité :</label>
+            <select data-id="${a.id}" class="act-crit">
+              <option value="low" ${a.criticality === "low" ? "selected" : ""}>Pas urgent</option>
+              <option value="medium" ${a.criticality === "medium" ? "selected" : ""}>Moyen</option>
+              <option value="high" ${a.criticality === "high" ? "selected" : ""}>Urgent</option>
+            </select>
+          </div>
+          <div class="activity-footer">
+            <div>
+              <span style="font-size:11px;">Fin :</span>
+              <input type="date" data-id="${a.id}" class="act-due" value="${a.due_date || ""}">
+            </div>
+            <button class="btn btn-danger btn-del-act" data-id="${a.id}">✕</button>
+          </div>
         `;
 
-        header.appendChild(title);
-        card.appendChild(header);
-
-        dayData.slots.forEach((slot, slotIndex) => {
-          const slotDiv = document.createElement("div");
-          slotDiv.className = "slot";
-
-          const slotHeader = document.createElement("div");
-          slotHeader.className = "slot-header";
-
-          const slotLabel = document.createElement("div");
-          slotLabel.className = "slot-label";
-          slotLabel.textContent = slot.label;
-
-          const slotTotal = document.createElement("div");
-          slotTotal.className = "slot-total";
-          slotTotal.textContent = formatHours(sumDurations(slot.activities));
-
-          slotHeader.appendChild(slotLabel);
-          slotHeader.appendChild(slotTotal);
-          slotDiv.appendChild(slotHeader);
-
-          const activitiesDiv = document.createElement("div");
-          activitiesDiv.className = "activities";
-
-          slot.activities.forEach((activity, actIndex) => {
-            const activityDiv = document.createElement("div");
-            activityDiv.className = "activity";
-
-            const checkbox = document.createElement("input");
-            checkbox.type = "checkbox";
-            checkbox.checked = !!activity.done;
-            checkbox.addEventListener("change", () => {
-              activity.done = checkbox.checked;
-              saveData();
-            });
-
-            const main = document.createElement("div");
-            main.className = "activity-main";
-
-            const name = document.createElement("div");
-            name.className = "activity-name";
-            name.textContent = activity.name;
-
-            const meta = document.createElement("div");
-            meta.className = "activity-meta";
-
-            const typeSpan = document.createElement("span");
-            typeSpan.className = "activity-type";
-            typeSpan.textContent = (activity.type || "activité").toUpperCase();
-
-            const durationSpan = document.createElement("span");
-            durationSpan.className = "activity-duration";
-            durationSpan.textContent = formatHours(activity.duration || 0);
-
-            meta.appendChild(typeSpan);
-            meta.appendChild(durationSpan);
-
-            main.appendChild(name);
-            main.appendChild(meta);
-
-            const deleteBtn = document.createElement("button");
-            deleteBtn.className = "activity-delete";
-            deleteBtn.textContent = "✖";
-            deleteBtn.title = "Supprimer cette activité";
-            deleteBtn.addEventListener("click", () => {
-              slot.activities.splice(actIndex, 1);
-              renderWeek();
-            });
-
-            activityDiv.appendChild(checkbox);
-            activityDiv.appendChild(main);
-            activityDiv.appendChild(deleteBtn);
-
-            activitiesDiv.appendChild(activityDiv);
-          });
-
-          slotDiv.appendChild(activitiesDiv);
-
-          const addEventBtn = document.createElement("button");
-          addEventBtn.className = "add-event-btn";
-          addEventBtn.innerHTML = `<span>+ Ajouter une activité</span>`;
-          addEventBtn.addEventListener("click", () => {
-            const name = prompt("Nom de l’activité :");
-            if (!name) return;
-
-            const durationStr = prompt("Durée en heures (ex : 1, 1.5, 2) :");
-            if (!durationStr) return;
-            const duration = parseFloat(durationStr.replace(",", "."));
-            if (isNaN(duration) || duration <= 0) return;
-
-            const type = prompt("Type (sport, perso, sortie, étude, autre...) :", "activité") || "activité";
-
-            slot.activities.push({
-              name: name.trim(),
-              type: type.trim().toLowerCase(),
-              duration,
-              done: false
-            });
-
-            renderWeek();
-          });
-
-          slotDiv.appendChild(addEventBtn);
-          card.appendChild(slotDiv);
-        });
-
-        const notesDiv = document.createElement("div");
-        notesDiv.className = "day-notes";
-        const notesTextarea = document.createElement("textarea");
-        notesTextarea.placeholder = "Notes pour ce jour (idées, ressentis, choses à surveiller...)";
-        notesTextarea.value = dayData.notes || "";
-        notesTextarea.addEventListener("input", () => {
-          dayData.notes = notesTextarea.value;
-          saveData();
-        });
-        notesDiv.appendChild(notesTextarea);
-        card.appendChild(notesDiv);
-
-        daysGrid.appendChild(card);
+        container.appendChild(div);
       });
-    }
-
-    // Checklist
-    const checklistContainer = document.getElementById("checklist-container");
-    const addChecklistBtn = document.getElementById("add-checklist-item");
-
-    function renderChecklist() {
-      checklistContainer.innerHTML = "";
-
-      weekData.checklist.forEach((item, index) => {
-        const row = document.createElement("div");
-        row.style.display = "flex";
-        row.style.alignItems = "center";
-        row.style.gap = "8px";
-        row.style.marginBottom = "6px";
-
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.checked = item.done;
-        checkbox.addEventListener("change", () => {
-          item.done = checkbox.checked;
-          saveData();
-        });
-
-        const text = document.createElement("input");
-        text.type = "text";
-        text.value = item.text;
-        text.style.flex = "1";
-        text.style.padding = "6px";
-        text.style.borderRadius = "8px";
-        text.style.border = "1px solid rgba(255,255,255,0.2)";
-        text.style.background = "rgba(255,255,255,0.05)";
-        text.style.color = "white";
-        text.addEventListener("input", () => {
-          item.text = text.value;
-          saveData();
-        });
-
-        const del = document.createElement("button");
-        del.textContent = "✖";
-        del.style.color = "#f87171";
-        del.style.background = "transparent";
-        del.style.border = "none";
-        del.style.cursor = "pointer";
-        del.addEventListener("click", () => {
-          weekData.checklist.splice(index, 1);
-          renderChecklist();
-          saveData();
-        });
-
-        row.appendChild(checkbox);
-        row.appendChild(text);
-        row.appendChild(del);
-
-        checklistContainer.appendChild(row);
-      });
-    }
-
-    addChecklistBtn.addEventListener("click", () => {
-      weekData.checklist.push({ text: "", done: false });
-      renderChecklist();
-      saveData();
     });
 
-    // Calendrier
-    const calendarMonthEl = document.getElementById("calendar-month");
-    const calendarGridEl = document.getElementById("calendar-grid");
-    const prevMonthBtn = document.getElementById("prev-month");
-    const nextMonthBtn = document.getElementById("next-month");
+    attachActivityEvents();
+  }
 
-    let currentCalendarDate = new Date();
+  // --- Ajout activité ---
+  function attachAddActivityButtons() {
+    document.querySelectorAll(".btn-add-activity").forEach(btn => {
+      btn.onclick = async () => {
+        const date = btn.dataset.date;
+        const slot = btn.dataset.slot;
 
-    function getMonday(d) {
-      const date = new Date(d);
-      const day = date.getDay();
-      const diff = (day === 0 ? -6 : 1) - day;
-      date.setDate(date.getDate() + diff);
-      date.setHours(0, 0, 0, 0);
-      return date;
+        const { data, error } = await supabase
+          .from("activities")
+          .insert({
+            date,
+            slot,
+            name: "",
+            category: "",
+            duration: 0,
+            criticality: "low",
+            created_at: new Date().toISOString(),
+            done: false
+          })
+          .select()
+          .single();
+
+        if (!error) {
+          if (!activitiesByDate[date]) activitiesByDate[date] = [];
+          activitiesByDate[date].push(data);
+          renderActivitiesForDay(date);
+        }
+      };
+    });
+  }
+
+  // --- Événements sur activités ---
+  function attachActivityEvents() {
+    document.querySelectorAll(".act-name").forEach(input => {
+      input.oninput = async e => {
+        const id = e.target.dataset.id;
+        const name = e.target.value;
+        await supabase.from("activities").update({ name }).eq("id", id);
+        updateLocalActivity(id, { name });
+      };
+    });
+
+    document.querySelectorAll(".act-cat").forEach(input => {
+      input.oninput = async e => {
+        const id = e.target.dataset.id;
+        const category = e.target.value;
+        await supabase.from("activities").update({ category }).eq("id", id);
+        updateLocalActivity(id, { category });
+      };
+    });
+
+    document.querySelectorAll(".act-dur").forEach(input => {
+      input.onchange = async e => {
+        const id = e.target.dataset.id;
+        const duration = Number(e.target.value) || 0;
+        await supabase.from("activities").update({ duration }).eq("id", id);
+        updateLocalActivity(id, { duration });
+      };
+    });
+
+    document.querySelectorAll(".act-crit").forEach(select => {
+      select.onchange = async e => {
+        const id = e.target.dataset.id;
+        const criticality = e.target.value;
+        await supabase.from("activities").update({ criticality }).eq("id", id);
+        updateLocalActivity(id, { criticality });
+        reloadColors();
+      };
+    });
+
+    document.querySelectorAll(".act-due").forEach(input => {
+      input.onchange = async e => {
+        const id = e.target.dataset.id;
+        const due_date = e.target.value || null;
+        await supabase.from("activities").update({ due_date }).eq("id", id);
+        updateLocalActivity(id, { due_date });
+        reloadColors();
+      };
+    });
+
+    document.querySelectorAll(".btn-del-act").forEach(btn => {
+      btn.onclick = async e => {
+        const id = e.target.dataset.id;
+        await supabase.from("activities").delete().eq("id", id);
+        removeLocalActivity(id);
+        renderWeekGrid();
+      };
+    });
+  }
+
+  function updateLocalActivity(id, patch) {
+    for (const d of weekDates) {
+      const list = activitiesByDate[d] || [];
+      const a = list.find(x => x.id === id);
+      if (a) Object.assign(a, patch);
     }
+  }
 
-    function sameDay(a, b) {
-      return a.getFullYear() === b.getFullYear() &&
-             a.getMonth() === b.getMonth() &&
-             a.getDate() === b.getDate();
+  function removeLocalActivity(id) {
+    for (const d of weekDates) {
+      activitiesByDate[d] = (activitiesByDate[d] || []).filter(x => x.id !== id);
     }
+  }
 
-    function inSameWeek(date, refMonday) {
-      const d = new Date(date);
-      d.setHours(0,0,0,0);
-      const diff = (d - refMonday) / (1000 * 60 * 60 * 24);
-      return diff >= 0 && diff < 7;
-    }
-
-    function renderCalendar() {
-      const year = currentCalendarDate.getFullYear();
-      const month = currentCalendarDate.getMonth();
-
-      const monthNames = [
-        "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-        "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
-      ];
-
-      calendarMonthEl.textContent = `${monthNames[month]} ${year}`;
-      calendarGridEl.innerHTML = "";
-
-      const dayNames = ["L", "M", "M", "J", "V", "S", "D"];
-      dayNames.forEach(d => {
-        const el = document.createElement("div");
-        el.className = "calendar-day-name";
-        el.textContent = d;
-        calendarGridEl.appendChild(el);
+  function reloadColors() {
+    weekDates.forEach(dateStr => {
+      const acts = activitiesByDate[dateStr] || [];
+      ["morning","noon","evening"].forEach(slot => {
+        const container = document.getElementById(`slot-${dateStr}-${slot}`);
+        if (!container) return;
+        const children = container.querySelectorAll(".activity");
+        acts.filter(a => a.slot === slot).forEach((a, idx) => {
+          const div = children[idx];
+          if (div) div.style.background = computeActivityColor(a);
+        });
       });
+    });
+  }
 
-      const firstDay = new Date(year, month, 1);
-      const startDay = (firstDay.getDay() + 6) % 7;
-      const daysInMonth = new Date(year, month + 1, 0).getDate();
-      const daysInPrevMonth = new Date(year, month, 0).getDate();
+  // --- Notes de semaine ---
+  document.getElementById("saveNotesBtn").onclick = async () => {
+    if (!weekStart) return;
+    const text = document.getElementById("weekNotes").value;
+    const ws = toISODate(weekStart);
 
-      const today = new Date();
-      today.setHours(0,0,0,0);
-      const mondayOfTodayWeek = getMonday(today);
+    const { data: existing } = await supabase
+      .from("week_notes")
+      .select("*")
+      .eq("week_start", ws)
+      .maybeSingle();
 
-      const totalCells = 42;
-
-      for (let i = 0; i < totalCells; i++) {
-        const cell = document.createElement("div");
-        cell.className = "calendar-cell";
-
-        let dayNumber;
-        let cellDate;
-        let isOtherMonth = false;
-
-        if (i < startDay) {
-          dayNumber = daysInPrevMonth - (startDay - 1 - i);
-          cellDate = new Date(year, month - 1, dayNumber);
-          isOtherMonth = true;
-        } else if (i >= startDay + daysInMonth) {
-          dayNumber = i - (startDay + daysInMonth) + 1;
-          cellDate = new Date(year, month + 1, dayNumber);
-          isOtherMonth = true;
-        } else {
-          dayNumber = i - startDay + 1;
-          cellDate = new Date(year, month, dayNumber);
-        }
-
-        cell.textContent = dayNumber;
-
-        if (isOtherMonth) {
-          cell.classList.add("other-month");
-        }
-
-        if (inSameWeek(cellDate, mondayOfTodayWeek)) {
-          cell.classList.add("current-week");
-        }
-
-        if (sameDay(cellDate, today)) {
-          cell.classList.add("today");
-        }
-
-        calendarGridEl.appendChild(cell);
-      }
+    if (existing) {
+      await supabase.from("week_notes").update({ notes: text }).eq("week_start", ws);
+    } else {
+      await supabase.from("week_notes").insert({ week_start: ws, notes: text });
     }
+  };
 
-    prevMonthBtn.addEventListener("click", () => {
-      currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
-      renderCalendar();
-    });
+  // --- Ajout TODO ---
+  document.getElementById("addTodoBtn").onclick = async () => {
+    if (!weekStart) return;
+    const ws = toISODate(weekStart);
+    const { data, error } = await supabase
+      .from("week_todos")
+      .insert({ week_start: ws, text: "", done: false })
+      .select()
+      .single();
+    if (!error) {
+      todos.push(data);
+      renderTodos();
+    }
+  };
 
-    nextMonthBtn.addEventListener("click", () => {
-      currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
-      renderCalendar();
-    });
+  // --- Changement de semaine ---
+  document.getElementById("weekStartInput").onchange = e => {
+    const d = new Date(e.target.value);
+    weekStart = getMonday(d);
+    loadWeek();
+  };
 
-    // Init
-    renderWeek();
-    renderChecklist();
-    renderCalendar();
-  </script>
+  // --- Init ---
+  (function init() {
+    const today = new Date();
+    weekStart = getMonday(today);
+    document.getElementById("weekStartInput").value = toISODate(weekStart);
+    loadWeek();
+  })();
+</script>
 </body>
 </html>
