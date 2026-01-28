@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Planning</title>
+  <meta charset="UTF-8" />
+  <title>Planning partagé</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <style>
     body {
-      font-family: Inter, sans-serif;
+      font-family: system-ui, sans-serif;
       background: #f5f5f5;
       margin: 0;
       padding: 0;
@@ -24,178 +24,6 @@
       align-items: center;
       margin-bottom: 16px;
     }
-    .logout {
-      background: #ef4444;
-      color: white;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .top-bar {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-    .top-bar label {
-      font-size: 14px;
-      color: #4b5563;
-    }
-    input[type="date"] {
-      padding: 6px 8px;
-      border-radius: 6px;
-      border: 1px solid #d1d5db;
-      background: white;
-    }
-    .layout {
-      display: grid;
-      grid-template-columns: 1.1fr 1fr;
-      gap: 20px;
-    }
-    .card {
-      background: white;
-      padding: 14px;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-      margin-bottom: 16px;
-    }
-    .week {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap: 14px;
-      margin-top: 10px;
-    }
-    .day-card {
-      background: #ffffff;
-      padding: 10px;
-      border-radius: 10px;
-      border: 1px solid #e5e7eb;
-    }
-    .day-card h3 {
-      margin: 0 0 4px;
-      font-size: 15px;
-    }
-    .tag-input {
-      font-size: 12px;
-      margin-bottom: 6px;
-    }
-    textarea, input[type="text"] {
-      width: 100%;
-      margin-top: 4px;
-      padding: 6px;
-      border-radius: 6px;
-      border: 1px solid #d1d5db;
-      font-size: 13px;
-      box-sizing: border-box;
-    }
-    textarea {
-      min-height: 60px;
-      resize: vertical;
-    }
-    .slots {
-      margin-top: 6px;
-    }
-    .slot {
-      margin-bottom: 8px;
-      padding: 6px;
-      border-radius: 8px;
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
-    }
-    .slot h4 {
-      margin: 0 0 4px;
-      font-size: 13px;
-      color: #374151;
-    }
-    .activities {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .activities li {
-      display: flex;
-      align-items: center;
-      margin-bottom: 4px;
-      gap: 4px;
-    }
-    .activity-input {
-      flex: 1;
-    }
-    .add-activity, #addCheck, #addDailyActivity, #addProject {
-      margin-top: 6px;
-      padding: 6px;
-      background: #3b82f6;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 12px;
-    }
-    .delete-activity, .delete-check, .delete-project {
-      background: #ef4444;
-      color: white;
-      border: none;
-      padding: 4px 8px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 11px;
-    }
-    .checklist ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .checklist li {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 4px;
-    }
-    .check-text {
-      flex: 1;
-    }
-    .daily-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 8px;
-    }
-    .daily-header span {
-      font-size: 13px;
-      color: #6b7280;
-    }
-    .matrix {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: auto auto;
-      gap: 6px;
-      margin-top: 8px;
-    }
-    .matrix-cell {
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      padding: 6px;
-      font-size: 12px;
-      background: #f9fafb;
-    }
-    .matrix-cell h4 {
-      margin: 0 0 4px;
-      font-size: 12px;
-      color: #374151;
-    }
-    .matrix-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .matrix-list li {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 4px;
-      margin-bottom: 2px;
-    }
     .pill-week {
       display: inline-block;
       padding: 2px 8px;
@@ -203,6 +31,7 @@
       background: #dbeafe;
       color: #1d4ed8;
       font-size: 11px;
+      margin-left: 8px;
     }
     .pill-day {
       display: inline-block;
@@ -211,557 +40,607 @@
       background: #fee2e2;
       color: #b91c1c;
       font-size: 11px;
+      margin-left: 4px;
+    }
+    .top-bar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    select, input[type="date"], input[type="text"] {
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      font-size: 13px;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 2fr 1.2fr;
+      gap: 16px;
+    }
+    .card {
+      background: white;
+      padding: 12px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      margin-bottom: 12px;
+    }
+    .slots {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .slot {
+      background: #f9fafb;
+      border-radius: 8px;
+      padding: 8px;
+      border: 1px solid #e5e7eb;
+    }
+    .slot h3 {
+      margin: 0 0 4px;
+      font-size: 14px;
+    }
+    .activity {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 4px;
+      border-radius: 6px;
+      margin-bottom: 4px;
+    }
+    .activity-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 4px;
+    }
+    .activity-header input {
+      flex: 1;
+    }
+    .activity-meta {
+      display: flex;
+      gap: 4px;
+      font-size: 11px;
+      color: #4b5563;
+      align-items: center;
+    }
+    .btn {
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .btn-primary {
+      background: #3b82f6;
+      color: white;
+    }
+    .btn-danger {
+      background: #ef4444;
+      color: white;
+    }
+    .todo-list ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .todo-list li {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+    .matrix {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .matrix-cell {
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 6px;
+      background: #f9fafb;
+      font-size: 12px;
+    }
+    .matrix-cell h4 {
+      margin: 0 0 4px;
+      font-size: 12px;
     }
   </style>
 </head>
-
 <body>
-  <h1 style="text-align:center;">Chargement du planning...</h1>
+  <div class="container">
+    <header>
+      <div>
+        <h1>Planning partagé & perso</h1>
+        <span class="pill-week">Semaine</span>
+        <span class="pill-day">Journée</span>
+      </div>
+      <button id="logoutBtn" class="btn btn-danger">Déconnexion</button>
+    </header>
+
+    <div class="top-bar">
+      <label>Planning :</label>
+      <select id="planningSelect"></select>
+
+      <label>Jour :</label>
+      <input type="date" id="datePicker" />
+
+      <span id="dateLabel"></span>
+    </div>
+
+    <div class="layout">
+      <!-- Colonne gauche : planning jour -->
+      <div>
+        <div class="card">
+          <h2>Planning de la journée</h2>
+          <div class="slots">
+            <div class="slot" data-slot="morning">
+              <h3>Matin</h3>
+              <div class="activities" id="slot-morning"></div>
+              <button class="btn btn-primary" data-add-activity="morning">+ Ajouter</button>
+            </div>
+            <div class="slot" data-slot="noon">
+              <h3>Midi</h3>
+              <div class="activities" id="slot-noon"></div>
+              <button class="btn btn-primary" data-add-activity="noon">+ Ajouter</button>
+            </div>
+            <div class="slot" data-slot="evening">
+              <h3>Soir</h3>
+              <div class="activities" id="slot-evening"></div>
+              <button class="btn btn-primary" data-add-activity="evening">+ Ajouter</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card todo-list">
+          <h2>To-do list du jour</h2>
+          <ul id="todoList"></ul>
+          <button id="addTodo" class="btn btn-primary">+ Ajouter une tâche</button>
+        </div>
+      </div>
+
+      <!-- Colonne droite : criticité + semaine -->
+      <div>
+        <div class="card">
+          <h2>Matrice de criticité</h2>
+          <div class="matrix">
+            <div class="matrix-cell" data-cell="low-low">
+              <h4>Impact faible / Urgence faible</h4>
+              <ul id="matrix-low-low"></ul>
+            </div>
+            <div class="matrix-cell" data-cell="low-high">
+              <h4>Impact faible / Urgence forte</h4>
+              <ul id="matrix-low-high"></ul>
+            </div>
+            <div class="matrix-cell" data-cell="high-low">
+              <h4>Impact fort / Urgence faible</h4>
+              <ul id="matrix-high-low"></ul>
+            </div>
+            <div class="matrix-cell" data-cell="high-high">
+              <h4>Impact fort / Urgence forte</h4>
+              <ul id="matrix-high-high"></ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Infos semaine</h2>
+          <p>Ici tu peux plus tard afficher un résumé de la semaine, ou colorer les jours.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script>
+    // 1) Connexion Supabase
   const supabase = window.supabase.createClient(
       "https://wgspawpymauabfdzhcwh.supabase.co",
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indnc3Bhd3B5bWF1YWJmZHpoY3doIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk1MDcyOTcsImV4cCI6MjA4NTA4MzI5N30.BV7w18Nmr9aMMAdsXdLovy6zowODwFvphXgWWSsVCHs"
     );
-    let user = null;
 
-    // Hebdo
-    let planningId = null;
-    let planningData = null;
-
-    // Journalier
-    let selectedDate = null; // "2025-02-24"
-    let dailyId = null;
-    let dailyData = null;
+    let currentUser = null;
+    let currentPlanning = null;
+    let currentDate = new Date().toISOString().slice(0, 10);
+    let currentDayId = null;
+    let activities = [];
+    let todos = [];
 
     async function init() {
       const { data } = await supabase.auth.getSession();
       if (!data.session) {
-        window.location.href = "Login.html";
+        // Ici tu peux rediriger vers une page de login
+        alert("Pas de session, connecte-toi d'abord.");
         return;
       }
+      currentUser = data.session.user;
 
-      user = data.session.user;
+      document.getElementById("datePicker").value = currentDate;
+      document.getElementById("dateLabel").textContent = formatDateFr(currentDate);
 
-      await loadWeeklyPlanning();
-      selectedDate = new Date().toISOString().slice(0, 10);
-      await loadDailyPlanning(selectedDate);
-
-      renderUI();
-      attachGlobalEvents();
-    }
-
-    function baseSlots() {
-      return [
-        { label: "Matin", activities: [] },
-        { label: "Midi", activities: [] },
-        { label: "Soir", activities: [] }
-      ];
-    }
-
-    async function loadWeeklyPlanning() {
-      const { data: planning, error } = await supabase
-        .from("plannings")
-        .select("*")
-        .eq("user_id", user.id)
-        .single();
-
-      if (error && error.code !== "PGRST116") {
-        document.body.innerHTML = "<h2>Erreur : " + error.message + "</h2>";
-        throw error;
-      }
-
-      if (!planning) {
-        const defaultData = {
-          globalNotes: "",
-          checklist: [],
-          days: [
-            { day: "Lundi", tag: "Démarrage en douceur", notes: "", slots: baseSlots() },
-            { day: "Mardi", tag: "Activités régulières", notes: "", slots: baseSlots() },
-            { day: "Mercredi", tag: "Milieu de semaine", notes: "", slots: baseSlots() },
-            { day: "Jeudi", tag: "Rythme stable", notes: "", slots: baseSlots() },
-            { day: "Vendredi", tag: "Fin de semaine", notes: "", slots: baseSlots() },
-            { day: "Samedi", tag: "Temps perso / loisirs", notes: "", slots: baseSlots() },
-            { day: "Dimanche", tag: "Repos / préparation", notes: "", slots: baseSlots() }
-          ]
-        };
-
-        const { data: newPlanning } = await supabase
-          .from("plannings")
-          .insert({ user_id: user.id, data: defaultData })
-          .select()
-          .single();
-
-        planningId = newPlanning.id;
-        planningData = newPlanning.data;
-      } else {
-        planningId = planning.id;
-        planningData = planning.data;
-      }
-    }
-
-    async function loadDailyPlanning(dateStr) {
-      const { data: daily, error } = await supabase
-        .from("daily_plannings")
-        .select("*")
-        .eq("user_id", user.id)
-        .eq("date", dateStr)
-        .single();
-
-      if (error && error.code !== "PGRST116") {
-        console.error("Erreur daily_plannings:", error);
-        throw error;
-      }
-
-      if (!daily) {
-        const defaultDaily = {
-          notes: "",
-          checklist: [],
-          slots: baseSlots(),
-          projects: [] // { title, impact (1/2), urgency (1/2) }
-        };
-
-        const { data: newDaily } = await supabase
-          .from("daily_plannings")
-          .insert({
-            user_id: user.id,
-            date: dateStr,
-            data: defaultDaily
-          })
-          .select()
-          .single();
-
-        dailyId = newDaily.id;
-        dailyData = newDaily.data;
-      } else {
-        dailyId = daily.id;
-        dailyData = daily.data;
-      }
-    }
-
-    async function saveWeekly() {
-      await supabase
-        .from("plannings")
-        .update({ data: planningData })
-        .eq("id", planningId);
-    }
-
-    async function saveDaily() {
-      await supabase
-        .from("daily_plannings")
-        .update({ data: dailyData })
-        .eq("id", dailyId);
+      await loadPlannings();
+      await loadDayData();
+      attachEvents();
     }
 
     function formatDateFr(dateStr) {
       const d = new Date(dateStr);
-      return d.toLocaleDateString("fr-FR", { weekday: "long", day: "2-digit", month: "short", year: "numeric" });
+      return d.toLocaleDateString("fr-FR", {
+        weekday: "long",
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+      });
     }
 
-    function renderUI() {
-      document.body.innerHTML = `
-        <div class="container">
-          <header>
-            <div>
-              <h1>Planning d’activités</h1>
-              <span class="pill-week">Vue semaine</span>
-              <span class="pill-day">Vue journée</span>
-            </div>
-            <button id="logoutBtn" class="logout">Déconnexion</button>
-          </header>
+    async function loadPlannings() {
+      const { data, error } = await supabase
+        .from("plannings")
+        .select("*")
+        .eq("user_id", currentUser.id);
 
-          <div class="top-bar">
-            <label for="datePicker">Journée sélectionnée :</label>
-            <input type="date" id="datePicker" value="${selectedDate}" />
-            <span>${formatDateFr(selectedDate)}</span>
-          </div>
-
-          <div class="layout">
-            <!-- Colonne gauche : semaine -->
-            <div>
-              <div class="card">
-                <h2>Notes globales semaine</h2>
-                <textarea id="globalNotes">${planningData.globalNotes || ""}</textarea>
-              </div>
-
-              <div class="card checklist">
-                <h2>Checklist semaine</h2>
-                <ul id="weekChecklist">
-                  ${planningData.checklist.map((item, i) => `
-                    <li>
-                      <input type="checkbox" ${item.checked ? "checked" : ""} data-index="${i}" />
-                      <input class="check-text" data-index="${i}" value="${item.text}" />
-                      <button class="delete-check" data-index="${i}">×</button>
-                    </li>
-                  `).join("")}
-                </ul>
-                <button id="addWeekCheck">+ Ajouter une tâche</button>
-              </div>
-
-              <div class="card">
-                <h2>Planning hebdomadaire</h2>
-                <div class="week">
-                  ${planningData.days.map((day, index) => `
-                    <div class="day-card" data-day-index="${index}">
-                      <h3>${day.day}</h3>
-                      <input class="tag-input" value="${day.tag}" placeholder="Tag du jour" />
-
-                      <div class="slots">
-                        ${day.slots.map((slot, sIndex) => `
-                          <div class="slot" data-slot-index="${sIndex}">
-                            <h4>${slot.label}</h4>
-                            <ul class="activities">
-                              ${slot.activities.map((act, aIndex) => `
-                                <li>
-                                  <input class="activity-input" data-activity-index="${aIndex}" value="${act}" />
-                                  <button class="delete-activity">×</button>
-                                </li>
-                              `).join("")}
-                            </ul>
-                            <button class="add-activity">+ Ajouter une activité</button>
-                          </div>
-                        `).join("")}
-                      </div>
-
-                      <textarea class="day-notes" placeholder="Notes du jour">${day.notes}</textarea>
-                    </div>
-                  `).join("")}
-                </div>
-              </div>
-            </div>
-
-            <!-- Colonne droite : journée -->
-            <div>
-              <div class="card">
-                <div class="daily-header">
-                  <h2>Journée du ${formatDateFr(selectedDate)}</h2>
-                  <span>Matin / Midi / Soir + notes</span>
-                </div>
-
-                <div class="slots">
-                  ${dailyData.slots.map((slot, sIndex) => `
-                    <div class="slot" data-dslot-index="${sIndex}">
-                      <h4>${slot.label}</h4>
-                      <ul class="activities">
-                        ${slot.activities.map((act, aIndex) => `
-                          <li>
-                            <input class="daily-activity-input" data-activity-index="${aIndex}" value="${act}" />
-                            <button class="delete-daily-activity">×</button>
-                          </li>
-                        `).join("")}
-                      </ul>
-                      <button class="add-daily-activity">+ Ajouter une activité</button>
-                    </div>
-                  `).join("")}
-                </div>
-
-                <h3>Notes de la journée</h3>
-                <textarea id="dailyNotes">${dailyData.notes || ""}</textarea>
-              </div>
-
-              <div class="card checklist">
-                <h2>Checklist journée</h2>
-                <ul id="dailyChecklist">
-                  ${dailyData.checklist.map((item, i) => `
-                    <li>
-                      <input type="checkbox" ${item.checked ? "checked" : ""} data-index="${i}" />
-                      <input class="check-text daily-check-text" data-index="${i}" value="${item.text}" />
-                      <button class="delete-daily-check" data-index="${i}">×</button>
-                    </li>
-                  `).join("")}
-                </ul>
-                <button id="addDailyCheck">+ Ajouter une tâche</button>
-              </div>
-
-              <div class="card">
-                <h2>Matrice de criticité (Impact / Urgence)</h2>
-                <div style="display:flex; gap:6px; margin-bottom:6px;">
-                  <input type="text" id="projectTitle" placeholder="Nom du projet" />
-                  <select id="projectImpact">
-                    <option value="1">Impact faible</option>
-                    <option value="2">Impact fort</option>
-                  </select>
-                  <select id="projectUrgency">
-                    <option value="1">Urgence faible</option>
-                    <option value="2">Urgence forte</option>
-                  </select>
-                </div>
-                <button id="addProject">Ajouter projet</button>
-
-                <div class="matrix">
-                  <div class="matrix-cell" data-cell="1-1">
-                    <h4>Impact faible / Urgence faible</h4>
-                    <ul class="matrix-list">
-                      ${dailyData.projects
-                        .filter(p => p.impact === 1 && p.urgency === 1)
-                        .map((p, i) => `
-                          <li data-pindex="${i}">
-                            <span>${p.title}</span>
-                            <button class="delete-project">×</button>
-                          </li>
-                        `).join("")}
-                    </ul>
-                  </div>
-                  <div class="matrix-cell" data-cell="1-2">
-                    <h4>Impact faible / Urgence forte</h4>
-                    <ul class="matrix-list">
-                      ${dailyData.projects
-                        .filter(p => p.impact === 1 && p.urgency === 2)
-                        .map((p, i) => `
-                          <li data-pindex="${i}">
-                            <span>${p.title}</span>
-                            <button class="delete-project">×</button>
-                          </li>
-                        `).join("")}
-                    </ul>
-                  </div>
-                  <div class="matrix-cell" data-cell="2-1">
-                    <h4>Impact fort / Urgence faible</h4>
-                    <ul class="matrix-list">
-                      ${dailyData.projects
-                        .filter(p => p.impact === 2 && p.urgency === 1)
-                        .map((p, i) => `
-                          <li data-pindex="${i}">
-                            <span>${p.title}</span>
-                            <button class="delete-project">×</button>
-                          </li>
-                        `).join("")}
-                    </ul>
-                  </div>
-                  <div class="matrix-cell" data-cell="2-2">
-                    <h4>Impact fort / Urgence forte</h4>
-                    <ul class="matrix-list">
-                      ${dailyData.projects
-                        .filter(p => p.impact === 2 && p.urgency === 2)
-                        .map((p, i) => `
-                          <li data-pindex="${i}">
-                            <span>${p.title}</span>
-                            <button class="delete-project">×</button>
-                          </li>
-                        `).join("")}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    function attachGlobalEvents() {
-      document.getElementById("logoutBtn").onclick = async () => {
-        await supabase.auth.signOut();
-        window.location.href = "Login.html";
-      };
-
-      // Date picker
-      document.getElementById("datePicker").onchange = async (e) => {
-        selectedDate = e.target.value;
-        await loadDailyPlanning(selectedDate);
-        renderUI();
-        attachGlobalEvents();
-        attachWeekEvents();
-        attachDayEvents();
-      };
-
-      attachWeekEvents();
-      attachDayEvents();
-    }
-
-    function attachWeekEvents() {
-      // Notes globales semaine
-      const globalNotes = document.getElementById("globalNotes");
-      if (globalNotes) {
-        globalNotes.oninput = (e) => {
-          planningData.globalNotes = e.target.value;
-          saveWeekly();
-        };
+      if (error) {
+        console.error(error);
+        return;
       }
 
-      // Checklist semaine
-      document.getElementById("addWeekCheck").onclick = () => {
-        planningData.checklist.push({ text: "", checked: false });
-        saveWeekly();
-        renderUI();
-        attachGlobalEvents();
-      };
+      const select = document.getElementById("planningSelect");
+      select.innerHTML = "";
 
-      document.querySelectorAll("#weekChecklist input[type='checkbox']").forEach((cb) => {
-        cb.onchange = (e) => {
-          const i = e.target.dataset.index;
-          planningData.checklist[i].checked = e.target.checked;
-          saveWeekly();
-        };
-      });
-
-      document.querySelectorAll("#weekChecklist .check-text").forEach((input) => {
-        input.oninput = (e) => {
-          const i = e.target.dataset.index;
-          planningData.checklist[i].text = e.target.value;
-          saveWeekly();
-        };
-      });
-
-      document.querySelectorAll("#weekChecklist .delete-check").forEach((btn) => {
-        btn.onclick = (e) => {
-          const i = e.target.dataset.index;
-          planningData.checklist.splice(i, 1);
-          saveWeekly();
-          renderUI();
-          attachGlobalEvents();
-        };
-      });
-
-      // Tags, notes, activités semaine
-      document.querySelectorAll(".day-card").forEach((card, dayIndex) => {
-        const tagInput = card.querySelector(".tag-input");
-        tagInput.oninput = (e) => {
-          planningData.days[dayIndex].tag = e.target.value;
-          saveWeekly();
-        };
-
-        const dayNotes = card.querySelector(".day-notes");
-        dayNotes.oninput = (e) => {
-          planningData.days[dayIndex].notes = e.target.value;
-          saveWeekly();
-        };
-
-        card.querySelectorAll(".slot").forEach((slotEl, slotIndex) => {
-          slotEl.querySelectorAll(".activity-input").forEach((input, aIndex) => {
-            input.oninput = (e) => {
-              planningData.days[dayIndex].slots[slotIndex].activities[aIndex] = e.target.value;
-              saveWeekly();
-            };
-          });
-
-          const addBtn = slotEl.querySelector(".add-activity");
-          addBtn.onclick = () => {
-            planningData.days[dayIndex].slots[slotIndex].activities.push("");
-            saveWeekly();
-            renderUI();
-            attachGlobalEvents();
-          };
-
-          slotEl.querySelectorAll(".delete-activity").forEach((btn, aIndex) => {
-            btn.onclick = () => {
-              planningData.days[dayIndex].slots[slotIndex].activities.splice(aIndex, 1);
-              saveWeekly();
-              renderUI();
-              attachGlobalEvents();
-            };
-          });
+      if (!data || data.length === 0) {
+        // Créer un planning perso par défaut
+        const { data: newPlanning } = await supabase
+          .from("plannings")
+          .insert({
+            user_id: currentUser.id,
+            type: "personal",
+            name: "Mon planning perso"
+          })
+          .select()
+          .single();
+        currentPlanning = newPlanning;
+        select.innerHTML = `<option value="${newPlanning.id}">${newPlanning.name}</option>`;
+      } else {
+        data.forEach(p => {
+          const opt = document.createElement("option");
+          opt.value = p.id;
+          opt.textContent = p.name + (p.type === "shared" ? " (partagé)" : "");
+          select.appendChild(opt);
         });
+        currentPlanning = data[0];
+      }
+
+      select.value = currentPlanning.id;
+      select.onchange = async (e) => {
+        currentPlanning = data.find(p => p.id === e.target.value);
+        await loadDayData();
+      };
+    }
+
+    async function loadDayData() {
+      // Charger / créer le planning_day
+      const { data: day, error } = await supabase
+        .from("planning_days")
+        .select("*")
+        .eq("planning_id", currentPlanning.id)
+        .eq("date", currentDate)
+        .single();
+
+      if (error && error.code !== "PGRST116") {
+        console.error(error);
+        return;
+      }
+
+      if (!day) {
+        const { data: newDay } = await supabase
+          .from("planning_days")
+          .insert({
+            planning_id: currentPlanning.id,
+            date: currentDate
+          })
+          .select()
+          .single();
+        currentDayId = newDay.id;
+      } else {
+        currentDayId = day.id;
+      }
+
+      await loadActivities();
+      await loadTodos();
+      renderActivities();
+      renderTodos();
+      renderMatrix();
+    }
+
+    async function loadActivities() {
+      const { data, error } = await supabase
+        .from("activities")
+        .select("*")
+        .eq("planning_day_id", currentDayId);
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+      activities = data || [];
+    }
+
+    async function loadTodos() {
+      const { data, error } = await supabase
+        .from("todos")
+        .select("*")
+        .eq("planning_day_id", currentDayId);
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+      todos = data || [];
+    }
+
+    function renderActivities() {
+      ["morning", "noon", "evening"].forEach(slot => {
+        const container = document.getElementById("slot-" + slot);
+        container.innerHTML = "";
+        activities
+          .filter(a => a.slot === slot)
+          .forEach(act => {
+            const div = document.createElement("div");
+            div.className = "activity";
+            div.style.background = computeActivityColor(act);
+
+            div.innerHTML = `
+              <div class="activity-header">
+                <input type="text" value="${act.name || ""}" data-id="${act.id}" class="act-name" />
+                <button class="btn btn-danger btn-del-act" data-id="${act.id}">×</button>
+              </div>
+              <div class="activity-meta">
+                <input type="text" value="${act.category || ""}" data-id="${act.id}" class="act-cat" placeholder="Catégorie" />
+                <input type="number" value="${act.duration_minutes || 0}" data-id="${act.id}" class="act-dur" style="width:60px;" /> min
+              </div>
+              <div class="activity-meta">
+                Criticité :
+                <select data-id="${act.id}" class="act-crit">
+                  <option value="low" ${act.criticality === "low" ? "selected" : ""}>Basse</option>
+                  <option value="medium" ${act.criticality === "medium" ? "selected" : ""}>Moyenne</option>
+                  <option value="high" ${act.criticality === "high" ? "selected" : ""}>Haute</option>
+                </select>
+                Fin :
+                <input type="date" value="${act.due_date ? act.due_date.slice(0,10) : ""}" data-id="${act.id}" class="act-due" />
+                <label>
+                  <input type="checkbox" class="act-done" data-id="${act.id}" ${act.done ? "checked" : ""} />
+                  Fini
+                </label>
+              </div>
+            `;
+            container.appendChild(div);
+          });
+      });
+
+      attachActivityEvents();
+    }
+
+    function computeActivityColor(act) {
+      if (!act.due_date) return "#e5f9e7"; // vert pastel par défaut
+      const now = new Date();
+      const start = new Date(act.created_at || act.due_date);
+      const end = new Date(act.due_date);
+      if (end <= start) return "#fee2e2"; // rouge pastel si date bizarre
+
+      const total = end - start;
+      const elapsed = Math.min(Math.max(now - start, 0), total);
+      const ratio = total === 0 ? 1 : elapsed / total; // 0 → vert, 1 → rouge
+
+      // interpolation simple entre vert pastel (#bbf7d0) et rouge pastel (#fecaca)
+      const from = { r: 187, g: 247, b: 208 };
+      const to = { r: 254, g: 202, b: 202 };
+      const r = Math.round(from.r + (to.r - from.r) * ratio);
+      const g = Math.round(from.g + (to.g - from.g) * ratio);
+      const b = Math.round(from.b + (to.b - from.b) * ratio);
+      return `rgb(${r}, ${g}, ${b})`;
+    }
+
+    function renderTodos() {
+      const ul = document.getElementById("todoList");
+      ul.innerHTML = "";
+      todos.forEach(t => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <input type="checkbox" data-id="${t.id}" class="todo-done" ${t.done ? "checked" : ""} />
+          <input type="text" data-id="${t.id}" class="todo-text" value="${t.text || ""}" />
+          <button class="btn btn-danger btn-del-todo" data-id="${t.id}">×</button>
+        `;
+        ul.appendChild(li);
+      });
+      attachTodoEvents();
+    }
+
+    function renderMatrix() {
+      const cells = {
+        "low-low": document.getElementById("matrix-low-low"),
+        "low-high": document.getElementById("matrix-low-high"),
+        "high-low": document.getElementById("matrix-high-low"),
+        "high-high": document.getElementById("matrix-high-high")
+      };
+      Object.values(cells).forEach(ul => ul.innerHTML = "");
+
+      activities.forEach(a => {
+        const urgency = a.criticality === "high" ? "high" : (a.criticality === "medium" ? "high" : "low");
+        const impact = a.duration_minutes >= 60 ? "high" : "low"; // exemple : durée >= 60 = impact fort
+        const key = `${impact}-${urgency}`;
+        const ul = cells[key];
+        if (!ul) return;
+        const li = document.createElement("li");
+        li.textContent = a.name || "(sans nom)";
+        ul.appendChild(li);
       });
     }
 
-    function attachDayEvents() {
-      // Slots journée
-      document.querySelectorAll(".slot[data-dslot-index]").forEach((slotEl) => {
-        const sIndex = slotEl.dataset.dslotIndex;
-
-        slotEl.querySelectorAll(".daily-activity-input").forEach((input, aIndex) => {
-          input.oninput = (e) => {
-            dailyData.slots[sIndex].activities[aIndex] = e.target.value;
-            saveDaily();
-          };
-        });
-
-        const addBtn = slotEl.querySelector(".add-daily-activity");
-        addBtn.onclick = () => {
-          dailyData.slots[sIndex].activities.push("");
-          saveDaily();
-          renderUI();
-          attachGlobalEvents();
-        };
-
-        slotEl.querySelectorAll(".delete-daily-activity").forEach((btn, aIndex) => {
-          btn.onclick = () => {
-            dailyData.slots[sIndex].activities.splice(aIndex, 1);
-            saveDaily();
-            renderUI();
-            attachGlobalEvents();
-          };
-        });
-      });
-
-      // Notes journée
-      const dailyNotes = document.getElementById("dailyNotes");
-      dailyNotes.oninput = (e) => {
-        dailyData.notes = e.target.value;
-        saveDaily();
+    function attachEvents() {
+      document.getElementById("logoutBtn").onclick = async () => {
+        await supabase.auth.signOut();
+        alert("Déconnecté.");
       };
 
-      // Checklist journée
-      document.getElementById("addDailyCheck").onclick = () => {
-        dailyData.checklist.push({ text: "", checked: false });
-        saveDaily();
-        renderUI();
-        attachGlobalEvents();
+      document.getElementById("datePicker").onchange = async (e) => {
+        currentDate = e.target.value;
+        document.getElementById("dateLabel").textContent = formatDateFr(currentDate);
+        await loadDayData();
       };
 
-      document.querySelectorAll("#dailyChecklist input[type='checkbox']").forEach((cb) => {
-        cb.onchange = (e) => {
-          const i = e.target.dataset.index;
-          dailyData.checklist[i].checked = e.target.checked;
-          saveDaily();
+      document.querySelectorAll("[data-add-activity]").forEach(btn => {
+        btn.onclick = async () => {
+          const slot = btn.getAttribute("data-add-activity");
+          const { data, error } = await supabase
+            .from("activities")
+            .insert({
+              planning_day_id: currentDayId,
+              slot,
+              name: "",
+              category: "",
+              duration_minutes: 0,
+              criticality: "low",
+              created_at: new Date().toISOString(),
+              done: false
+            })
+            .select()
+            .single();
+          if (!error) {
+            activities.push(data);
+            renderActivities();
+            renderMatrix();
+          }
         };
       });
 
-      document.querySelectorAll("#dailyChecklist .daily-check-text").forEach((input) => {
-        input.oninput = (e) => {
-          const i = e.target.dataset.index;
-          dailyData.checklist[i].text = e.target.value;
-          saveDaily();
-        };
-      });
-
-      document.querySelectorAll("#dailyChecklist .delete-daily-check").forEach((btn) => {
-        btn.onclick = (e) => {
-          const i = e.target.dataset.index;
-          dailyData.checklist.splice(i, 1);
-          saveDaily();
-          renderUI();
-          attachGlobalEvents();
-        };
-      });
-
-      // Matrice de criticité
-      document.getElementById("addProject").onclick = () => {
-        const title = document.getElementById("projectTitle").value.trim();
-        const impact = Number(document.getElementById("projectImpact").value);
-        const urgency = Number(document.getElementById("projectUrgency").value);
-        if (!title) return;
-
-        dailyData.projects.push({ title, impact, urgency });
-        document.getElementById("projectTitle").value = "";
-        saveDaily();
-        renderUI();
-        attachGlobalEvents();
+      document.getElementById("addTodo").onclick = async () => {
+        const { data, error } = await supabase
+          .from("todos")
+          .insert({
+            planning_day_id: currentDayId,
+            text: "",
+            done: false
+          })
+          .select()
+          .single();
+        if (!error) {
+          todos.push(data);
+          renderTodos();
+        }
       };
-
-      document.querySelectorAll(".matrix .delete-project").forEach((btn) => {
-        btn.onclick = (e) => {
-          const li = e.target.closest("li");
-          const pIndex = Number(li.dataset.pindex);
-          dailyData.projects.splice(pIndex, 1);
-          saveDaily();
-          renderUI();
-          attachGlobalEvents();
-        };
-      });
-          init();
     }
 
+    function attachActivityEvents() {
+      document.querySelectorAll(".act-name").forEach(input => {
+        input.oninput = async (e) => {
+          const id = e.target.dataset.id;
+          const name = e.target.value;
+          await supabase.from("activities").update({ name }).eq("id", id);
+          const act = activities.find(a => a.id === id);
+          if (act) act.name = name;
+          renderMatrix();
+        };
+      });
 
+      document.querySelectorAll(".act-cat").forEach(input => {
+        input.oninput = async (e) => {
+          const id = e.target.dataset.id;
+          const category = e.target.value;
+          await supabase.from("activities").update({ category }).eq("id", id);
+          const act = activities.find(a => a.id === id);
+          if (act) act.category = category;
+        };
+      });
+
+      document.querySelectorAll(".act-dur").forEach(input => {
+        input.onchange = async (e) => {
+          const id = e.target.dataset.id;
+          const duration_minutes = Number(e.target.value) || 0;
+          await supabase.from("activities").update({ duration_minutes }).eq("id", id);
+          const act = activities.find(a => a.id === id);
+          if (act) act.duration_minutes = duration_minutes;
+          renderMatrix();
+        };
+      });
+
+      document.querySelectorAll(".act-crit").forEach(select => {
+        select.onchange = async (e) => {
+          const id = e.target.dataset.id;
+          const criticality = e.target.value;
+          await supabase.from("activities").update({ criticality }).eq("id", id);
+          const act = activities.find(a => a.id === id);
+          if (act) act.criticality = criticality;
+          renderMatrix();
+        };
+      });
+
+      document.querySelectorAll(".act-due").forEach(input => {
+        input.onchange = async (e) => {
+          const id = e.target.dataset.id;
+          const due_date = e.target.value || null;
+          await supabase.from("activities").update({ due_date }).eq("id", id);
+          const act = activities.find(a => a.id === id);
+          if (act) act.due_date = due_date;
+          renderActivities();
+          renderMatrix();
+        };
+      });
+
+      document.querySelectorAll(".act-done").forEach(cb => {
+        cb.onchange = async (e) => {
+          const id = e.target.dataset.id;
+          const done = e.target.checked;
+          await supabase.from("activities").update({ done }).eq("id", id);
+          const act = activities.find(a => a.id === id);
+          if (act) act.done = done;
+        };
+      });
+
+      document.querySelectorAll(".btn-del-act").forEach(btn => {
+        btn.onclick = async (e) => {
+          const id = e.target.dataset.id;
+          await supabase.from("activities").delete().eq("id", id);
+          activities = activities.filter(a => a.id !== id);
+          renderActivities();
+          renderMatrix();
+        };
+      });
+    }
+
+    function attachTodoEvents() {
+      document.querySelectorAll(".todo-text").forEach(input => {
+        input.oninput = async (e) => {
+          const id = e.target.dataset.id;
+          const text = e.target.value;
+          await supabase.from("todos").update({ text }).eq("id", id);
+          const t = todos.find(x => x.id === id);
+          if (t) t.text = text;
+        };
+      });
+
+      document.querySelectorAll(".todo-done").forEach(cb => {
+        cb.onchange = async (e) => {
+          const id = e.target.dataset.id;
+          const done = e.target.checked;
+          await supabase.from("todos").update({ done }).eq("id", id);
+          const t = todos.find(x => x.id === id);
+          if (t) t.done = done;
+        };
+      });
+
+      document.querySelectorAll(".btn-del-todo").forEach(btn => {
+        btn.onclick = async (e) => {
+          const id = e.target.dataset.id;
+          await supabase.from("todos").delete().eq("id", id);
+          todos = todos.filter(x => x.id !== id);
+          renderTodos();
+        };
+      });
+    }
+
+    init();
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
