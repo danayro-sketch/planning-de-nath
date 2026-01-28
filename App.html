@@ -72,7 +72,10 @@
 </head>
 
 <body>
-  <h1 style="text-align:center;">Chargement du planning...</h1>
+  <div id="app">
+    <h1 style="text-align:center;">Chargement du planning...</h1>
+  </div>
+</body>
 
   <script>
     const supabase = window.supabase.createClient(
@@ -97,10 +100,11 @@
         .from("plannings")
         .select("*")
         .eq("user_id", user.id)
+        .limit(1)
         .single();
 
       if (error && error.code !== "PGRST116") {
-        document.body.innerHTML = "<h2>Erreur : " + error.message + "</h2>";
+        document.getElementById("app").innerHTML = "<h2>Erreur : " + error.message + "</h2>";
         return;
       }
 
@@ -152,7 +156,7 @@
     }
 
     function loadPlanningUI() {
-      document.body.innerHTML = `
+     document.getElementById("app").innerHTML = `
         <div class="container">
           <header>
             <h1>Planning d’activités</h1>
