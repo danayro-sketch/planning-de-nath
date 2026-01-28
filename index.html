@@ -88,35 +88,6 @@
     .btn-danger {
       background: #FCA5A5;
     }
-
-    .todo-card {
-      margin-top: 20px;
-      background: #FFFFFF;
-      padding: 12px;
-      border-radius: 12px;
-      border: 1px solid #E0E7FF;
-    }
-
-    .todo-list li {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 6px;
-      align-items: center;
-    }
-
-    .matrix {
-      margin-top: 20px;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-
-    .matrix-cell {
-      background: #FFFFFF;
-      border-radius: 10px;
-      padding: 10px;
-      border: 1px solid #E0E7FF;
-    }
   </style>
 </head>
 
@@ -127,26 +98,13 @@
     <input type="date" id="weekStart" />
 
     <div class="week-grid" id="weekGrid"></div>
-
-    <div class="todo-card">
-      <h2>To‑do list</h2>
-      <ul id="todoList" class="todo-list"></ul>
-      <button id="addTodo" class="btn">+ Ajouter une tâche</button>
-    </div>
-
-    <div class="matrix">
-      <div class="matrix-cell" id="low-low"><h3>Faible / Faible</h3></div>
-      <div class="matrix-cell" id="low-high"><h3>Faible / Fort</h3></div>
-      <div class="matrix-cell" id="high-low"><h3>Fort / Faible</h3></div>
-      <div class="matrix-cell" id="high-high"><h3>Fort / Fort</h3></div>
-    </div>
   </div>
 
 <script>
   const supabase = window.supabase.createClient(
-      "https://wgspawpymauabfdzhcwh.supabase.co",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indnc3Bhd3B5bWF1YWJmZHpoY3doIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk1MDcyOTcsImV4cCI6MjA4NTA4MzI5N30.BV7w18Nmr9aMMAdsXdLovy6zowODwFvphXgWWSsVCHs"
-    );
+    "https://wgspawpymauabfdzhcwh.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indnc3Bhd3B5bWF1YWJmZHpoY3doIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk1MDcyOTcsImV4cCI6MjA4NTA4MzI5N30.BV7w18Nmr9aMMAdsXdLovy6zowODwFvphXgWWSsVCHs"
+  );
 
   let currentUser = null;
   let planningId = null;
@@ -189,57 +147,7 @@
       planningId = data.id;
     }
   }
-function attachAddButtons() {
-  document.querySelectorAll(".add-btn").forEach(btn => {
-    btn.onclick = async () => {
-      const date = btn.dataset.date;
-      const slot = btn.dataset.slot;
 
-      await addActivity(date, slot);
-      await renderWeek(); // 🔥 recharge la semaine et réattache les événements
-    };
-  });
-}
-   async function renderWeek() {
-  const grid = document.getElementById("weekGrid");
-  grid.innerHTML = "";
-
-  for (const date of weekDates) {
-    const dayCard = document.createElement("div");
-    dayCard.className = "day-card";
-
-    dayCard.innerHTML = `
-      <h2>${formatDate(date)}</h2>
-
-      <div class="slot" data-slot="morning">
-        <h3>Matin</h3>
-        <div id="m-${date}"></div>
-        <button class="btn add-btn" data-date="${date}" data-slot="morning">+ Ajouter</button>
-      </div>
-
-      <div class="slot" data-slot="noon">
-        <h3>Midi</h3>
-        <div id="n-${date}"></div>
-        <button class="btn add-btn" data-date="${date}" data-slot="noon">+ Ajouter</button>
-      </div>
-
-      <div class="slot" data-slot="evening">
-        <h3>Soir</h3>
-        <div id="e-${date}"></div>
-        <button class="btn add-btn" data-date="${date}" data-slot="evening">+ Ajouter</button>
-      </div>
-    `;
-
-    grid.appendChild(dayCard);
-
-    await loadDay(date);
-  }
-
-  // 🔥 C’est ici que tout se joue
-  attachAddButtons();
-  attachActivityEvents();
-}
- 
   function setWeek(date) {
     const monday = new Date(date);
     monday.setDate(monday.getDate() - monday.getDay() + 1);
@@ -255,7 +163,44 @@ function attachAddButtons() {
     renderWeek();
   }
 
- 
+  async function renderWeek() {
+    const grid = document.getElementById("weekGrid");
+    grid.innerHTML = "";
+
+    for (const date of weekDates) {
+      const dayCard = document.createElement("div");
+      dayCard.className = "day-card";
+
+      dayCard.innerHTML = `
+        <h2>${formatDate(date)}</h2>
+
+        <div class="slot" data-slot="morning">
+          <h3>Matin</h3>
+          <div id="m-${date}"></div>
+          <button class="btn add-btn" data-date="${date}" data-slot="morning">+ Ajouter</button>
+        </div>
+
+        <div class="slot" data-slot="noon">
+          <h3>Midi</h3>
+          <div id="n-${date}"></div>
+          <button class="btn add-btn" data-date="${date}" data-slot="noon">+ Ajouter</button>
+        </div>
+
+        <div class="slot" data-slot="evening">
+          <h3>Soir</h3>
+          <div id="e-${date}"></div>
+          <button class="btn add-btn" data-date="${date}" data-slot="evening">+ Ajouter</button>
+        </div>
+      `;
+
+      grid.appendChild(dayCard);
+
+      await loadDay(date);
+    }
+
+    attachAddButtons();
+    attachActivityEvents();
+  }
 
   function formatDate(d) {
     return new Date(d).toLocaleDateString("fr-FR", {
@@ -315,8 +260,6 @@ function attachAddButtons() {
         container.appendChild(div);
       });
     });
-
-    attachActivityEvents();
   }
 
   function computeColor(a) {
@@ -340,6 +283,17 @@ function attachAddButtons() {
     return `rgb(${r},${g},${b})`;
   }
 
+  function attachAddButtons() {
+    document.querySelectorAll(".add-btn").forEach(btn => {
+      btn.onclick = async () => {
+        const date = btn.dataset.date;
+        const slot = btn.dataset.slot;
+
+        await addActivity(date, slot);
+        await renderWeek();
+      };
+    });
+  }
 
   async function addActivity(date, slot) {
     const { data: day } = await supabase
@@ -396,4 +350,3 @@ function attachAddButtons() {
 
 </body>
 </html>
-
