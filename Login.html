@@ -177,21 +177,13 @@
     });
 
     // Si déjà connecté, on redirige directement vers l’app
-    (async () => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-  email,
-  password
-});
+   (async () => {
+  const { data } = await supabase.auth.getSession();
 
-if (error) {
-  showError(error.message);
-  return;
-}
-
-window.location.href = "App.html";
-
-      }
-    })();
+  if (data.session) {
+    window.location.href = "App.html";
+  }
+})();
   </script>
 </body>
 </html>
