@@ -189,7 +189,57 @@
       planningId = data.id;
     }
   }
+function attachAddButtons() {
+  document.querySelectorAll(".add-btn").forEach(btn => {
+    btn.onclick = async () => {
+      const date = btn.dataset.date;
+      const slot = btn.dataset.slot;
 
+      await addActivity(date, slot);
+      await renderWeek(); // 🔥 recharge la semaine et réattache les événements
+    };
+  });
+}
+   async function renderWeek() {
+  const grid = document.getElementById("weekGrid");
+  grid.innerHTML = "";
+
+  for (const date of weekDates) {
+    const dayCard = document.createElement("div");
+    dayCard.className = "day-card";
+
+    dayCard.innerHTML = `
+      <h2>${formatDate(date)}</h2>
+
+      <div class="slot" data-slot="morning">
+        <h3>Matin</h3>
+        <div id="m-${date}"></div>
+        <button class="btn add-btn" data-date="${date}" data-slot="morning">+ Ajouter</button>
+      </div>
+
+      <div class="slot" data-slot="noon">
+        <h3>Midi</h3>
+        <div id="n-${date}"></div>
+        <button class="btn add-btn" data-date="${date}" data-slot="noon">+ Ajouter</button>
+      </div>
+
+      <div class="slot" data-slot="evening">
+        <h3>Soir</h3>
+        <div id="e-${date}"></div>
+        <button class="btn add-btn" data-date="${date}" data-slot="evening">+ Ajouter</button>
+      </div>
+    `;
+
+    grid.appendChild(dayCard);
+
+    await loadDay(date);
+  }
+
+  // 🔥 C’est ici que tout se joue
+  attachAddButtons();
+  attachActivityEvents();
+}
+ 
   function setWeek(date) {
     const monday = new Date(date);
     monday.setDate(monday.getDate() - monday.getDay() + 1);
@@ -205,43 +255,7 @@
     renderWeek();
   }
 
-  async function renderWeek() {
-    const grid = document.getElementById("weekGrid");
-    grid.innerHTML = "";
-
-    for (const date of weekDates) {
-      const dayCard = document.createElement("div");
-      dayCard.className = "day-card";
-
-      dayCard.innerHTML = `
-        <h2>${formatDate(date)}</h2>
-
-        <div class="slot" data-slot="morning">
-          <h3>Matin</h3>
-          <div id="m-${date}"></div>
-          <button class="btn" data-add="${date}-morning">+ Ajouter</button>
-        </div>
-
-        <div class="slot" data-slot="noon">
-          <h3>Midi</h3>
-          <div id="n-${date}"></div>
-          <button class="btn" data-add="${date}-noon">+ Ajouter</button>
-        </div>
-
-        <div class="slot" data-slot="evening">
-          <h3>Soir</h3>
-          <div id="e-${date}"></div>
-          <button class="btn" data-add="${date}-evening">+ Ajouter</button>
-        </div>
-      `;
-
-      grid.appendChild(dayCard);
-
-      await loadDay(date);
-    }
-
-    attachAddButtons();
-  }
+ 
 
   function formatDate(d) {
     return new Date(d).toLocaleDateString("fr-FR", {
@@ -326,15 +340,6 @@
     return `rgb(${r},${g},${b})`;
   }
 
-  function attachAddButtons() {
-    document.querySelectorAll("[data-add]").forEach(btn => {
-      btn.onclick = async () => {
-        const [date, slot] = btn.dataset.add.split("-");
-        await addActivity(date, slot);
-        await renderWeek();
-      };
-    });
-  }
 
   async function addActivity(date, slot) {
     const { data: day } = await supabase
@@ -391,3 +396,4 @@
 
 </body>
 </html>
+
