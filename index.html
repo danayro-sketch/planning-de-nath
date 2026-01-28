@@ -2,572 +2,392 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Planning partagé</title>
+  <title>Planning 7 jours pastel</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
   <style>
-   body {
-    font-family: Inter, sans-serif;
-    background: #F7F7FB;
-    margin: 0;
-    padding: 0;
-    color: #333;
-  }
+    body {
+      font-family: Inter, sans-serif;
+      background: #F7F7FB;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
 
-  .container {
-    max-width: 1200px;
-    margin: auto;
-    padding: 20px;
-  }
+    .container {
+      max-width: 1400px;
+      margin: auto;
+      padding: 20px;
+    }
 
-  .card {
-    background: #FFFFFF;
-    padding: 14px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    margin-bottom: 16px;
-    border: 1px solid #E0E7FF;
-  }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
 
-  .slots {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-  }
+    .week-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 12px;
+    }
 
-  .slot {
-    border-radius: 10px;
-    padding: 10px;
-  }
+    .day-card {
+      background: #FFFFFF;
+      border-radius: 12px;
+      padding: 12px;
+      border: 1px solid #E0E7FF;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
 
-  .slot[data-slot="morning"] { background: #E3F2FD; }
-  .slot[data-slot="noon"]    { background: #FFF3E0; }
-  .slot[data-slot="evening"] { background: #F3E5F5; }
+    .day-card h2 {
+      text-align: center;
+      font-size: 16px;
+      margin: 0 0 10px;
+    }
 
-  .activity {
-    background: #FFFFFF;
-    border-radius: 8px;
-    padding: 6px;
-    margin-bottom: 6px;
-    border: 1px solid #E0E7FF;
-  }
+    .slot {
+      border-radius: 10px;
+      padding: 8px;
+      margin-bottom: 10px;
+    }
 
-  input, select {
-    width: 100%;
-    padding: 6px;
-    border-radius: 6px;
-    border: 1px solid #D1D5DB;
-    margin-bottom: 4px;
-    font-size: 14px;
-  }
+    .slot[data-slot="morning"] { background: #E3F2FD; }
+    .slot[data-slot="noon"]    { background: #FFF3E0; }
+    .slot[data-slot="evening"] { background: #F3E5F5; }
 
-  .btn {
-    padding: 6px 10px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    background: #A5B4FC;
-    color: white;
-    font-size: 13px;
-  }
+    .activity {
+      background: #FFFFFF;
+      border-radius: 8px;
+      padding: 6px;
+      margin-bottom: 6px;
+      border: 1px solid #E0E7FF;
+    }
 
-  .btn-danger {
-    background: #FCA5A5;
-  }
+    input, select {
+      width: 100%;
+      padding: 6px;
+      border-radius: 6px;
+      border: 1px solid #D1D5DB;
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+
+    .btn {
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      background: #A5B4FC;
+      color: white;
+      font-size: 13px;
+      width: 100%;
+    }
+
+    .btn-danger {
+      background: #FCA5A5;
+    }
+
+    .todo-card {
+      margin-top: 20px;
+      background: #FFFFFF;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid #E0E7FF;
+    }
+
+    .todo-list li {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 6px;
+      align-items: center;
+    }
+
+    .matrix {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .matrix-cell {
+      background: #FFFFFF;
+      border-radius: 10px;
+      padding: 10px;
+      border: 1px solid #E0E7FF;
+    }
   </style>
 </head>
+
 <body>
   <div class="container">
-    <header>
-      <div>
-        <h1>Planning partagé & perso</h1>
-        <span class="pill-week">Semaine</span>
-        <span class="pill-day">Journée</span>
-      </div>
-      <button id="logoutBtn" class="btn btn-danger">Déconnexion</button>
-    </header>
+    <h1>Planning pastel – 7 jours visibles</h1>
 
-    <div class="top-bar">
-      <label>Planning :</label>
-      <select id="planningSelect"></select>
+    <input type="date" id="weekStart" />
 
-      <label>Jour :</label>
-      <input type="date" id="datePicker" />
+    <div class="week-grid" id="weekGrid"></div>
 
-      <span id="dateLabel"></span>
+    <div class="todo-card">
+      <h2>To‑do list</h2>
+      <ul id="todoList" class="todo-list"></ul>
+      <button id="addTodo" class="btn">+ Ajouter une tâche</button>
     </div>
 
-    <div class="layout">
-      <!-- Colonne gauche : planning jour -->
-      <div>
-        <div class="card">
-          <h2>Planning de la journée</h2>
-          <div class="slots">
-            <div class="slot" data-slot="morning">
-              <h3>Matin</h3>
-              <div class="activities" id="slot-morning"></div>
-              <button class="btn btn-primary" data-add-activity="morning">+ Ajouter</button>
-            </div>
-            <div class="slot" data-slot="noon">
-              <h3>Midi</h3>
-              <div class="activities" id="slot-noon"></div>
-              <button class="btn btn-primary" data-add-activity="noon">+ Ajouter</button>
-            </div>
-            <div class="slot" data-slot="evening">
-              <h3>Soir</h3>
-              <div class="activities" id="slot-evening"></div>
-              <button class="btn btn-primary" data-add-activity="evening">+ Ajouter</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="card todo-list">
-          <h2>To-do list du jour</h2>
-          <ul id="todoList"></ul>
-          <button id="addTodo" class="btn btn-primary">+ Ajouter une tâche</button>
-        </div>
-      </div>
-
-      <!-- Colonne droite : criticité + semaine -->
-      <div>
-        <div class="card">
-          <h2>Matrice de criticité</h2>
-          <div class="matrix">
-            <div class="matrix-cell" data-cell="low-low">
-              <h4>Impact faible / Urgence faible</h4>
-              <ul id="matrix-low-low"></ul>
-            </div>
-            <div class="matrix-cell" data-cell="low-high">
-              <h4>Impact faible / Urgence forte</h4>
-              <ul id="matrix-low-high"></ul>
-            </div>
-            <div class="matrix-cell" data-cell="high-low">
-              <h4>Impact fort / Urgence faible</h4>
-              <ul id="matrix-high-low"></ul>
-            </div>
-            <div class="matrix-cell" data-cell="high-high">
-              <h4>Impact fort / Urgence forte</h4>
-              <ul id="matrix-high-high"></ul>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <h2>Infos semaine</h2>
-          <p>Ici tu peux plus tard afficher un résumé de la semaine, ou colorer les jours.</p>
-        </div>
-      </div>
+    <div class="matrix">
+      <div class="matrix-cell" id="low-low"><h3>Faible / Faible</h3></div>
+      <div class="matrix-cell" id="low-high"><h3>Faible / Fort</h3></div>
+      <div class="matrix-cell" id="high-low"><h3>Fort / Faible</h3></div>
+      <div class="matrix-cell" id="high-high"><h3>Fort / Fort</h3></div>
     </div>
   </div>
 
-  <script>
-    // 1) Connexion Supabase
+<script>
   const supabase = window.supabase.createClient(
       "https://wgspawpymauabfdzhcwh.supabase.co",
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indnc3Bhd3B5bWF1YWJmZHpoY3doIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk1MDcyOTcsImV4cCI6MjA4NTA4MzI5N30.BV7w18Nmr9aMMAdsXdLovy6zowODwFvphXgWWSsVCHs"
     );
 
-    let currentUser = null;
-    let currentPlanning = null;
-    let currentDate = new Date().toISOString().slice(0, 10);
-    let currentDayId = null;
-    let activities = [];
-    let todos = [];
+  let currentUser = null;
+  let planningId = null;
+  let weekDates = [];
 
-    async function init() {
-      const { data } = await supabase.auth.getSession();
-      if (!data.session) {
-        // Ici tu peux rediriger vers une page de login
-        alert("Pas de session, connecte-toi d'abord.");
-        return;
-      }
-      currentUser = data.session.user;
-
-      document.getElementById("datePicker").value = currentDate;
-      document.getElementById("dateLabel").textContent = formatDateFr(currentDate);
-
-      await loadPlannings();
-      await loadDayData();
-      attachEvents();
+  async function init() {
+    const { data } = await supabase.auth.getSession();
+    if (!data.session) {
+      alert("Connecte-toi d'abord.");
+      return;
     }
 
-    function formatDateFr(dateStr) {
-      const d = new Date(dateStr);
-      return d.toLocaleDateString("fr-FR", {
-        weekday: "long",
-        day: "2-digit",
-        month: "short",
-        year: "numeric"
-      });
-    }
+    currentUser = data.session.user;
 
-    async function loadPlannings() {
-      const { data, error } = await supabase
+    await loadOrCreatePlanning();
+    setWeek(new Date());
+  }
+
+  async function loadOrCreatePlanning() {
+    const { data } = await supabase
+      .from("plannings")
+      .select("*")
+      .eq("user_id", currentUser.id)
+      .eq("type", "personal")
+      .single();
+
+    if (!data) {
+      const { data: newP } = await supabase
         .from("plannings")
-        .select("*")
-        .eq("user_id", currentUser.id);
-
-      if (error) {
-        console.error(error);
-        return;
-      }
-
-      const select = document.getElementById("planningSelect");
-      select.innerHTML = "";
-
-      if (!data || data.length === 0) {
-        // Créer un planning perso par défaut
-        const { data: newPlanning } = await supabase
-          .from("plannings")
-          .insert({
-            user_id: currentUser.id,
-            type: "personal",
-            name: "Mon planning perso"
-          })
-          .select()
-          .single();
-        currentPlanning = newPlanning;
-        select.innerHTML = `<option value="${newPlanning.id}">${newPlanning.name}</option>`;
-      } else {
-        data.forEach(p => {
-          const opt = document.createElement("option");
-          opt.value = p.id;
-          opt.textContent = p.name + (p.type === "shared" ? " (partagé)" : "");
-          select.appendChild(opt);
-        });
-        currentPlanning = data[0];
-      }
-
-      select.value = currentPlanning.id;
-      select.onchange = async (e) => {
-        currentPlanning = data.find(p => p.id === e.target.value);
-        await loadDayData();
-      };
-    }
-
-    async function loadDayData() {
-      // Charger / créer le planning_day
-      const { data: day, error } = await supabase
-        .from("planning_days")
-        .select("*")
-        .eq("planning_id", currentPlanning.id)
-        .eq("date", currentDate)
+        .insert({
+          user_id: currentUser.id,
+          type: "personal",
+          name: "Mon planning perso"
+        })
+        .select()
         .single();
 
-      if (error && error.code !== "PGRST116") {
-        console.error(error);
-        return;
-      }
+      planningId = newP.id;
+    } else {
+      planningId = data.id;
+    }
+  }
 
-      if (!day) {
-        const { data: newDay } = await supabase
-          .from("planning_days")
-          .insert({
-            planning_id: currentPlanning.id,
-            date: currentDate
-          })
-          .select()
-          .single();
-        currentDayId = newDay.id;
-      } else {
-        currentDayId = day.id;
-      }
+  function setWeek(date) {
+    const monday = new Date(date);
+    monday.setDate(monday.getDate() - monday.getDay() + 1);
 
-      await loadActivities();
-      await loadTodos();
-      renderActivities();
-      renderTodos();
-      renderMatrix();
+    weekDates = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(monday);
+      d.setDate(monday.getDate() + i);
+      weekDates.push(d.toISOString().slice(0,10));
     }
 
-    async function loadActivities() {
-      const { data, error } = await supabase
-        .from("activities")
-        .select("*")
-        .eq("planning_day_id", currentDayId);
+    document.getElementById("weekStart").value = weekDates[0];
+    renderWeek();
+  }
 
-      if (error) {
-        console.error(error);
-        return;
-      }
-      activities = data || [];
+  async function renderWeek() {
+    const grid = document.getElementById("weekGrid");
+    grid.innerHTML = "";
+
+    for (const date of weekDates) {
+      const dayCard = document.createElement("div");
+      dayCard.className = "day-card";
+
+      dayCard.innerHTML = `
+        <h2>${formatDate(date)}</h2>
+
+        <div class="slot" data-slot="morning">
+          <h3>Matin</h3>
+          <div id="m-${date}"></div>
+          <button class="btn" data-add="${date}-morning">+ Ajouter</button>
+        </div>
+
+        <div class="slot" data-slot="noon">
+          <h3>Midi</h3>
+          <div id="n-${date}"></div>
+          <button class="btn" data-add="${date}-noon">+ Ajouter</button>
+        </div>
+
+        <div class="slot" data-slot="evening">
+          <h3>Soir</h3>
+          <div id="e-${date}"></div>
+          <button class="btn" data-add="${date}-evening">+ Ajouter</button>
+        </div>
+      `;
+
+      grid.appendChild(dayCard);
+
+      await loadDay(date);
     }
 
-    async function loadTodos() {
-      const { data, error } = await supabase
-        .from("todos")
-        .select("*")
-        .eq("planning_day_id", currentDayId);
+    attachAddButtons();
+  }
 
-      if (error) {
-        console.error(error);
-        return;
-      }
-      todos = data || [];
+  function formatDate(d) {
+    return new Date(d).toLocaleDateString("fr-FR", {
+      weekday: "long",
+      day: "2-digit",
+      month: "short"
+    });
+  }
+
+  async function loadDay(date) {
+    const { data: day } = await supabase
+      .from("planning_days")
+      .select("*")
+      .eq("planning_id", planningId)
+      .eq("date", date)
+      .single();
+
+    let dayId = null;
+
+    if (!day) {
+      const { data: newDay } = await supabase
+        .from("planning_days")
+        .insert({ planning_id: planningId, date })
+        .select()
+        .single();
+      dayId = newDay.id;
+    } else {
+      dayId = day.id;
     }
 
-    function renderActivities() {
-      ["morning", "noon", "evening"].forEach(slot => {
-        const container = document.getElementById("slot-" + slot);
-        container.innerHTML = "";
-        activities
-          .filter(a => a.slot === slot)
-          .forEach(act => {
-            const div = document.createElement("div");
-            div.className = "activity";
-            div.style.background = computeActivityColor(act);
+    const { data: acts } = await supabase
+      .from("activities")
+      .select("*")
+      .eq("planning_day_id", dayId);
 
-            div.innerHTML = `
-              <div class="activity-header">
-                <input type="text" value="${act.name || ""}" data-id="${act.id}" class="act-name" />
-                <button class="btn btn-danger btn-del-act" data-id="${act.id}">×</button>
-              </div>
-              <div class="activity-meta">
-                <input type="text" value="${act.category || ""}" data-id="${act.id}" class="act-cat" placeholder="Catégorie" />
-                <input type="number" value="${act.duration_minutes || 0}" data-id="${act.id}" class="act-dur" style="width:60px;" /> min
-              </div>
-              <div class="activity-meta">
-                Criticité :
-                <select data-id="${act.id}" class="act-crit">
-                  <option value="low" ${act.criticality === "low" ? "selected" : ""}>Basse</option>
-                  <option value="medium" ${act.criticality === "medium" ? "selected" : ""}>Moyenne</option>
-                  <option value="high" ${act.criticality === "high" ? "selected" : ""}>Haute</option>
-                </select>
-                Fin :
-                <input type="date" value="${act.due_date ? act.due_date.slice(0,10) : ""}" data-id="${act.id}" class="act-due" />
-                <label>
-                  <input type="checkbox" class="act-done" data-id="${act.id}" ${act.done ? "checked" : ""} />
-                  Fini
-                </label>
-              </div>
-            `;
-            container.appendChild(div);
-          });
-      });
+    renderActivities(date, acts || []);
+  }
 
-      attachActivityEvents();
-    }
+  function renderActivities(date, acts) {
+    ["morning","noon","evening"].forEach(slot => {
+      const container = document.getElementById(slot[0] + "-" + date);
+      container.innerHTML = "";
 
-    function computeActivityColor(act) {
-      if (!act.due_date) return "#e5f9e7"; // vert pastel par défaut
-      const now = new Date();
-      const start = new Date(act.created_at || act.due_date);
-      const end = new Date(act.due_date);
-      if (end <= start) return "#fee2e2"; // rouge pastel si date bizarre
+      acts.filter(a => a.slot === slot).forEach(a => {
+        const div = document.createElement("div");
+        div.className = "activity";
+        div.style.background = computeColor(a);
 
-      const total = end - start;
-      const elapsed = Math.min(Math.max(now - start, 0), total);
-      const ratio = total === 0 ? 1 : elapsed / total; // 0 → vert, 1 → rouge
-
-      // interpolation simple entre vert pastel (#bbf7d0) et rouge pastel (#fecaca)
-      const from = { r: 187, g: 247, b: 208 };
-      const to = { r: 254, g: 202, b: 202 };
-      const r = Math.round(from.r + (to.r - from.r) * ratio);
-      const g = Math.round(from.g + (to.g - from.g) * ratio);
-      const b = Math.round(from.b + (to.b - from.b) * ratio);
-      return `rgb(${r}, ${g}, ${b})`;
-    }
-
-    function renderTodos() {
-      const ul = document.getElementById("todoList");
-      ul.innerHTML = "";
-      todos.forEach(t => {
-        const li = document.createElement("li");
-        li.innerHTML = `
-          <input type="checkbox" data-id="${t.id}" class="todo-done" ${t.done ? "checked" : ""} />
-          <input type="text" data-id="${t.id}" class="todo-text" value="${t.text || ""}" />
-          <button class="btn btn-danger btn-del-todo" data-id="${t.id}">×</button>
+        div.innerHTML = `
+          <input data-id="${a.id}" class="name" value="${a.name || ""}" placeholder="Nom">
+          <input data-id="${a.id}" class="cat" value="${a.category || ""}" placeholder="Catégorie">
+          <input data-id="${a.id}" class="dur" type="number" value="${a.duration || 0}" placeholder="Durée (min)">
+          <input data-id="${a.id}" class="due" type="date" value="${a.due_date || ""}">
+          <button class="btn btn-danger" data-del="${a.id}">Supprimer</button>
         `;
-        ul.appendChild(li);
-      });
-      attachTodoEvents();
-    }
 
-    function renderMatrix() {
-      const cells = {
-        "low-low": document.getElementById("matrix-low-low"),
-        "low-high": document.getElementById("matrix-low-high"),
-        "high-low": document.getElementById("matrix-high-low"),
-        "high-high": document.getElementById("matrix-high-high")
+        container.appendChild(div);
+      });
+    });
+
+    attachActivityEvents();
+  }
+
+  function computeColor(a) {
+    if (!a.due_date) return "#E0F7E9";
+
+    const start = new Date(a.created_at || a.due_date);
+    const end = new Date(a.due_date);
+    const now = new Date();
+
+    const total = end - start;
+    const elapsed = Math.min(Math.max(now - start, 0), total);
+    const ratio = total === 0 ? 1 : elapsed / total;
+
+    const from = { r: 224, g: 247, b: 233 };
+    const to   = { r: 253, g: 226, b: 226 };
+
+    const r = Math.round(from.r + (to.r - from.r) * ratio);
+    const g = Math.round(from.g + (to.g - from.g) * ratio);
+    const b = Math.round(from.b + (to.b - from.b) * ratio);
+
+    return `rgb(${r},${g},${b})`;
+  }
+
+  function attachAddButtons() {
+    document.querySelectorAll("[data-add]").forEach(btn => {
+      btn.onclick = async () => {
+        const [date, slot] = btn.dataset.add.split("-");
+        await addActivity(date, slot);
+        await renderWeek();
       };
-      Object.values(cells).forEach(ul => ul.innerHTML = "");
+    });
+  }
 
-      activities.forEach(a => {
-        const urgency = a.criticality === "high" ? "high" : (a.criticality === "medium" ? "high" : "low");
-        const impact = a.duration_minutes >= 60 ? "high" : "low"; // exemple : durée >= 60 = impact fort
-        const key = `${impact}-${urgency}`;
-        const ul = cells[key];
-        if (!ul) return;
-        const li = document.createElement("li");
-        li.textContent = a.name || "(sans nom)";
-        ul.appendChild(li);
-      });
-    }
+  async function addActivity(date, slot) {
+    const { data: day } = await supabase
+      .from("planning_days")
+      .select("*")
+      .eq("planning_id", planningId)
+      .eq("date", date)
+      .single();
 
-    function attachEvents() {
-      document.getElementById("logoutBtn").onclick = async () => {
-        await supabase.auth.signOut();
-        alert("Déconnecté.");
+    const dayId = day.id;
+
+    await supabase.from("activities").insert({
+      planning_day_id: dayId,
+      slot,
+      name: "",
+      category: "",
+      duration: 0,
+      created_at: new Date().toISOString(),
+      done: false
+    });
+  }
+
+  function attachActivityEvents() {
+    document.querySelectorAll(".name").forEach(i => {
+      i.oninput = () => update(i.dataset.id, { name: i.value });
+    });
+
+    document.querySelectorAll(".cat").forEach(i => {
+      i.oninput = () => update(i.dataset.id, { category: i.value });
+    });
+
+    document.querySelectorAll(".dur").forEach(i => {
+      i.onchange = () => update(i.dataset.id, { duration: Number(i.value) });
+    });
+
+    document.querySelectorAll(".due").forEach(i => {
+      i.onchange = () => update(i.dataset.id, { due_date: i.value });
+    });
+
+    document.querySelectorAll("[data-del]").forEach(btn => {
+      btn.onclick = async () => {
+        await supabase.from("activities").delete().eq("id", btn.dataset.del);
+        await renderWeek();
       };
+    });
+  }
 
-      document.getElementById("datePicker").onchange = async (e) => {
-        currentDate = e.target.value;
-        document.getElementById("dateLabel").textContent = formatDateFr(currentDate);
-        await loadDayData();
-      };
+  async function update(id, data) {
+    await supabase.from("activities").update(data).eq("id", id);
+  }
 
-      document.querySelectorAll("[data-add-activity]").forEach(btn => {
-        btn.onclick = async () => {
-          const slot = btn.getAttribute("data-add-activity");
-          const { data, error } = await supabase
-            .from("activities")
-            .insert({
-              planning_day_id: currentDayId,
-              slot,
-              name: "",
-              category: "",
-              duration_minutes: 0,
-              criticality: "low",
-              created_at: new Date().toISOString(),
-              done: false
-            })
-            .select()
-            .single();
-          if (!error) {
-            activities.push(data);
-            renderActivities();
-            renderMatrix();
-          }
-        };
-      });
+  init();
+</script>
 
-      document.getElementById("addTodo").onclick = async () => {
-        const { data, error } = await supabase
-          .from("todos")
-          .insert({
-            planning_day_id: currentDayId,
-            text: "",
-            done: false
-          })
-          .select()
-          .single();
-        if (!error) {
-          todos.push(data);
-          renderTodos();
-        }
-      };
-    }
-
-    function attachActivityEvents() {
-      document.querySelectorAll(".act-name").forEach(input => {
-        input.oninput = async (e) => {
-          const id = e.target.dataset.id;
-          const name = e.target.value;
-          await supabase.from("activities").update({ name }).eq("id", id);
-          const act = activities.find(a => a.id === id);
-          if (act) act.name = name;
-          renderMatrix();
-        };
-      });
-
-      document.querySelectorAll(".act-cat").forEach(input => {
-        input.oninput = async (e) => {
-          const id = e.target.dataset.id;
-          const category = e.target.value;
-          await supabase.from("activities").update({ category }).eq("id", id);
-          const act = activities.find(a => a.id === id);
-          if (act) act.category = category;
-        };
-      });
-
-      document.querySelectorAll(".act-dur").forEach(input => {
-        input.onchange = async (e) => {
-          const id = e.target.dataset.id;
-          const duration_minutes = Number(e.target.value) || 0;
-          await supabase.from("activities").update({ duration_minutes }).eq("id", id);
-          const act = activities.find(a => a.id === id);
-          if (act) act.duration_minutes = duration_minutes;
-          renderMatrix();
-        };
-      });
-
-      document.querySelectorAll(".act-crit").forEach(select => {
-        select.onchange = async (e) => {
-          const id = e.target.dataset.id;
-          const criticality = e.target.value;
-          await supabase.from("activities").update({ criticality }).eq("id", id);
-          const act = activities.find(a => a.id === id);
-          if (act) act.criticality = criticality;
-          renderMatrix();
-        };
-      });
-
-      document.querySelectorAll(".act-due").forEach(input => {
-        input.onchange = async (e) => {
-          const id = e.target.dataset.id;
-          const due_date = e.target.value || null;
-          await supabase.from("activities").update({ due_date }).eq("id", id);
-          const act = activities.find(a => a.id === id);
-          if (act) act.due_date = due_date;
-          renderActivities();
-          renderMatrix();
-        };
-      });
-
-      document.querySelectorAll(".act-done").forEach(cb => {
-        cb.onchange = async (e) => {
-          const id = e.target.dataset.id;
-          const done = e.target.checked;
-          await supabase.from("activities").update({ done }).eq("id", id);
-          const act = activities.find(a => a.id === id);
-          if (act) act.done = done;
-        };
-      });
-
-      document.querySelectorAll(".btn-del-act").forEach(btn => {
-        btn.onclick = async (e) => {
-          const id = e.target.dataset.id;
-          await supabase.from("activities").delete().eq("id", id);
-          activities = activities.filter(a => a.id !== id);
-          renderActivities();
-          renderMatrix();
-        };
-      });
-    }
-
-    function attachTodoEvents() {
-      document.querySelectorAll(".todo-text").forEach(input => {
-        input.oninput = async (e) => {
-          const id = e.target.dataset.id;
-          const text = e.target.value;
-          await supabase.from("todos").update({ text }).eq("id", id);
-          const t = todos.find(x => x.id === id);
-          if (t) t.text = text;
-        };
-      });
-
-      document.querySelectorAll(".todo-done").forEach(cb => {
-        cb.onchange = async (e) => {
-          const id = e.target.dataset.id;
-          const done = e.target.checked;
-          await supabase.from("todos").update({ done }).eq("id", id);
-          const t = todos.find(x => x.id === id);
-          if (t) t.done = done;
-        };
-      });
-
-      document.querySelectorAll(".btn-del-todo").forEach(btn => {
-        btn.onclick = async (e) => {
-          const id = e.target.dataset.id;
-          await supabase.from("todos").delete().eq("id", id);
-          todos = todos.filter(x => x.id !== id);
-          renderTodos();
-        };
-      });
-    }
-
-    init();
-  </script>
 </body>
 </html>
-
