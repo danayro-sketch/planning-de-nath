@@ -79,6 +79,29 @@
       align-items: center;
       gap: 8px;
     }
+.impact-badge {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.impact-1, .impact-2, .impact-3 {
+  background: #4ade80; /* vert */
+}
+
+.impact-4, .impact-5, .impact-6 {
+  background: #facc15; /* orange */
+}
+
+.impact-7, .impact-8, .impact-9 {
+  background: #ef4444; /* rouge */
+}
 
     .panel-title span.icon {
       width: 22px;
@@ -1068,7 +1091,12 @@ function renderProjects() {
       <div class="project-dates">${project.start} → ${project.end}</div>
       <div class="criticity-bar">
         <div class="criticity-fill"
-        
+      <label>Impact (1 à 9)</label>
+<input type="number" min="1" max="9" id="impactInput">  
+<div class="project-header">
+  <span class="project-title">campus modop</span>
+  <span class="impact-badge impact-7">7</span>
+</div>
  background:${color};">
         </div>
       </div>
@@ -1078,8 +1106,6 @@ function renderProjects() {
   });
 }
 addProjectBtn.addEventListener("click", () => {
-  <label>Impact (1 à 9)</label>
-<input type="number" min="1" max="9" id="impactInput">
 const impact = parseInt(impactInput.value, 10);
   const name = prompt("Nom du projet :");
   if (!name) return;
@@ -1091,8 +1117,8 @@ const impact = parseInt(impactInput.value, 10);
   weekData.projects.push({
     name: name.trim(),
     startDate,
-    endDate
-    impact
+    endDate,
+    impact,
   });
 
   saveData();
@@ -1104,6 +1130,7 @@ const impact = parseInt(impactInput.value, 10);
   </script>
 </body>
 </html>
+
 
 
 
