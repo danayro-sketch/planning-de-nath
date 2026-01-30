@@ -1043,9 +1043,6 @@ const remaining = endDate - today;
 
 let ratio = remaining / totalDuration;
 ratio = Math.max(0, Math.min(1, ratio)); // sécurité
-
-  const ratio = Math.min(Math.max(elapsed / total, 0), 1);
- 
   if (ratio > 0.66) {
   progressBar.className = "rgba(167, 227, 171, 0.7)";
 } else if (ratio > 0.33) {
@@ -1107,6 +1104,7 @@ const impact = parseInt(impactInput.value, 10);
   </script>
 </body>
 </html>
+
 
 
 
