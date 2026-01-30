@@ -491,6 +491,41 @@
       border-color: var(--accent);
       box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.4);
     }
+    /* --- Projets / criticité --- */
+
+.project-card {
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 10px;
+  margin-bottom: 8px;
+  background: rgba(15, 23, 42, 0.9);
+}
+
+.project-title {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.project-dates {
+  font-size: 11px;
+  color: #9ca3af;
+  margin-bottom: 6px;
+}
+
+.criticity-bar {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.1);
+  overflow: hidden;
+}
+
+.criticity-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
   </style>
 </head>
 <body>
@@ -573,6 +608,7 @@
     const STORAGE_KEY = "planning_activites_nath_v1";
 
     const defaultWeekData = {
+      projects: [],
       globalNotes: "",
       checklist: [],
       days: [
@@ -605,6 +641,7 @@
         });
         if (!parsed.checklist) parsed.checklist = [];
         if (!parsed.globalNotes) parsed.globalNotes = "";
+        if (!parsed.projects) parsed.projects = [];
         return parsed;
       } catch {
         return structuredClone(defaultWeekData);
@@ -991,7 +1028,71 @@
     renderWeek();
     renderChecklist();
     renderCalendar();
+    renderProjects();
+    const projectsContainer = document.getElementById("projects-container");
+const addProjectBtn = document.getElementById("add-project-btn");
+
+function getCriticity(project) {
+  const now = new Date();
+  const start = new Date(project.start);
+  const end = new Date(project.end);
+
+  const total = end - start;
+  const elapsed = now - start;
+
+  const ratio = Math.min(Math.max(elapsed / total, 0), 1);
+
+  let color = "rgba(167, 227, 171, 0.7)"; // vert
+  if (ratio > 0.6) color = "rgba(255, 236, 179, 0.8)"; // jaune
+  if (ratio > 0.85) color = "rgba(255, 182, 193, 0.85)"; // rouge
+
+  return { ratio, color };
+}
+
+function renderProjects() {
+  projectsContainer.innerHTML = "";
+
+  weekData.projects.forEach(project => {
+    const { ratio, color } = getCriticity(project);
+
+    const card = document.createElement("div");
+    card.className = "project-card";
+
+    card.innerHTML = `
+      <div class="project-title">${project.name}</div>
+      <div class="project-dates">${project.start} → ${project.end}</div>
+      <div class="criticity-bar">
+        <div class="criticity-fill"
+             style="width:${ratio * 100}%; background:${color};">
+        </div>
+      </div>
+    `;
+
+    projectsContainer.appendChild(card);
+  });
+}
+addProjectBtn.addEventListener("click", () => {
+  const name = prompt("Nom du projet :");
+  if (!name) return;
+
+  const start = prompt("Date de départ (YYYY-MM-DD) :");
+  const end = prompt("Date de fin (YYYY-MM-DD) :");
+  if (!start || !end) return;
+
+  weekData.projects.push({
+    name: name.trim(),
+    start,
+    end
+  });
+
+  saveData();
+  renderProjects();
+  renderCalendar();
+  renderProjects():
+});
+
   </script>
 </body>
 </html>
+
 
