@@ -1034,6 +1034,7 @@ const addProjectBtn = document.getElementById("add-project-btn");
 
 function getCriticity(project) {
   const today = new Date();
+  const impact = parseInt(impactInput.value, 10);
   const startDate = new Date(project.start);
   const endDate = new Date(project.end);
 
@@ -1080,17 +1081,21 @@ function renderProjects() {
   });
 }
 addProjectBtn.addEventListener("click", () => {
+  <label>Impact (1 à 9)</label>
+<input type="number" min="1" max="9" id="impactInput">
+const impact = parseInt(impactInput.value, 10);
   const name = prompt("Nom du projet :");
   if (!name) return;
 
-  const start = prompt("Date de départ (YYYY-MM-DD) :");
-  const end = prompt("Date de fin (YYYY-MM-DD) :");
+  const startDate = prompt("Date de départ (YYYY-MM-DD) :");
+  const endDate = prompt("Date de fin (YYYY-MM-DD) :");
   if (!start || !end) return;
 
   weekData.projects.push({
     name: name.trim(),
-    start,
-    end
+    startDate,
+    endDate
+    impact
   });
 
   saveData();
@@ -1102,6 +1107,7 @@ addProjectBtn.addEventListener("click", () => {
   </script>
 </body>
 </html>
+
 
 
 
