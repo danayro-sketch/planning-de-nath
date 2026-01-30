@@ -713,6 +713,18 @@
       const t = getTotals();
       totalsDiv.innerHTML = "";
       const pill = document.createElement("div");
+      // Créer le badge
+const impactBadge = document.createElement('span');
+
+// Ajouter la classe correspondant à l'impact
+impactBadge.classList.add(`impact-${project.impact}`);
+
+// Mettre le texte du badge
+impactBadge.textContent = project.impact;
+
+// Ajouter le badge à l'élément parent (ex: card du projet)
+projectCard.appendChild(impactBadge);
+
       pill.className = "total-pill";
       pill.innerHTML = `
         <span class="total-label">Total estimé</span>
@@ -1131,6 +1143,7 @@ const impact = parseInt(impactInput.value, 10);
   </script>
 </body>
 </html>
+
 
 
 
