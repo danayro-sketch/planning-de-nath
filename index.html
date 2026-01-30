@@ -2,651 +2,485 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Planning hebdo pastel</title>
+  <title>Planning Nathan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <style>
-    body {
-      font-family: system-ui, sans-serif;
-      background: #f7f7fb;
+    :root {
+      --bg: #0f172a;
+      --card: #111827;
+      --accent: #38bdf8;
+      --accent-soft: #0ea5e9;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --sport: #22c55e;
+      --music: #f97316;
+      --english: #a855f7;
+    }
+
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      color: #111827;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
+
+    body {
+      background: radial-gradient(circle at top, #1e293b 0, #020617 55%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px;
+      display: flex;
+      justify-content: center;
+    }
+
     .app {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 20px;
-      display: grid;
-      grid-template-columns: 320px 1fr;
-      gap: 16px;
-    }
-    h1 {
-      grid-column: 1 / -1;
-      text-align: center;
-      margin-bottom: 10px;
-    }
-    .card {
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 12px;
-      box-shadow: 0 4px 10px rgba(15,23,42,0.06);
-      border: 1px solid #e0e7ff;
-      margin-bottom: 12px;
-    }
-    .card h2 {
-      margin: 0 0 8px;
-      font-size: 16px;
-    }
-    label {
-      font-size: 13px;
-      color: #4b5563;
-      display: block;
-      margin-bottom: 4px;
-    }
-    input[type="date"],
-    textarea,
-    input[type="text"],
-    select {
       width: 100%;
-      padding: 6px 8px;
-      border-radius: 8px;
-      border: 1px solid #d1d5db;
-      font-size: 13px;
-      margin-bottom: 6px;
-      box-sizing: border-box;
+      max-width: 1100px;
     }
-    textarea {
-      min-height: 80px;
-      resize: vertical;
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.25rem;
     }
-    .btn {
-      padding: 6px 10px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      font-size: 13px;
+
+    .subtitle {
+      color: var(--muted);
+      margin-bottom: 1.5rem;
     }
-    .btn-primary {
-      background: #a5b4fc;
-      color: white;
-    }
-    .btn-danger {
-      background: #fca5a5;
-      color: white;
-    }
-    .btn-ghost {
-      background: transparent;
-      color: #6b7280;
-    }
-    .todo-item {
+
+    .summary {
       display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .badge {
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      font-size: 0.85rem;
+      display: inline-flex;
       align-items: center;
       gap: 6px;
-      margin-bottom: 4px;
     }
-    .todo-item input[type="text"] {
-      flex: 1;
-      margin-bottom: 0;
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
     }
-    .week-grid {
+
+    .dot.sport { background: var(--sport); }
+    .dot.music { background: var(--music); }
+    .dot.english { background: var(--english); }
+
+    .grid {
       display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 10px;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
     }
-    .day-card {
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 8px;
-      border: 1px solid #e0e7ff;
-      box-shadow: 0 2px 6px rgba(15,23,42,0.04);
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .day-header {
-      text-align: center;
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-    .day-sub {
-      text-align: center;
-      font-size: 11px;
-      color: #6b7280;
-      margin-bottom: 4px;
-    }
-    .slot {
-      border-radius: 10px;
-      padding: 6px;
-      margin-bottom: 4px;
-    }
-    .slot[data-slot="morning"] { background: #e3f2fd; }
-    .slot[data-slot="noon"]    { background: #fff3e0; }
-    .slot[data-slot="evening"] { background: #f3e5f5; }
-    .slot h3 {
-      margin: 0 0 4px;
-      font-size: 12px;
-      font-weight: 600;
-    }
-    .activity {
-      background: #ffffff;
-      border-radius: 8px;
-      padding: 6px;
-      margin-bottom: 4px;
-      border: 1px solid #e0e7ff;
-      font-size: 12px;
-    }
-    .activity-row {
-      display: flex;
-      gap: 4px;
-      margin-bottom: 4px;
-    }
-    .activity-row input,
-    .activity-row select {
-      margin-bottom: 0;
-      font-size: 11px;
-      padding: 4px 6px;
-    }
-    .activity-row input[type="number"] {
-      width: 60px;
-    }
-    .activity-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 4px;
-      font-size: 11px;
-    }
-    .activity-footer input[type="date"] {
-      font-size: 11px;
-      padding: 3px 4px;
-    }
-    .pill-week {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 999px;
-      background: #dbeafe;
-      color: #1d4ed8;
-      font-size: 11px;
-      margin-left: 4px;
-    }
-    .pill-day {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 999px;
-      background: #fee2e2;
-      color: #b91c1c;
-      font-size: 11px;
-      margin-left: 4px;
-    }
-    @media (max-width: 1000px) {
-      .app {
+
+    @media (max-width: 900px) {
+      .grid {
         grid-template-columns: 1fr;
       }
-      .week-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+    }
+
+    .day-card {
+      background: linear-gradient(145deg, rgba(15,23,42,0.95), rgba(15,23,42,0.7));
+      border-radius: 16px;
+      padding: 14px 14px 10px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(16px);
+    }
+
+    .day-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+
+    .day-name {
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .day-tag {
+      font-size: 0.7rem;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: var(--muted);
+    }
+
+    .slot {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed rgba(55, 65, 81, 0.8);
+    }
+
+    .slot-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .activity {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      border-radius: 10px;
+      margin-bottom: 4px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+    }
+
+    .activity-label {
+      font-size: 0.8rem;
+    }
+
+    .activity-tag {
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: var(--muted);
+    }
+
+    .activity-tag.sport { border-color: var(--sport); color: var(--sport); }
+    .activity-tag.music { border-color: var(--music); color: var(--music); }
+    .activity-tag.english { border-color: var(--english); color: var(--english); }
+
+    .activity-time {
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .footer {
+      margin-top: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .totals {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 0.85rem;
+    }
+
+    .total-pill {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .total-pill span.value {
+      font-weight: 600;
+      color: var(--accent-soft);
+    }
+
+    .reset-btn {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    .reset-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
     }
   </style>
 </head>
 <body>
-  <h1>Planning hebdo pastel</h1>
   <div class="app">
-    <!-- Colonne gauche : calendrier + notes + todo -->
-    <div>
-      <div class="card">
-        <h2>Vue calendrier <span class="pill-week">Semaine</span></h2>
-        <label>Semaine (choisis un lundi) :</label>
-        <input type="date" id="weekStartInput" />
-        <small style="font-size:11px;color:#6b7280;">
-          La semaine affichée va du lundi choisi au dimanche suivant.
-        </small>
-      </div>
+    <h1>Planning semaine — Nathan</h1>
+    <div class="subtitle">Sport cohérent, 4 h de musique et 5 h d’anglais du lundi au vendredi.</div>
 
-      <div class="card">
-        <h2>Notes globales de la semaine</h2>
-        <textarea id="weekNotes" placeholder="Objectifs, focus, choses à ne pas oublier..."></textarea>
-        <button id="saveNotesBtn" class="btn btn-primary">Enregistrer les notes</button>
-      </div>
-
-      <div class="card">
-        <h2>Liste d'activités à ne pas oublier</h2>
-        <div id="todoList"></div>
-        <button id="addTodoBtn" class="btn btn-primary">+ Ajouter une activité</button>
-      </div>
+    <div class="summary">
+      <div class="badge"><span class="dot sport"></span>Sport réparti (bas / haut / cardio / escalade)</div>
+      <div class="badge"><span class="dot music"></span>Musique / chant : objectif 4 h</div>
+      <div class="badge"><span class="dot english"></span>Anglais : objectif 5 h (TOEIC)</div>
     </div>
 
-    <!-- Colonne droite : planning 7 jours -->
-    <div>
-      <div class="card">
-        <h2>Planning d'activités</h2>
-        <small style="font-size:11px;color:#6b7280;">
-          7 jours, Matin / Midi / Soir, couleurs pastel. La couleur passe du vert au rouge selon l'approche de la date de fin et la criticité.
-        </small>
+    <div class="grid" id="week-grid">
+      <!-- Les cartes jours seront injectées en JS -->
+    </div>
+
+    <div class="footer">
+      <div class="totals">
+        <div class="total-pill">
+          🎵 Musique / chant : <span class="value" id="music-hours">0</span> h / 4 h
+        </div>
+        <div class="total-pill">
+          🇬🇧 Anglais : <span class="value" id="english-hours">0</span> h / 5 h
+        </div>
       </div>
-      <div class="week-grid" id="weekGrid"></div>
+      <button class="reset-btn" id="reset-btn">Réinitialiser la semaine</button>
     </div>
   </div>
 
-<script>
-  // --- Connexion Supabase ---
-  const supabase = window.supabase.createClient(
-    "https://wgspawpymauabfdzhcwh.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indnc3Bhd3B5bWF1YWJmZHpoY3doIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk1MDcyOTcsImV4cCI6MjA4NTA4MzI5N30.BV7w18Nmr9aMMAdsXdLovy6zowODwFvphXgWWSsVCHs"
-  );
+  <script>
+    const weekData = [
+      {
+        day: "Lundi",
+        tag: "Bas du corps + créatif",
+        slots: [
+          {
+            label: "Midi",
+            activities: [
+              { name: "Abdos + jambes", type: "sport", duration: 1 }
+            ]
+          },
+          {
+            label: "Soir",
+            activities: [
+              { name: "Musique / chant (session douce)", type: "music", duration: 1 },
+              { name: "Anglais — écoute + vocabulaire", type: "english", duration: 0.5 }
+            ]
+          }
+        ]
+      },
+      {
+        day: "Mardi",
+        tag: "Escalade",
+        slots: [
+          {
+            label: "Midi",
+            activities: [
+              { name: "Course (optionnel)", type: "sport", duration: 1 }
+            ]
+          },
+          {
+            label: "Soir",
+            activities: [
+              { name: "Escalade", type: "sport", duration: 2 },
+              { name: "Anglais — compréhension orale", type: "english", duration: 0.75 }
+            ]
+          }
+        ]
+      },
+      {
+        day: "Mercredi",
+        tag: "Musique intense",
+        slots: [
+          {
+            label: "Midi",
+            activities: [
+              { name: "Natation (récup active, futur)", type: "sport", duration: 0.75 }
+            ]
+          },
+          {
+            label: "Soir",
+            activities: [
+              { name: "Musique / chant (grosse session)", type: "music", duration: 2 },
+              { name: "Anglais — lecture + grammaire", type: "english", duration: 0.5 }
+            ]
+          }
+        ]
+      },
+      {
+        day: "Jeudi",
+        tag: "Haut du corps + mix",
+        slots: [
+          {
+            label: "Midi",
+            activities: [
+              { name: "Muscu poids du corps (haut du corps)", type: "sport", duration: 1 }
+            ]
+          },
+          {
+            label: "Soir",
+            activities: [
+              { name: "Musique / chant", type: "music", duration: 1 },
+              { name: "Anglais — TOEIC ciblé", type: "english", duration: 1 }
+            ]
+          }
+        ]
+      },
+      {
+        day: "Vendredi",
+        tag: "Cardio + Anglais fort",
+        slots: [
+          {
+            label: "Midi",
+            activities: [
+              { name: "Course ou vélo", type: "sport", duration: 1 }
+            ]
+          },
+          {
+            label: "Soir",
+            activities: [
+              { name: "Anglais — grammaire + exos", type: "english", duration: 1 },
+              { name: "Anglais — écoute + test blanc", type: "english", duration: 1 },
+              { name: "Anglais — écoute passive (podcast)", type: "english", duration: 0.25 }
+            ]
+          }
+        ]
+      }
+    ];
 
-  // --- État ---
-  let weekStart = null;      // lundi de la semaine
-  let weekDates = [];        // 7 dates (lundi → dimanche)
-  let activitiesByDate = {}; // { '2026-01-26': [ ... ], ... }
-  let todos = [];
-  let notes = "";
+    const grid = document.getElementById("week-grid");
+    const musicHoursEl = document.getElementById("music-hours");
+    const englishHoursEl = document.getElementById("english-hours");
+    const resetBtn = document.getElementById("reset-btn");
 
-  // --- Utilitaires de date ---
-  function toISODate(d) {
-    return d.toISOString().slice(0,10);
-  }
+    function createDayCard(dayData, dayIndex) {
+      const card = document.createElement("div");
+      card.className = "day-card";
 
-  function getMonday(date) {
-    const d = new Date(date);
-    const day = d.getDay(); // 0 = dimanche, 1 = lundi...
-    const diff = (day === 0 ? -6 : 1 - day);
-    d.setDate(d.getDate() + diff);
-    d.setHours(0,0,0,0);
-    return d;
-  }
+      const header = document.createElement("div");
+      header.className = "day-header";
 
-  function computeWeekDates(startDate) {
-    const arr = [];
-    for (let i = 0; i < 7; i++) {
-      const d = new Date(startDate);
-      d.setDate(startDate.getDate() + i);
-      arr.push(toISODate(d));
-    }
-    return arr;
-  }
+      const name = document.createElement("div");
+      name.className = "day-name";
+      name.textContent = dayData.day;
 
-  function formatDayLabel(dateStr) {
-    const d = new Date(dateStr);
-    return d.toLocaleDateString("fr-FR", {
-      weekday: "long",
-      day: "2-digit",
-      month: "short"
-    });
-  }
+      const tag = document.createElement("div");
+      tag.className = "day-tag";
+      tag.textContent = dayData.tag;
 
-  // --- Couleur activité (vert → rouge + criticité) ---
-  function computeActivityColor(a) {
-    if (!a.due_date || !a.created_at) return "rgb(224,247,233)"; // vert pastel
+      header.appendChild(name);
+      header.appendChild(tag);
+      card.appendChild(header);
 
-    const start = new Date(a.created_at);
-    const end = new Date(a.due_date);
-    const now = new Date();
+      dayData.slots.forEach((slot, slotIndex) => {
+        const slotDiv = document.createElement("div");
+        slotDiv.className = "slot";
 
-    if (end <= start) return "rgb(253,226,226)"; // rouge pastel si dates incohérentes
+        const slotLabel = document.createElement("div");
+        slotLabel.className = "slot-label";
+        slotLabel.textContent = slot.label;
+        slotDiv.appendChild(slotLabel);
 
-    const total = end - start;
-    const elapsed = Math.min(Math.max(now - start, 0), total);
-    let ratio = total === 0 ? 1 : elapsed / total; // 0 → vert, 1 → rouge
+        slot.activities.forEach((act, actIndex) => {
+          const activityDiv = document.createElement("div");
+          activityDiv.className = "activity";
 
-    // Ajustement selon criticité
-    if (a.criticality === "low")   ratio *= 0.7;
-    if (a.criticality === "medium") ratio *= 1.0;
-    if (a.criticality === "high")   ratio *= 1.3;
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.dataset.type = act.type;
+          checkbox.dataset.duration = act.duration;
+          checkbox.dataset.key = `${dayIndex}-${slotIndex}-${actIndex}`;
 
-    ratio = Math.max(0, Math.min(1, ratio));
+          const labelDiv = document.createElement("div");
+          const title = document.createElement("div");
+          title.className = "activity-label";
+          title.textContent = act.name;
 
-    const from = { r: 200, g: 255, b: 220 }; // vert pastel
-    const to   = { r: 255, g: 210, b: 210 }; // rouge pastel
+          const meta = document.createElement("div");
+          meta.style.display = "flex";
+          meta.style.gap = "6px";
+          meta.style.alignItems = "center";
 
-    const r = Math.round(from.r + (to.r - from.r) * ratio);
-    const g = Math.round(from.g + (to.g - from.g) * ratio);
-    const b = Math.round(from.b + (to.b - from.b) * ratio);
+          const tagSpan = document.createElement("span");
+          tagSpan.className = `activity-tag ${act.type}`;
+          tagSpan.textContent =
+            act.type === "sport" ? "Sport" :
+            act.type === "music" ? "Musique" :
+            "Anglais";
 
-    return `rgb(${r},${g},${b})`;
-  }
+          const timeSpan = document.createElement("span");
+          timeSpan.className = "activity-time";
+          timeSpan.textContent = `${act.duration} h`;
 
-  // --- Chargement global de la semaine ---
-  async function loadWeek() {
-    if (!weekStart) return;
+          meta.appendChild(tagSpan);
+          meta.appendChild(timeSpan);
 
-    weekDates = computeWeekDates(weekStart);
+          labelDiv.appendChild(title);
+          labelDiv.appendChild(meta);
 
-    // 1) Notes de semaine
-    const { data: notesData } = await supabase
-      .from("week_notes")
-      .select("*")
-      .eq("week_start", toISODate(weekStart))
-      .maybeSingle();
+          activityDiv.appendChild(checkbox);
+          activityDiv.appendChild(labelDiv);
+          slotDiv.appendChild(activityDiv);
+        });
 
-    notes = notesData ? notesData.notes || "" : "";
-    document.getElementById("weekNotes").value = notes;
-
-    // 2) Todos de semaine
-    const { data: todosData } = await supabase
-      .from("week_todos")
-      .select("*")
-      .eq("week_start", toISODate(weekStart))
-      .order("id");
-
-    todos = todosData || [];
-    renderTodos();
-
-    // 3) Activités de la semaine (toutes dates de la semaine)
-    activitiesByDate = {};
-    for (const d of weekDates) activitiesByDate[d] = [];
-
-    const { data: acts } = await supabase
-      .from("activities")
-      .select("*")
-      .in("date", weekDates)
-      .order("created_at");
-
-    (acts || []).forEach(a => {
-      if (!activitiesByDate[a.date]) activitiesByDate[a.date] = [];
-      activitiesByDate[a.date].push(a);
-    });
-
-    renderWeekGrid();
-  }
-
-  // --- Rendu TODO ---
-  function renderTodos() {
-    const container = document.getElementById("todoList");
-    container.innerHTML = "";
-    todos.forEach(t => {
-      const div = document.createElement("div");
-      div.className = "todo-item";
-      div.innerHTML = `
-        <input type="checkbox" data-id="${t.id}" class="todo-done" ${t.done ? "checked" : ""} />
-        <input type="text" data-id="${t.id}" class="todo-text" value="${t.text || ""}" />
-        <button class="btn btn-ghost btn-del-todo" data-id="${t.id}">✕</button>
-      `;
-      container.appendChild(div);
-    });
-
-    document.querySelectorAll(".todo-done").forEach(cb => {
-      cb.onchange = async e => {
-        const id = e.target.dataset.id;
-        const done = e.target.checked;
-        await supabase.from("week_todos").update({ done }).eq("id", id);
-        const t = todos.find(x => x.id === id);
-        if (t) t.done = done;
-      };
-    });
-
-    document.querySelectorAll(".todo-text").forEach(input => {
-      input.oninput = async e => {
-        const id = e.target.dataset.id;
-        const text = e.target.value;
-        await supabase.from("week_todos").update({ text }).eq("id", id);
-        const t = todos.find(x => x.id === id);
-        if (t) t.text = text;
-      };
-    });
-
-    document.querySelectorAll(".btn-del-todo").forEach(btn => {
-      btn.onclick = async e => {
-        const id = e.target.dataset.id;
-        await supabase.from("week_todos").delete().eq("id", id);
-        todos = todos.filter(x => x.id !== id);
-        renderTodos();
-      };
-    });
-  }
-
-  // --- Rendu planning semaine ---
-  function renderWeekGrid() {
-    const grid = document.getElementById("weekGrid");
-    grid.innerHTML = "";
-
-    const dayLabels = ["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"];
-
-    weekDates.forEach((dateStr, index) => {
-      const dayCard = document.createElement("div");
-      dayCard.className = "day-card";
-
-      dayCard.innerHTML = `
-        <div class="day-header">${dayLabels[index]}</div>
-        <div class="day-sub">${formatDayLabel(dateStr)}</div>
-
-        <div class="slot" data-slot="morning">
-          <h3>Matin</h3>
-          <div class="slot-activities" id="slot-${dateStr}-morning"></div>
-          <button class="btn btn-primary btn-add-activity" data-date="${dateStr}" data-slot="morning">+ Ajouter</button>
-        </div>
-
-        <div class="slot" data-slot="noon">
-          <h3>Midi</h3>
-          <div class="slot-activities" id="slot-${dateStr}-noon"></div>
-          <button class="btn btn-primary btn-add-activity" data-date="${dateStr}" data-slot="noon">+ Ajouter</button>
-        </div>
-
-        <div class="slot" data-slot="evening">
-          <h3>Soir</h3>
-          <div class="slot-activities" id="slot-${dateStr}-evening"></div>
-          <button class="btn btn-primary btn-add-activity" data-date="${dateStr}" data-slot="evening">+ Ajouter</button>
-        </div>
-      `;
-
-      grid.appendChild(dayCard);
-
-      renderActivitiesForDay(dateStr);
-    });
-
-    attachAddActivityButtons();
-  }
-
-  function renderActivitiesForDay(dateStr) {
-    const acts = activitiesByDate[dateStr] || [];
-    ["morning","noon","evening"].forEach(slot => {
-      const container = document.getElementById(`slot-${dateStr}-${slot}`);
-      container.innerHTML = "";
-      acts.filter(a => a.slot === slot).forEach(a => {
-        const div = document.createElement("div");
-        div.className = "activity";
-        div.style.background = computeActivityColor(a);
-
-        div.innerHTML = `
-          <div class="activity-row">
-            <input type="text" data-id="${a.id}" class="act-name" value="${a.name || ""}" placeholder="Nom">
-          </div>
-          <div class="activity-row">
-            <input type="text" data-id="${a.id}" class="act-cat" value="${a.category || ""}" placeholder="Catégorie">
-            <input type="number" data-id="${a.id}" class="act-dur" value="${a.duration || 0}" placeholder="Durée (min)">
-          </div>
-          <div class="activity-row">
-            <label style="font-size:11px;">Criticité :</label>
-            <select data-id="${a.id}" class="act-crit">
-              <option value="low" ${a.criticality === "low" ? "selected" : ""}>Pas urgent</option>
-              <option value="medium" ${a.criticality === "medium" ? "selected" : ""}>Moyen</option>
-              <option value="high" ${a.criticality === "high" ? "selected" : ""}>Urgent</option>
-            </select>
-          </div>
-          <div class="activity-footer">
-            <div>
-              <span style="font-size:11px;">Fin :</span>
-              <input type="date" data-id="${a.id}" class="act-due" value="${a.due_date || ""}">
-            </div>
-            <button class="btn btn-danger btn-del-act" data-id="${a.id}">✕</button>
-          </div>
-        `;
-
-        container.appendChild(div);
+        card.appendChild(slotDiv);
       });
-    });
 
-    attachActivityEvents();
-  }
-
-  // --- Ajout activité ---
-  function attachAddActivityButtons() {
-    document.querySelectorAll(".btn-add-activity").forEach(btn => {
-      btn.onclick = async () => {
-        const date = btn.dataset.date;
-        const slot = btn.dataset.slot;
-
-        const { data, error } = await supabase
-          .from("activities")
-          .insert({
-            date,
-            slot,
-            name: "",
-            category: "",
-            duration: 0,
-            criticality: "low",
-            created_at: new Date().toISOString(),
-            done: false
-          })
-          .select()
-          .single();
-
-        if (!error) {
-          if (!activitiesByDate[date]) activitiesByDate[date] = [];
-          activitiesByDate[date].push(data);
-          renderActivitiesForDay(date);
-        }
-      };
-    });
-  }
-
-  // --- Événements sur activités ---
-  function attachActivityEvents() {
-    document.querySelectorAll(".act-name").forEach(input => {
-      input.oninput = async e => {
-        const id = e.target.dataset.id;
-        const name = e.target.value;
-        await supabase.from("activities").update({ name }).eq("id", id);
-        updateLocalActivity(id, { name });
-      };
-    });
-
-    document.querySelectorAll(".act-cat").forEach(input => {
-      input.oninput = async e => {
-        const id = e.target.dataset.id;
-        const category = e.target.value;
-        await supabase.from("activities").update({ category }).eq("id", id);
-        updateLocalActivity(id, { category });
-      };
-    });
-
-    document.querySelectorAll(".act-dur").forEach(input => {
-      input.onchange = async e => {
-        const id = e.target.dataset.id;
-        const duration = Number(e.target.value) || 0;
-        await supabase.from("activities").update({ duration }).eq("id", id);
-        updateLocalActivity(id, { duration });
-      };
-    });
-
-    document.querySelectorAll(".act-crit").forEach(select => {
-      select.onchange = async e => {
-        const id = e.target.dataset.id;
-        const criticality = e.target.value;
-        await supabase.from("activities").update({ criticality }).eq("id", id);
-        updateLocalActivity(id, { criticality });
-        reloadColors();
-      };
-    });
-
-    document.querySelectorAll(".act-due").forEach(input => {
-      input.onchange = async e => {
-        const id = e.target.dataset.id;
-        const due_date = e.target.value || null;
-        await supabase.from("activities").update({ due_date }).eq("id", id);
-        updateLocalActivity(id, { due_date });
-        reloadColors();
-      };
-    });
-
-    document.querySelectorAll(".btn-del-act").forEach(btn => {
-      btn.onclick = async e => {
-        const id = e.target.dataset.id;
-        await supabase.from("activities").delete().eq("id", id);
-        removeLocalActivity(id);
-        renderWeekGrid();
-      };
-    });
-  }
-
-  function updateLocalActivity(id, patch) {
-    for (const d of weekDates) {
-      const list = activitiesByDate[d] || [];
-      const a = list.find(x => x.id === id);
-      if (a) Object.assign(a, patch);
+      return card;
     }
-  }
 
-  function removeLocalActivity(id) {
-    for (const d of weekDates) {
-      activitiesByDate[d] = (activitiesByDate[d] || []).filter(x => x.id !== id);
+    function renderWeek() {
+      grid.innerHTML = "";
+      weekData.forEach((day, i) => {
+        const card = createDayCard(day, i);
+        grid.appendChild(card);
+      });
+
+      // Restaurer l'état depuis localStorage
+      const saved = JSON.parse(localStorage.getItem("planning-state") || "{}");
+      document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        const key = cb.dataset.key;
+        if (saved[key]) cb.checked = true;
+      });
+
+      updateTotals();
+      attachListeners();
     }
-  }
 
-  function reloadColors() {
-    weekDates.forEach(dateStr => {
-      const acts = activitiesByDate[dateStr] || [];
-      ["morning","noon","evening"].forEach(slot => {
-        const container = document.getElementById(`slot-${dateStr}-${slot}`);
-        if (!container) return;
-        const children = container.querySelectorAll(".activity");
-        acts.filter(a => a.slot === slot).forEach((a, idx) => {
-          const div = children[idx];
-          if (div) div.style.background = computeActivityColor(a);
+    function updateTotals() {
+      let music = 0;
+      let english = 0;
+
+      document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        if (!cb.checked) return;
+        const type = cb.dataset.type;
+        const duration = parseFloat(cb.dataset.duration || "0");
+        if (type === "music") music += duration;
+        if (type === "english") english += duration;
+      });
+
+      musicHoursEl.textContent = music.toFixed(2).replace(".00", "");
+      englishHoursEl.textContent = english.toFixed(2).replace(".00", "");
+    }
+
+    function attachListeners() {
+      document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener("change", () => {
+          const saved = JSON.parse(localStorage.getItem("planning-state") || "{}");
+          saved[cb.dataset.key] = cb.checked;
+          localStorage.setItem("planning-state", JSON.stringify(saved));
+          updateTotals();
         });
       });
-    });
-  }
 
-  // --- Notes de semaine ---
-  document.getElementById("saveNotesBtn").onclick = async () => {
-    if (!weekStart) return;
-    const text = document.getElementById("weekNotes").value;
-    const ws = toISODate(weekStart);
-
-    const { data: existing } = await supabase
-      .from("week_notes")
-      .select("*")
-      .eq("week_start", ws)
-      .maybeSingle();
-
-    if (existing) {
-      await supabase.from("week_notes").update({ notes: text }).eq("week_start", ws);
-    } else {
-      await supabase.from("week_notes").insert({ week_start: ws, notes: text });
+      resetBtn.addEventListener("click", () => {
+        document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+        localStorage.removeItem("planning-state");
+        updateTotals();
+      });
     }
-  };
 
-  // --- Ajout TODO ---
-  document.getElementById("addTodoBtn").onclick = async () => {
-    if (!weekStart) return;
-    const ws = toISODate(weekStart);
-    const { data, error } = await supabase
-      .from("week_todos")
-      .insert({ week_start: ws, text: "", done: false })
-      .select()
-      .single();
-    if (!error) {
-      todos.push(data);
-      renderTodos();
-    }
-  };
-
-  // --- Changement de semaine ---
-  document.getElementById("weekStartInput").onchange = e => {
-    const d = new Date(e.target.value);
-    weekStart = getMonday(d);
-    loadWeek();
-  };
-
-  // --- Init ---
-  (function init() {
-    const today = new Date();
-    weekStart = getMonday(today);
-    document.getElementById("weekStartInput").value = toISODate(weekStart);
-    loadWeek();
-  })();
-</script>
+    renderWeek();
+  </script>
 </body>
 </html>
