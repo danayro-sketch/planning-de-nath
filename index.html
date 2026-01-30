@@ -15,18 +15,6 @@
       --sport: #22c55e;
       --music: #f97316;
       --english: #a855f7;
-      select {
-  background: #020617;
-  color: white;
-  border-radius: 6px;
-  border: 1px solid rgba(148,163,184,0.4);
-}
-
-select[value="5"] { border-color: #ef4444; }
-select[value="4"] { border-color: #f97316; }
-select[value="3"] { border-color: #facc15; }
-select[value="2"] { border-color: #22c55e; }
-
     }
 
     * {
@@ -87,15 +75,6 @@ select[value="2"] { border-color: #22c55e; }
     .dot.sport { background: var(--sport); }
     .dot.music { background: var(--music); }
     .dot.english { background: var(--english); }
-<div class="day-card" style="margin-bottom:20px">
-  <div class="day-name">Projets</div>
-  <input id="project-name" placeholder="Nom du projet" />
-  <input type="date" id="project-start" />
-  <input type="date" id="project-end" />
-  <button id="add-project">Ajouter</button>
-
-  <div id="project-list"></div>
-</div>
 
     .grid {
       display: grid;
@@ -270,47 +249,6 @@ select[value="2"] { border-color: #22c55e; }
   </div>
 
   <script>
-    function projectColor(start, end) {
-  const now = Date.now();
-  const s = new Date(start).getTime();
-  const e = new Date(end).getTime();
-  const ratio = (now - s) / (e - s);
-
-  if (ratio < 0.5) return "#22c55e";
-  if (ratio < 0.8) return "#facc15";
-  return "#ef4444";
-}
-    document.getElementById("add-project").onclick = () => {
-  const projects = JSON.parse(localStorage.getItem("projects") || "[]");
-
-  projects.push({
-    name: projectName.value,
-    start: projectStart.value,
-    end: projectEnd.value
-  });
-
-      function renderProjects() {
-  const list = document.getElementById("project-list");
-  list.innerHTML = "";
-  const projects = JSON.parse(localStorage.getItem("projects") || "[]");
-
-  projects.forEach(p => {
-    const div = document.createElement("div");
-    div.textContent = `${p.name} (${p.start} → ${p.end})`;
-    div.style.color = projectColor(p.start, p.end);
-    list.appendChild(div);
-  });
-}
-
-
-  localStorage.setItem("projects", JSON.stringify(projects));
-  renderProjects();
-};
-
-
-    function getNowDate() {
-  return new Date().toISOString().split("T")[0];
-}
     const weekData = [
       {
         day: "Lundi",
@@ -416,32 +354,6 @@ select[value="2"] { border-color: #22c55e; }
     const resetBtn = document.getElementById("reset-btn");
 
     function createDayCard(dayData, dayIndex) {
-      const controls = document.createElement("div");
-controls.style.display = "flex";
-controls.style.gap = "6px";
-controls.style.marginLeft = "auto";
-
-/* Durée */
-const durationInput = document.createElement("input");
-durationInput.type = "number";
-durationInput.min = "0";
-durationInput.step = "0.25";
-durationInput.value = act.duration;
-durationInput.style.width = "60px";
-
-/* Criticité */
-const criticitySelect = document.createElement("select");
-[1,2,3,4,5].forEach(v => {
-  const opt = document.createElement("option");
-  opt.value = v;
-  opt.textContent = `⚠️ ${v}`;
-  criticitySelect.appendChild(opt);
-});
-
-controls.appendChild(durationInput);
-controls.appendChild(criticitySelect);
-activityDiv.appendChild(controls);
-
       const card = document.createElement("div");
       card.className = "day-card";
 
@@ -545,14 +457,7 @@ activityDiv.appendChild(controls);
         const duration = parseFloat(cb.dataset.duration || "0");
         if (type === "music") music += duration;
         if (type === "english") english += duration;
-    
       });
-      saved[cb.dataset.key] = {
-  checked: cb.checked,
-  dateAdded: saved[cb.dataset.key]?.dateAdded || getNowDate(),
-  duration: durationInput.value,
-  criticity: criticitySelect.value
-};
 
       musicHoursEl.textContent = music.toFixed(2).replace(".00", "");
       englishHoursEl.textContent = english.toFixed(2).replace(".00", "");
@@ -575,13 +480,7 @@ activityDiv.appendChild(controls);
       });
     }
 
-    renderWeek() {
-      if (saved[key]) {
-  cb.checked = saved[key].checked;
-  durationInput.value = saved[key].duration;
-  criticitySelect.value = saved[key].criticity;
-}};
+    renderWeek();
   </script>
 </body>
 </html>
-
