@@ -1033,18 +1033,25 @@
 const addProjectBtn = document.getElementById("add-project-btn");
 
 function getCriticity(project) {
-  const now = new Date();
-  const start = new Date(project.start);
-  const end = new Date(project.end);
+  const today = new Date();
+  const startDate = new Date(project.start);
+  const endDate = new Date(project.end);
 
-  const total = end - start;
-  const elapsed = now - start;
+ const totalDuration = endDate - startDate;
+const remaining = endDate - today;
+
+let ratio = remaining / totalDuration;
+ratio = Math.max(0, Math.min(1, ratio)); // sécurité
 
   const ratio = Math.min(Math.max(elapsed / total, 0), 1);
-
-  let color = "rgba(167, 227, 171, 0.7)"; // vert
-  if (ratio > 0.6) color = "rgba(255, 236, 179, 0.8)"; // jaune
-  if (ratio > 0.85) color = "rgba(255, 182, 193, 0.85)"; // rouge
+ 
+  if (ratio > 0.66) {
+  progressBar.className = "rgba(167, 227, 171, 0.7)";
+} else if (ratio > 0.33) {
+  progressBar.className = "rgba(255, 236, 179, 0.8)";
+} else if (ratio > 0.15) {
+  progressBar.className = "rgba(255, 182, 193, 0.85)";
+}
 
   return { ratio, color };
 }
@@ -1063,7 +1070,8 @@ function renderProjects() {
       <div class="project-dates">${project.start} → ${project.end}</div>
       <div class="criticity-bar">
         <div class="criticity-fill"
-             style="width:${ratio * 100}%; background:${color};">
+            progressBar.style.width = `${ratio * 100}%`;
+ background:${color};">
         </div>
       </div>
     `;
@@ -1094,6 +1102,7 @@ addProjectBtn.addEventListener("click", () => {
   </script>
 </body>
 </html>
+
 
 
 
