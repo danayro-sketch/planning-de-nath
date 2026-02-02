@@ -709,29 +709,19 @@
       saveData();
     });
 
-    function renderTotals() {
-      const t = getTotals();
-      totalsDiv.innerHTML = "";
-      const pill = document.createElement("div");
-      // Créer le badge
-const impactBadge = document.createElement('span');
+   function renderTotals() {
+  const t = getTotals();
+  totalsDiv.innerHTML = "";
 
-// Ajouter la classe correspondant à l'impact
-impactBadge.classList.add(`impact-${project.impact}`);
+  const pill = document.createElement("div");
+  pill.className = "total-pill";
+  pill.innerHTML = `
+    <span class="total-label">Total estimé</span>
+    <span class="total-value">${formatHours(t.global)}</span>
+  `;
 
-// Mettre le texte du badge
-impactBadge.textContent = project.impact;
-
-// Ajouter le badge à l'élément parent (ex: card du projet)
-projectCard.appendChild(impactBadge);
-
-      pill.className = "total-pill";
-      pill.innerHTML = `
-        <span class="total-label">Total estimé</span>
-        <span class="total-value">${formatHours(t.global)}</span>
-      `;
-      totalsDiv.appendChild(pill);
-    }
+  totalsDiv.appendChild(pill);
+}}
 
     const pastelColors = [
       "rgba(137, 207, 240, 0.35)",
@@ -1100,20 +1090,22 @@ function renderProjects() {
     card.className = "project-card";
 
     card.innerHTML = `
-      <div class="project-title">${project.name}</div>
-      <div class="project-dates">${project.start} → ${project.end}</div>
-      <div class="criticity-bar">
-        <div class="criticity-fill"
-      <label>Impact (1 à 9)</label>
-<input type="number" min="1" max="9" id="impactInput">  
-<div class="project-header">
-  <span class="project-title">campus modop</span>
-  <span class="impact-badge impact-7">7</span>
-</div>
- background:${color};">
-        </div>
-      </div>
-    `;
+  <div class="project-title">${project.name}</div>
+  <div class="project-dates">${project.start} → ${project.end}</div>
+
+  <div class="criticity-bar">
+    <div class="criticity-fill" style="background:${color};"></div>
+  </div>
+
+  <label>Impact (1 à 9)</label>
+  <input type="number" min="1" max="9" id="impactInput">
+
+  <div class="project-header">
+    <span class="project-title">campus modop</span>
+    <span class="impact-badge impact-7">7</span>
+  </div>
+`;
+
 
     projectsContainer.appendChild(card);
   });
@@ -1143,6 +1135,7 @@ const impact = parseInt(impactInput.value, 10);
   </script>
 </body>
 </html>
+
 
 
 
